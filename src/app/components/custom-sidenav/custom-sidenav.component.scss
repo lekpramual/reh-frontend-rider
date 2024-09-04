@@ -1,0 +1,90 @@
+:host * {
+  transition: all 500ms ease-in-out;
+
+}
+.sidenav-header {
+  padding-top: 24px;
+  text-align: center;
+
+  > img {
+    border-radius: 100%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .header-text {
+    height: 3rem;
+
+    > h2 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    > p {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+
+.sidenav-content {
+  padding: 0px 12px 0px 12px;
+  height: calc(100vh - 300px);
+  overflow: hidden;
+  scrollbar-color: transparent transparent;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  margin-top: 12px;
+}
+
+.hide-sidenav-content {
+  height: calc(100vh - 150px);
+}
+
+.sidenav-content:hover {
+  // overflow-y: auto;
+  // overflow: hidden;
+
+  flex: 1;
+  flex-basis: 0.000000001px;
+  overflow-y: auto;
+  scrollbar-color: #909090 transparent;
+  scrollbar-width: thin;
+}
+
+
+
+// .sidenav-content::-webkit-scrollbar  {
+//   scrollbar-width: thin;
+//   width: 8px !important;
+//   background: blue!important;
+// }
+
+// .sidenav-content::-webkit-scrollbar-track {
+//   scrollbar-width: thin;
+//   background: blue!important;
+// }
+
+// .sidenav-content::-webkit-scrollbar-thumb {
+//   scrollbar-width: thin;
+//   border: 2px solid white;
+//   background: blue!important;
+//   border-radius: 8px  ;
+//   box-shadow: 0 0 5px rgba(0,0,0,0.5);
+// }
+
+// .sidenav-content::-webkit-scrollbar-thumb:hover {
+//   scrollbar-width: thin;
+//   background: blue!important;
+//   box-shadow: 0 0 5px rgba(0,0,0,0.5);
+// }
+
+.hide-header-text {
+  opacity: 0;
+  height: 0px !important;
+}
+
+
+

@@ -1,0 +1,49 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "paths": {
+      "@core": ["app/core"],
+      "@core/*": ["app/core/*"],
+      "@pages": ["app/pages"],
+      "@pages/*": ["app/pages/*"],
+      "@routes": ["app/routes"],
+      "@routes/*": ["app/routes/*"],
+      "@shared": ["app/shared"],
+      "@shared/*": ["app/shared/*"],
+      "@layouts": ["app/layouts"],
+      "@layouts/*": ["app/layouts/*"],
+      "@assets": ["assets"],
+      "@assets/*": ["assets/*"],
+      "@env": ["environments"],
+      "@env/*": ["environments/*"],
+    },
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

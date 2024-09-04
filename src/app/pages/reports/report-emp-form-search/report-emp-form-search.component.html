@@ -1,0 +1,101 @@
+<form
+  class="reh-form-sm"
+  [formGroup]="formGroupData"
+  (ngSubmit)="onSubmit()"
+>
+  <mat-card>
+
+
+      <mat-divider />
+      <section class="pt-2" tabindex="0" >
+        <div class="row mt-3 mx-0 justify-content-center">
+          <div class="col-6">
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>วันที่เริ่ม</mat-label>
+              <!-- datePickerFormat="YYYY/MM/DD" -->
+              <input
+                matInput
+                name="emp_start"
+                formControlName="emp_start"
+                placeholder="วันที่เริ่ม"
+                [max]="maxDate"
+                [min]="minDate"
+                [matDatepicker]="picker_start"
+                datePickerFormat = "YYYY/MM/DD"
+
+              />
+
+              <mat-datepicker-toggle matIconSuffix [for]="picker_start"></mat-datepicker-toggle>
+              <mat-datepicker #picker_start></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+          <div class="row mx-0  justify-content-center" >
+            <div class="col-6">
+              <mat-form-field class="reh-input-full-width">
+                <mat-label>วันที่สิ้นสุด</mat-label>
+                <input
+                  matInput
+                  name="emp_end"
+                  formControlName="emp_end"
+                  placeholder="วันที่สิ้นสุด"
+                  [max]="maxDate"
+                  [min]="minDate"
+                  [matDatepicker]="picker_end"
+                  datePickerFormat="DD MMM YYYY"
+
+                />
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker_end"></mat-datepicker-toggle>
+                <mat-datepicker #picker_end></mat-datepicker>
+
+
+                <mat-error
+                  *ngIf="
+                    formGroupData.get('emp_end')?.invalid ||
+                    formGroupData.get('emp_end')?.touched
+                  "
+                >
+                  *โปรดระบุ วันที่สิ้นสุด</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mx-0  justify-content-center">
+            <div class="col-6">
+              <mat-form-field class="reh-input-full-width mt-2">
+                <mat-label>เลือก ประเภทเจ้าหน้าที่</mat-label>
+                <mat-select formControlName="emp_role_id" required style="font-size: 14px">
+
+                  <mat-option
+                    *ngFor="let dept of departments"
+                    [value]="dept.id"
+                    style="font-size: 14px"
+                  >
+                    {{ dept.name }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error
+                  *ngIf="
+                    formGroupData.get('emp_role_id')?.invalid ||
+                    formGroupData.get('emp_role_id')?.touched
+                  "
+                >
+                  *โปรดเลือก ประเภทเจ้าหน้าที่</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mx-0 mb-2  justify-content-center">
+          <div class="col-6" align="end">
+            <button mat-stroked-button class="reh-btn-blue">
+              <mat-icon fontSet="material-icons-outlined">print</mat-icon>
+              แสดงรายงาน
+            </button>
+          </div>
+        </div>
+      </section>
+
+  </mat-card>
+</form>

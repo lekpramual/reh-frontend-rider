@@ -1,0 +1,33 @@
+
+<div class="row">
+  <div class="col-12">
+    <span class="mat-headline-5">รายงาน</span>
+  </div>
+</div>
+
+<mat-card>
+  <div class="row">
+    <div class="col-12">
+      <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="reh-tab-icon">people</mat-icon>
+            เจ้าหน้าที่
+          </ng-template>
+
+          <app-report-emp-form-search/>
+        </mat-tab>
+
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="reh-tab-icon">domain_add</mat-icon>
+            วอร์ด
+          </ng-template>
+          <app-report-ward-form-search/>
+        </mat-tab>
+
+
+      </mat-tab-group>
+    </div>
+  </div>
+</mat-card>

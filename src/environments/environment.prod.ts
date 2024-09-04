@@ -1,0 +1,15 @@
+export const environment = {
+  production: true,
+  APP_TITLE: "ระบบเบิกยาและสารน้ํา",
+  API_URL: "http://localhost:4200/",
+  node_api_url: "https://api.reh.go.th/comservice",
+  // node_api_url: 'http://localhost:8082',
+  node_static_url: "https://api.reh.go.th/comservice/public",
+  baseUrl: "/app-rider",
+  token: "token_32",
+  version: "1.4.7",
+  appId: "32",
+  managerRole: 6,
+  adminRole: 5,
+  userRole: 0,
+};

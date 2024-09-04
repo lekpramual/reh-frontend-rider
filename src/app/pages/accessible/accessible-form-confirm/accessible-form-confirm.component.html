@@ -1,0 +1,146 @@
+<span
+  class="h2 btn-action-green"
+  mat-dialog-title
+  style="display: flex; align-items: center;height: 48px;"
+
+>
+  <mat-icon fontSet="material-icons-outlined" class="btn-action-green">send_to_mobile</mat-icon>
+  ปิดงาน เลขที่ : J1000
+</span>
+<mat-divider></mat-divider>
+<form class="reh-form-sm" [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="row" align="center">
+      <div class="col-12">
+          <span class="mat-subtitle-2">รายละเอียดขอใช้เปล</span>
+          <mat-divider></mat-divider>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <span class="mat-subtitle-2">ชื่อ: </span
+        ><span class="mat-subtitle-1">น.ส.เกษร เหนือโท</span>
+      </div>
+      <div class="col-6">
+        <span class="mat-subtitle-2">เวลา: </span
+        ><span class="mat-subtitle-1">11:20</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <span class="mat-subtitle-2">ประเภท: </span
+        ><span class="reh-txt-green mat-subtitle-1">ปกติ [0-60]</span>
+      </div>
+      <div class="col-6">
+        <span class="mat-subtitle-2">อุปกรณ์: </span
+        ><span class="mat-subtitle-1">เปลนอน</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <span class="mat-subtitle-2">จุดรับ: </span><span class="mat-subtitle-1">มาเอง</span>
+       </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <span class="mat-subtitle-2">จุดส่ง: </span><span class="mat-subtitle-1">ส่งผู้ป่วยกลับบ้าน</span>
+      </div>
+    </div>
+    <div class="row mt-2 mb-3" align="center">
+      <div class="col-12">
+          <span class="mat-subtitle-2"
+            >รายละเอียด จนท.เปล</span
+          >
+          <mat-divider></mat-divider>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+
+        <span class="mat-subtitle-2">รหัสเจ้าหน้าที่: </span><span class="mat-subtitle-1">OP00001</span>
+      </div>
+      <div class="col-6 text-end">
+        <span class="mat-subtitle-2">ชื่อ: </span><span class="mat-subtitle-1">นายชุมพล ผดุงกิจ</span>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <span class="mat-subtitle-2">ขอใช้เปล [วอร์ด]</span>
+      </div>
+      <div class="col-2" align="end">
+        <span class="mat-subtitle-2">11:20</span>
+      </div>
+      <div class="col-6">
+        <span class="reh-txt-green mat-subtitle-2">ปกติ [0-60] นาที</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <span class="mat-subtitle-2">จ่ายงาน [ศูนย์]</span>
+      </div>
+      <div class="col-2" align="end">
+        <span class="mat-subtitle-2">11:20</span>
+      </div>
+      <div class="col-6">
+        <span class="mat-subtitle-2">เวลา 1 นาที</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <span class="mat-subtitle-2">รับงาน [จนท]</span>
+      </div>
+      <div class="col-2" align="end">
+        <span class="mat-subtitle-2">-</span>
+      </div>
+      <div class="col-6">
+        <button mat-stroked-button class="reh-btn-blue mb-2" style="width: 110px;">
+          <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+          คลิกรับงาน</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <span class="mat-subtitle-2">ปิดงาน [จนท]</span>
+      </div>
+      <div class="col-2" align="end">
+        <span class="mat-subtitle-2">-</span>
+      </div>
+      <div class="col-6">
+        <button mat-stroked-button class="reh-btn-green disabled" style="width: 110px;" disabled>
+          <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
+          คลิกปิดงาน</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6" align="end">
+        <span class="mat-subtitle-2">รวมระยะเวลา</span>
+      </div>
+
+      <div class="col-6">
+        <span class="mat-subtitle-2">เวลา 10  นาที</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="end">
+    <!-- <button mat-button (click)="onNoClick()">ยกเลิก</button> -->
+    <button mat-stroked-button class="reh-btn-red" (click)="onNoClick()">
+      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      ปิดหน้าจอ
+    </button>
+
+    <!-- <button mat-button  type="submit" cdkFocusInitial>บันทึก</button> -->
+    <!-- <button
+      mat-stroked-button
+      class="reh-btn-green"
+      type="submit"
+      cdkFocusInitial
+    >
+      <mat-icon fontSet="material-icons-outlined">send_to_mobile</mat-icon>
+      จ่ายงาน
+    </button> -->
+  </mat-dialog-actions>
+</form>

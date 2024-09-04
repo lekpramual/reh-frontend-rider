@@ -1,0 +1,267 @@
+<span
+  class="h2 btn-action-green"
+  mat-dialog-title
+  style="display: flex; align-items: center;height: 48px;"
+>
+  <mat-icon fontSet="material-icons-outlined" class="btn-action-green"> accessible_forward </mat-icon>
+  ขอใช้เปลใหม่</span
+>
+<mat-divider></mat-divider>
+<form class="reh-form-sm" [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-12" align="center">
+        <span class="mat-subtitle-1">ประเภทผู้ป่วย</span>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+    <div class="row" align="center">
+      <div class="col-12">
+        <mat-radio-group formControlName="work" color="primary">
+          <mat-radio-button value="1">
+            <div class="reh-txt-blue">
+              <strong>ผู้ป่วยนอก OPD</strong>
+            </div>
+          </mat-radio-button>
+          <mat-radio-button value="2">
+            <div class="reh-txt-blue">
+              <strong>ผู้ป่วยใน IPD</strong>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="reh-input-full-width">
+          <mat-label>HN</mat-label>
+          <input
+            style="font-size: 14px"
+            matInput
+            name="activity_name"
+            placeholder="HN (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)"
+            aria-label="activity_name label "
+            formControlName="activity_name"
+            required
+          />
+          <mat-error
+            *ngIf="
+              formAccessible.get('activity_name')?.invalid ||
+              formAccessible.get('activity_name')?.touched
+            "
+          >
+            *โปรดระบุ (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="reh-input-full-width">
+          <mat-label>ชื่อ-สกุล</mat-label>
+          <input
+            style="font-size: 14px"
+            matInput
+            name="activity_indicator"
+            placeholder="ชื่อ-สกุล"
+            aria-label="activity_indicator label "
+            formControlName="activity_indicator"
+            required
+          />
+          <mat-error
+            *ngIf="
+              formAccessible.get('activity_indicator')?.invalid ||
+              formAccessible.get('activity_indicator')?.touched
+            "
+          >
+            *โปรดระบุ ระบุ ชื่อ-สกุล</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row" align="center">
+      <div class="col-12">
+        <span class="mat-subtitle-1">ประเภทความเร่งด่วน</span>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+    <div class="row" align="center">
+      <div class="col-12">
+        <mat-radio-group formControlName="work" color="primary">
+          <mat-radio-button value="1">
+            <div class="reh-txt-green">
+              <strong>ปกติ [0-60]</strong>
+            </div>
+          </mat-radio-button>
+          <mat-radio-button value="2">
+            <div class="reh-txt-yellow">
+              <strong>ด่วน [0-30]</strong>
+            </div>
+          </mat-radio-button>
+          <mat-radio-button value="3">
+            <div class="reh-txt-orange">
+              <strong>ด่วนมาก [0-20]</strong>
+            </div>
+          </mat-radio-button>
+          <mat-radio-button value="4">
+            <div class="reh-txt-red">
+              <strong>ด่วนพิเศษ [0-10]</strong>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="row" align="center">
+      <div class="col-12">
+        <span class="mat-subtitle-1">ประเภทอุปกรณ์</span>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <mat-form-field class="reh-input-full-width mt-2">
+          <mat-label>เลือก ประเภทอุปกรณ์</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="1">รถนั่ง</mat-option>
+            <mat-option value="2">เปลนอน</mat-option>
+          </mat-select>
+
+          <mat-error
+            *ngIf="
+              formAccessible.get('status')?.invalid ||
+              formAccessible.get('status')?.touched
+            "
+          >
+            *โปรดเลือก ประเภทอุปกรณ์</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row" align="center">
+      <div class="col-12 ">
+          <span class="mat-subtitle-1">จุด รับ-ส่ง ผู้ป่วย</span>
+          <mat-divider></mat-divider>
+        </div>
+
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <mat-form-field class="reh-input-full-width mt-2">
+          <mat-label>เลือก จุดรับผู้ป่วย</mat-label>
+
+          <mat-select formControlName="select">
+            <mat-option>
+              <ngx-mat-select-search
+                [formControl]="searchControl"
+                placeholderLabel="ค้นหา จุดรับผู้ป่วย"
+                [preventHomeEndKeyPropagation]="true"
+
+              >
+
+                  <span  ngxMatSelectNoEntriesFound>
+                    ไม่พบข้อมูล
+                  </span>
+
+
+            </ngx-mat-select-search>
+          </mat-option>
+          @for (option of filteredOptions | async; track option) {
+            <mat-option  [value]="option.id"> {{ option.name }}</mat-option>
+          }
+
+          </mat-select>
+
+
+
+
+          <mat-error
+            *ngIf="
+              formAccessible.get('select')?.invalid ||
+              formAccessible.get('select')?.touched
+            "
+          >
+            *โปรดเลือก จุดรับผู้ป่วย</mat-error
+          >
+        </mat-form-field>
+
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <mat-form-field class="reh-input-full-width mt-1">
+          <mat-label>เลือก จุดส่งผู้ป่วย</mat-label>
+
+          <mat-select formControlName="out">
+            <mat-option>
+              <ngx-mat-select-search
+                [formControl]="searchControl"
+                placeholderLabel="ค้นหา จุดส่งผู้ป่วย"
+                [preventHomeEndKeyPropagation]="true"
+
+              >
+
+                  <span  ngxMatSelectNoEntriesFound>
+                    ไม่พบข้อมูล
+                  </span>
+
+
+            </ngx-mat-select-search>
+          </mat-option>
+          @for (option of filteredOptions | async; track option) {
+            <mat-option  [value]="option.id"> {{ option.name }}</mat-option>
+          }
+          </mat-select>
+
+          <mat-error
+            *ngIf="
+              formAccessible.get('out')?.invalid ||
+              formAccessible.get('out')?.touched
+            "
+          >
+            *โปรดเลือก จุดส่งผู้ป่วย</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-12 text-center">
+        <div class="divider-container">
+          <mat-divider></mat-divider>
+          <span class="divider-title">ประเภทเวร</span>
+        </div>
+        <div class="card">
+          <mat-radio-group formControlName="work" color="primary">
+            <mat-radio-button
+              *ngFor="let option of optionworks"
+              [value]="option.value"
+            >
+              <strong>{{ option.label }}</strong>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div> -->
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="end">
+    <!-- <button mat-button (click)="onNoClick()">ยกเลิก</button> -->
+    <button mat-stroked-button class="reh-btn-red" (click)="onNoClick()">
+      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      ปิดหน้าจอ
+    </button>
+
+    <!-- <button mat-button  type="submit" cdkFocusInitial>บันทึก</button> -->
+    <button
+      mat-stroked-button
+      class="reh-btn-green"
+      type="submit"
+      cdkFocusInitial
+    >
+      <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+      คำขอใช้เปลใหม่
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,214 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'theme.scss';
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "FC_Iconic_Regular", Roboto,"Helvetica Neue", sans-serif,"Sadayu_Bold" !important;
+  // --primary-color: #cc0000;
+}
+
+
+mat-mdc-list-item:focus {
+  outline: none;
+}
+
+.mat-drawer-inner-container {
+//   width: 100%;
+//   height: 100%;
+//   overflow: auto;
+//   -webkit-overflow-scrolling: touch;
+//   overflow: hidden !important;
+//
+}
+
+.title_logo {
+  font-family: "Sadayu_Bold" !important;
+  font-size: 28px !important;
+}
+
+// .h1, .h2 , .h3, .h4, .h5, .h6 {
+//   font-family: "FC_Iconic_Bold" !important;
+// }
+
+.reh-chip-blue {
+  background-color: var(--blue-color)!important;
+  span.label {
+    color: #fff !important;
+  }
+}
+.reh-chip-green {
+  background-color: var(--green-color)!important;
+  color: #fff !important;
+  span.label {
+    color: #fff !important;
+  }
+}
+
+.reh-chip-yellow {
+  background-color: var(--yellow-color) !important;
+  color: #212529 !important;
+  span.label {
+    color: #212529 !important;
+  }
+}
+
+.reh-chip-orange {
+  background-color: var(--orange-color)!important;
+  color: #212529 !important;
+  span.label {
+    color: #212529 !important;
+  }
+}
+
+.reh-chip-red {
+  background-color: var(--red-color) !important;
+  color: #fff !important;
+  span.label {
+    color: #fff !important;
+  }
+}
+
+.reh-card:hover {
+  background-color: var(--background-color-card-blue-50) !important;
+  border-color: var(--green-color) !important;
+  cursor: pointer;
+}
+
+.reh-card-img {
+  border-top-left-radius: 4px!important;
+  border-top-right-radius: 4px!important;
+}
+
+
+.reh-btn-green {
+  background-color: var(--green-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  height: 36px!important;
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
+}
+
+.reh-btn-blue {
+  background-color: var(--blue-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  height: 36px!important;
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
+}
+
+.reh-btn-yellow {
+  background-color: var(--yellow-color)!important;
+  color: #212529 !important;
+  border-radius: 20px !important;
+  height: 36px!important;
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
+}
+
+.reh-btn-red {
+  background-color: var(--red-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  height: 36px!important;
+}
+
+.reh-txt-blue {
+  color: var(--blue-color)!important;
+}
+.reh-txt-green {
+  color: var(--green-color)!important;
+}
+
+.reh-txt-yellow {
+  color: var(--yellow700-color) !important;
+}
+
+.reh-txt-orange {
+  color: var(--orange-color)!important;
+
+}
+
+.reh-txt-red {
+  color: var(--red-color) !important;
+}
+
+
+.btn-action {
+  color:var(--primary-color) !important;
+}
+
+.btn-action-blue {
+  color:var(--primary-color) !important;
+}
+.btn-action-green {
+  color:var(--green-color) !important;
+}
+.btn-action-red {
+  color:var(--red-color) !important;
+}
+
+.reh-badge-blue .mat-badge-content {
+  background-color: var(--blue-color);
+  color: var(--white-color);
+}
+
+
+.reh-btn-confirm {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: var(--green-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+}
+
+.reh-input-full-width{
+  width: 100%;
+}
+
+.reh-tab-icon {
+  margin-right: 8px;
+}
+
+/* Custom Snackbar styles */
+.success-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--green-color);
+  // --mat-mdc-snack-bar-button-color: var(--white-color);
+  --mat-snack-bar-button-color: var(--white-color);
+}
+
+// .mat-mdc-snack-bar-container
+// .mat-mdc-button.mat-mdc-snack-bar-action
+
+
+.error-snackbar {
+  max-width: max-content !important;
+  color: var(--white-color);
+  --mdc-snackbar-container-color: var(--red-color);
+  border-color: #f5c6cb;
+  --mat-snack-bar-button-color: var(--white-color);
+}
+
+.error-snackbar button{
+  color: var(--white-color);
+  background-color: var(--blue-color);
+  border-radius: 10px;
+}
+
+

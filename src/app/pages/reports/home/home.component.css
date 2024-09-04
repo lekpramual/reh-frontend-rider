@@ -1,0 +1,54 @@
+.th-head {
+    font-weight: bold;
+    text-align: center;
+}
+
+.th-head-end {
+    font-weight: bold;
+    text-align: right;
+}
+
+::ng-deep .mat-sort-header-arrow,
+::ng-deep .mat-sort-header-sorted {
+    color: #FFB300;
+}
+
+::ng-deep th.mat-column-year>.mat-sort-header-container,
+::ng-deep th.mat-column-month>.mat-sort-header-container,
+::ng-deep th.mat-column-income_type>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep th.mat-column-income>.mat-sort-header-container,
+::ng-deep th.mat-column-diff>.mat-sort-header-container,
+::ng-deep th.mat-column-summary>.mat-sort-header-container {
+    justify-content: right;
+}
+
+td,
+th {
+    vertical-align: middle !important;
+}
+
+.mat-mdc-icon-button.mat-primary:focus {
+    --mdc-icon-button-icon-color: #FFB300;
+    --mat-mdc-button-persistent-ripple-color: #FFB300;
+    --mat-mdc-button-ripple-color: rgba(77, 182, 172, 0.1);
+}
+
+.w-15 {
+    width: 15%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-8 {
+    width: 8%;
+}
+
+.head_before_table {
+    font-size: 20px;
+    font-weight: bold;
+}

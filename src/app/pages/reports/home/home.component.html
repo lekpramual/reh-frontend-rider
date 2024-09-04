@@ -1,0 +1,104 @@
+<div class="table-responsive mt-1 px-5" [hidden]="isLoading">
+
+    <div class="row mt-1">
+        <div class="col-md-8 d-flex align-items-center">
+            <span class="material-symbols-outlined" matTooltip="อย่าลืมออมเงินด้วยนะฮะ">
+                savings
+            </span>
+            <span class="head_before_table">
+                &nbsp; รายการสลิปเงินเดือน
+            </span>
+        </div>
+        <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>ค้นหา</mat-label>
+                <input matInput [(ngModel)]="searchText" name="searchText" autocomplete="off" onfocus="this.select()"
+                    (keyup)="applyFilter($event)" class="text-center">
+                <mat-icon matSuffix *ngIf="!searchText">search</mat-icon>
+                <button mat-icon-button matSuffix *ngIf="searchText" (click)="clearSearch()">
+                    <mat-icon class="mat-18">close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100 table table-hover table-striped">
+        <ng-container matColumnDef="no">
+            <th mat-header-cell *matHeaderCellDef class="th-head">ลำดับที่</th>
+            <td mat-cell *matCellDef="let element; let i = index;" class="text-center w-18">
+                {{ paginator.pageIndex * paginator.pageSize + i+1 }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head">ปี</th>
+            <td mat-cell *matCellDef="let element;" class="text-center w-10">
+                {{ element.year }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="month">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head">เดือน</th>
+            <td mat-cell *matCellDef="let element;" class="text-center w-10">
+                {{ element.month }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="income">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head-end">รายการรับ</th>
+            <td mat-cell *matCellDef="let element;" class="text-end w-15 pe-4">
+                {{ element.income | number : '1.2-2' }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diff">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head-end">รายการหัก</th>
+            <td mat-cell *matCellDef="let element;" class="text-end w-15 pe-4">
+                {{ element.diff | number : '1.2-2' }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="summary">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head-end">เงินเดือนสุทธิ</th>
+            <td mat-cell *matCellDef="let element;" class="text-end w-15 pe-4">
+                {{ element.summary | number : '1.2-2' }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="income_type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-head">ประเภท</th>
+            <td mat-cell *matCellDef="let element;" class="text-center">
+                {{ element.income_type }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="th-head">รายละเอียด</th>
+            <td mat-cell *matCellDef="let element; let i = index;" class="text-center w-10">
+                <button mat-icon-button color="primary" (click)="showPDF(element)">
+                    <mat-icon class="material-symbols-outlined mat-18">open_in_new</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100, 200]" [showFirstLastButtons]="true" aria-label="Select page">
+    </mat-paginator>
+</div>
+
+<div class="row my-5" *ngIf="isLoading">
+    <div class="col-md-12 text-center">
+        <div class="spinner-grow text-warning" role="status" style="width: 5px; height: 5px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>&nbsp;
+        <div class="spinner-grow text-warning" role="status" style="width: 5px; height: 5px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>&nbsp;
+        <div class="spinner-grow text-warning" role="status" style="width: 5px; height: 5px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>

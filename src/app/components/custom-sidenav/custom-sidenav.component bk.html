@@ -1,0 +1,21 @@
+<div class="sidenav-header">
+  <img
+    [width]="profilePicSize()"
+    [height]="profilePicSize()"
+    src="/assets/images/account.png"
+  />
+  <div class="header-text" [class.hide-header-text]="sideNavCollapsed()">
+    <h2>Your channel</h2>
+    <p>Zoaib Khan</p>
+  </div>
+</div>
+
+
+{{isBackDrop()}}
+    <mat-nav-list role="list" class="sidenav-content" [class.hide-sidenav-content]="sideNavCollapsed()">
+      @for(item of menuItems(); track item.label){
+        <app-menu-item [item]="item" [collapsed]="sideNavCollapsed()"  />
+      }
+    </mat-nav-list>
+
+

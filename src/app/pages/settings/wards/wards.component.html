@@ -1,0 +1,11 @@
+<div class="row g-3">
+  <div [class]="isOpened()?'col-lg-8 col-md-12':'col-lg-12 col-md-12' ">
+    <app-ward-list [sideopen]="isOpened()" (messageChange)="onMessageChange($event)" (formChange)="onFormData($event)"/>
+  </div>
+  @if(isOpened()){
+    <div  class="col-lg-4 col-md-12">
+      <app-ward-form [sideopen]="isOpened()" [formdata]="formData()" (messageChange)="onMessageChange($event)"   />
+    </div>
+  }
+
+</div>

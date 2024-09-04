@@ -1,0 +1,218 @@
+@use "@angular/material" as mat;
+@include mat.core();
+
+
+:root {
+  --blue-color: #2196f3;
+  --primary-color: #153d77;
+  --secondary-color: #6c757d;
+  --white-color: #fff;
+  --green50-color: #e7f7ee;
+  --green-color: #4caf50;
+  --black-color: #263238;
+  --yellow-color: #ffeb3b;
+  --yellow700-color: #fbc02d;
+  --orange-color: #ff5722;
+  --red-color: #f44336;
+  --background-color: #f2f2f2;
+  --background-color-card-blue-50: #e3f2fd;
+}
+
+$my-palette: (
+  50: #e7f7ee,
+  100: #c5ead4,
+  200: #9fddb9,
+  300: #76d19d,
+  500: #2dbc72,
+  700: #1b995b,
+  900: #05683a,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    500: white,
+    700: white,
+    900: white,
+  ),
+);
+$primary: mat.define-palette($my-palette, 900);
+$accent: mat.define-palette(mat.$gray-palette, 500);
+$warn: mat.define-palette(mat.$red-palette);
+
+@font-face{
+  font-family:'FC_Iconic_Bold_Italic' ;
+  src: url('./assets/fonts/FC_Iconic/FC_Iconic_Bold_Italic.ttf') format('truetype');
+}
+@font-face{
+  font-family:'FC_Iconic_Bold' ;
+  src: url('./assets/fonts/FC_Iconic/FC_Iconic_Bold.ttf') format('truetype');
+}
+
+@font-face{
+  font-family:'FC_Iconic_Regular' ;
+  src: url('./assets/fonts/FC_Iconic/FC_Iconic_Regular.ttf') format('truetype');
+}
+
+$heading-font-family: 'FC_Iconic_Bold';
+$regular-font-family: 'FC_Iconic_Regular';
+
+$reh-typography-config: mat.define-typography-config(
+  $font-family: $regular-font-family,
+  $headline-1:
+    mat.define-typography-level(112px, 112px, 300,$heading-font-family, $letter-spacing: -0.05em),
+  $headline-2:
+    mat.define-typography-level(56px, 56px, 400,$heading-font-family, $letter-spacing: -0.02em),
+  $headline-3:
+    mat.define-typography-level(45px, 48px, 400,$heading-font-family, $letter-spacing: -0.005em),
+  $headline-4: mat.define-typography-level(34px, 40px, 400,$heading-font-family),
+  $headline-5: mat.define-typography-level(24px, 32px, 400,$heading-font-family),
+  $headline-6: mat.define-typography-level(20px, 32px, 400,$heading-font-family),
+  $subtitle-1: mat.define-typography-level(16px, 28px, 400),
+  $subtitle-2: mat.define-typography-level(16px, 28px, 400,$heading-font-family),
+  $body-1: mat.define-typography-level(20px, 20px, 400),
+  $body-2: mat.define-typography-level(20px, 20px, 400),
+
+  $caption: mat.define-typography-level(20px, 20px, 400),
+);
+
+$my-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+    typography: $reh-typography-config,
+    density: 0,
+    // กำหนด input เป็น outline
+    "mat-form-field":
+      (
+        "appearance": "outline",
+      ),
+  )
+);
+
+@include mat.typography-hierarchy($reh-typography-config);
+@include mat.all-component-themes($my-theme);
+
+// กำหนดค่า button.
+$button-typography: mat.define-typography-config(
+  $font-family: "FC_Iconic_Regular",
+  $button: mat.define-typography-level(22px, 22px, 500),
+);
+
+$button-typography-sarabun: mat.define-typography-config(
+  $font-family: "FC_Iconic_Regular",
+  $button: mat.define-typography-level(14px, 20px, 700),
+);
+
+// กำหนดค่า form input.
+$input-typography-sarabun: mat.define-typography-config(
+  $font-family: "FC_Iconic_Regular",
+  $button: mat.define-typography-level(14px, 20px, 400),
+);
+
+
+
+.reh-form-sm {
+  @include mat.form-field-density(-5);
+  @include mat.button-typography($button-typography-sarabun);
+  @include mat.radio-typography($button-typography-sarabun);
+  @include mat.form-field-typography($input-typography-sarabun);
+}
+// Mat Style
+mat-toolbar {
+  height: 56px !important;
+  position: relative;
+  z-index: 5;
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+mat-sidenav,
+mat-sidenav-content {
+  transition: all 500ms ease-in-out;
+}
+
+.mat-drawer-container {
+  height: calc(100vh - 64px);
+}
+
+.mat-mdc-list-item {
+  border-radius: 10px !important;
+  height: 48px !important;
+}
+
+.mat-mdc-icon-button {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+.mat-mdc-icon-button mat-icon {
+  font-size: 24px !important;
+}
+
+.mat-drawer-inner-container {
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  overflow: hidden !important;
+}
+
+.mat-mdc-list-item-title {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
+  letter-spacing: 0.15px !important;
+}
+
+.mat-mdc-standard-chip .mdc-evolution-chip__cell--primary {
+  flex-basis: 0% !important;
+}
+.mat-mdc-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: var(--background-color);
+  border-color: var(--green-color);
+}
+
+.mat-select-search-input {
+  font-family: "FC_Iconic_Regular" !important;
+  font-size: larger !important;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.mdc-dialog .mdc-dialog__content {
+  padding: 8px 12px 8px 12px !important;
+}
+
+.mdc-dialog__title {
+  padding: 0 12px 0px !important;
+}
+
+.mat-tab-group {
+  margin-bottom: 48px;
+}
+
+

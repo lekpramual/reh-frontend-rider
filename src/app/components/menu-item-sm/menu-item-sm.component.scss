@@ -1,0 +1,24 @@
+:host * {
+  transition: all 500ms ease-in-out;
+}
+
+.menu-item {
+  // border-left: 5px solid;
+  // border-left-color: rgba(0, 0, 0, 0);
+//  width: 215px;
+}
+
+.selected-menu-item {
+  // border-left-color: var(--primary-color);
+  // background: rgba(0, 0, 0, 0.05);
+  background-color: #e0e0e0 !important;
+  font-weight: bold!important;
+}
+
+.hide-header-icon{
+  margin-left: 8px;
+}
+
+.indented {
+  --mat-list-list-item-leading-icon-start-space:20px
+}

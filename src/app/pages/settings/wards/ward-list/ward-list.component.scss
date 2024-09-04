@@ -1,0 +1,45 @@
+@import '../../../../../theme.scss';
+
+.example-container {
+  height: calc(100vh - 236px);
+  overflow: auto;
+}
+
+.reh-container-scroll {
+  // height: calc(100vh - 236px);
+  overflow: auto;
+}
+
+table.accept {
+  width: 720px;
+}
+
+.centered-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+}
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+td.mat-column-type {
+  width: 36px;
+  padding-right: 8px;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+  cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+  cursor: pointer;
+}
+
+
+

@@ -1,0 +1,119 @@
+<mat-card class="flex items-center justify-center h-screen p-4" style="max-width:420px;">
+  <div class="row">
+    <div class="col-12" align="center">
+      <img
+        src="/assets/images/logo-moph-reh.png"
+        style="width: 156px; height: 156px"
+      />
+    </div>
+    <div class="col-12" align="center">
+      <div class="mat-headline-5 reh-txt-green">ระบบขอใช้เปลออนไลน์</div>
+    </div>
+
+    <form
+      class="reh-form"
+      style="padding: 8px"
+      [formGroup]="formInitial"
+      (submit)="onSubmit()"
+    >
+      <div class="col-12">
+        <mat-label class="mat-subtitle-2">ชื่อผู้ใช้งาน</mat-label>
+      </div>
+      <div class="col-12">
+        <mat-form-field class="reh-input-full-width" appearance="outline">
+          <!-- <mat-label>ชื่อผู้ใช้งาน</mat-label> -->
+          <input
+            matInput
+            name="username"
+            placeholder="ชื่อผู้ใช้งาน"
+            aria-label="username label "
+            formControlName="username"
+          />
+
+          @if(formInitial.get('username')?.invalid ||
+          formInitial.get('username')?.touched){
+          <mat-error> *โปรดระบุ ชื่อผู้ใช้งาน</mat-error>
+          }
+
+          <mat-icon class="text-gray-500" matSuffix>account_box</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="col-12">
+        <mat-label class="mat-subtitle-2">รหัสผ่าน</mat-label>
+      </div>
+      <div class="col-12">
+        <mat-form-field class="reh-input-full-width" appearance="outline">
+          <input
+            matInput
+            name="password"
+            placeholder="รหัสผ่าน"
+            aria-label="password label"
+            formControlName="password"
+            [type]="hide ? 'password' : 'text'"
+            required
+          />
+
+          @if(formInitial.get('password')?.invalid ||
+          formInitial.get('password')?.touched){
+          <mat-error> *โปรดระบุ รหัสผ่าน</mat-error>
+          }
+
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon class="text-gray-500">
+              @if(hide){ visibility_off } @else { visibility }
+            </mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="col-12">
+        <button
+          class="reh-input-full-width reh-btn-blue"
+          style="height: 48px !important"
+
+          type="submit"
+          mat-raised-button
+        >
+          <!-- <mat-icon class="icon-lg">input</mat-icon> -->
+          <span style="font-size: 20px;">เข้าสู่ระบบ</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+
+  <div class="row">
+    <div class="divider-with-text">
+      <mat-divider></mat-divider>
+      <span class="divider-text mat-headline-6" style="margin-top: 8px;">หรือ</span>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button
+        class="reh-input-full-width reh-btn-green"
+        style="height: 48px !important"
+        type="submit"
+        mat-raised-button
+      >
+        <span style="font-size: 20px;">Provider ID</span>
+      </button>
+    </div>
+  </div>
+  <div class="row mt-1">
+    <div class="col-6">
+      <span class="mat-subtitle-1">Version 1.0.1 </span>
+    </div>
+
+    <div class="col-6" align="end">
+      <span class="mat-subtitle-1">© 2024 รพ.ร้อยเอ็ด</span>
+    </div>
+  </div>
+</mat-card>
