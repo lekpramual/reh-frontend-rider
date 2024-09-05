@@ -2,7 +2,7 @@
   <div style="padding: 0px !important">
     <div class="row align-items-center px-2" style="height: 48px">
       <div class="col-6">
-        <span class="mat-headline-6">ตั้งค่า - วอร์ด</span>
+        <span class="mat-headline-6 reh-txt-blue900">ตั้งค่า - วอร์ด</span>
       </div>
       <div class="col-6" align="end">
         <button mat-stroked-button class="reh-btn-green" (click)="onMessageChange()">
@@ -13,7 +13,8 @@
     <mat-divider> </mat-divider>
     <div class="row px-2 pt-3">
       <div class="col-12">
-        <div class="reh-form-sm">
+        <!-- class="reh-form-sm" -->
+        <div >
           <mat-form-field class="reh-input-full-width">
             <mat-label>ค้นหา วอร์ด</mat-label>
             <input matInput  type="text" (keyup)="applyFilter($event)" [(ngModel)]="searchValue" placeholder="ค้นหา วอร์ด" [ngModelOptions]="{ standalone: true }" #input>
@@ -23,6 +24,7 @@
             mat-icon-button
             aria-label="Clear"
             (click)="clearSearch()"
+            style="margin-right: 8px;"
           >
             <mat-icon>close</mat-icon>
           </button>
@@ -55,6 +57,15 @@
                 </mat-menu>
               </td>
             </ng-container>
+            <!-- <ng-container matColumnDef="star" sticky>
+              <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;"><strong>#</strong></th>
+              <td mat-cell *matCellDef="let element" style="pointer-events: none">
+                <button mat-icon-button class="btn-action-blue"  matTooltip="ปริ้น QRCODE" (click)="showPDF(element)" style="pointer-events: auto;">
+                  <mat-icon fontSet="material-icons-outlined" class="btn-action-blue">qr_code</mat-icon>
+
+                </button>
+              </td>
+            </ng-container> -->
 
             <ng-container matColumnDef="ward_id" >
               <th mat-header-cell *matHeaderCellDef mat-sort-header>

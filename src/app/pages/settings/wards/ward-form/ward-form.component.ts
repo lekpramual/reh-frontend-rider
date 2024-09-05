@@ -58,6 +58,7 @@ export class WardFormComponent implements OnInit{
 
     this.sideCreate.set(val)
   }
+
   @Input() set formdata(val:any){
     console.log(val);
 
@@ -82,6 +83,10 @@ export class WardFormComponent implements OnInit{
   @Output() messageChange = new EventEmitter<string>();
 
 
+  status = [
+    { id: '01', name: 'เปิดใช้งาน' },
+    { id: '02', name: 'ปิดใช้งาน' },
+  ];
 
   // Method to handle changes and emit the new value
   onMessageChange(newMessage: string) {
@@ -96,11 +101,13 @@ export class WardFormComponent implements OnInit{
   searchControl: FormControl = new FormControl();
 
 
-  constructor(private _snackBar: MatSnackBar) {}
+  constructor(private _snackBar: MatSnackBar) {
+
+  }
 
   ngOnInit(): void {
     // this.accessibleId = '';
-    // this.initForm();
+
   }
 
   async onSubmit() {
@@ -111,11 +118,13 @@ export class WardFormComponent implements OnInit{
         const data: any = {};
         data.name = this.formGroupData.value.emp_name;
 
-          this._snackBar.open(`คุณยกเลิกงาน เรียบร้อย`, '', {
-            duration:2500,
+          this._snackBar.open(`บันทึกข้อมูล เรียบร้อย`, '', {
+            duration:1500,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
             panelClass:['success-snackbar']
+          }).afterDismissed().subscribe(() => {
+            this.onMessageChange('close')
           });
       } catch (error: any) {
         // Handle error during form submission
@@ -136,9 +145,11 @@ export class WardFormComponent implements OnInit{
   initForm() {
     // console.log('Loadding ...',this.formDataSignal())
     // choice_depart choice_stamp
+    let statusId = this.formDataSignal()?.ward_status_id != '' ? this.formDataSignal()?.ward_status_id :'01';
     this.formGroupData = new FormGroup({
       ward_id: new FormControl(this.formDataSignal()?.ward_id, [Validators.required]),
       ward_name: new FormControl(this.formDataSignal()?.ward_name, [Validators.required]),
+      ward_status: new FormControl(statusId,[Validators.required]),
     });
   }
 

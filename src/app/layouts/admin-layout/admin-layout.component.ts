@@ -17,6 +17,9 @@ import { CustomSidenavSMComponent } from '../../components/custom-sidenav-sm/cus
 import { MenuItemComponent } from '../../components/menu-item/menu-item.component';
 import { MenuItemSMComponent } from '../../components/menu-item-sm/menu-item-sm.component';
 
+import { environment } from "@env/environment";
+import { RoleService } from "@core/services/role.service";
+
 @Component({
   selector: "app-admin-layout",
   templateUrl: "./admin-layout.component.html",
@@ -25,6 +28,14 @@ import { MenuItemSMComponent } from '../../components/menu-item-sm/menu-item-sm.
 export class AdminLayoutComponent implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('toggleButton') toggleButton!: ElementRef<HTMLButtonElement>;
+
+  defaultAccount = {
+    userId: "",
+    userName: "",
+    levelApp: "",
+    departId: "",
+    departName: "",
+  };
 
   subscription!: Subscription;
 
@@ -49,7 +60,7 @@ export class AdminLayoutComponent implements OnInit {
   sidenavWidth = computed(() => (this.isMenuOpened() ? "250px" : "65px"));
   // sidenavWidth = computed(() => (this.isBackDrop() ? !this.isMenuOpened()  ? "250px" :"250px" : this.isMenuOpened() ? "65px" : "250px"));
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute,private breakpointObserver: BreakpointObserver,private configService: ConfigService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,private breakpointObserver: BreakpointObserver,private configService: ConfigService,private role: RoleService,) {}
 
   ngOnInit() {
     this.breakpointObserver
@@ -82,6 +93,7 @@ export class AdminLayoutComponent implements OnInit {
     });
 
     this.titleApp = this.configService.getTitleApp();
+    this.initProfile(this.role.profile());
   }
 
   isActiveLink(link: string): boolean {
@@ -112,4 +124,33 @@ export class AdminLayoutComponent implements OnInit {
     this.isMenuOpened.set(false);
 
   }
+
+  logout() {
+    // Clear the authentication token and other sensitive data from session storage
+    localStorage.clear();
+    // Optionally, redirect the user to the login page
+    this.router.navigate(['/login']);
+  }
+
+  initProfile(data: any) {
+    this.defaultAccount.userName = data.userName;
+    this.defaultAccount.departName = data.departName;
+
+    const levelApp = parseInt(data.levelApp);
+    if(levelApp === 6){
+      this.defaultAccount.levelApp = "ผู้ดูแลระบบ";
+    }else if(levelApp === 5){
+      this.defaultAccount.levelApp = "ศูนย์ OPD";
+    }else if(levelApp === 4){
+      this.defaultAccount.levelApp = "ศูนย์ IPD";
+    }else if(levelApp === 3){
+      this.defaultAccount.levelApp = "เจ้าหน้าที่ OPD";
+    }else if(levelApp === 2){
+      this.defaultAccount.levelApp = "เจ้าหน้าที่ IPD";
+    }else{
+      this.defaultAccount.levelApp = "วอร์ด";
+    }
+
+  }
+
 }

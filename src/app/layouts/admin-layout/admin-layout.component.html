@@ -41,21 +41,20 @@
       class="avatar reh-profile-avatar"
     />
     <div class="reh-profile-content-title">
-      <label for=""><strong>ผู้ดูแลระบบ</strong></label>
-      <label for="">นายประมวล นัดทะยาย</label>
-
+      <label class="mat-subtitle-2">{{ defaultAccount.userName }}</label>
+      <label class="mat-subtitle-1 mb-0">{{ defaultAccount.levelApp }}</label>
     </div>
   </div>
   <mat-divider></mat-divider>
-  <button mat-menu-item>
+  <!-- <button mat-menu-item>
     <mat-icon class="material-icons-outlined">person</mat-icon>
     <span>ข้อมูลส่วนตัว</span>
   </button>
   <button mat-menu-item>
     <mat-icon class="material-icons-outlined">settings</mat-icon>
     <span>การตั้งค่า</span>
-  </button>
-  <button mat-menu-item>
+  </button> -->
+  <button mat-menu-item (click)="logout()">
     <mat-icon class="material-icons-outlined">logout</mat-icon>
     <span>ออกจากระบบ</span>
   </button>

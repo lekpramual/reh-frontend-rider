@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AuthGuard } from '@core/guards/auth.guard';
 
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
    {
     path: "",
     component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -53,7 +55,8 @@ const routes: Routes = [
         path: 'accessible',
         loadComponent : (() => import("../app/pages/accessible/accessible.component")),
       },
-      ],
+
+    ],
   },
 
   /*********************
@@ -64,10 +67,12 @@ const routes: Routes = [
     path: "auth",
     component: AuthLayoutComponent,
     children: [
+
       { path: "login", component: LoginComponent },
     ],
   },
   { path: "**", redirectTo: "auth/login" },
+
 ];
 
 @NgModule({

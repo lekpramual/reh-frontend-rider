@@ -90,7 +90,7 @@ export class UserFormComponent implements OnInit{
 
 
   departments = [
-    { id: 1, name: 'วอร์ด' },
+
     { id: 2, name: 'เจ้าหน้าที่ IPD' },
     { id: 3, name: 'เจ้าหน้าที่ OPD' },
     { id: 4, name: 'ศูนย์ OPD' },

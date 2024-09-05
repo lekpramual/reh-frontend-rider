@@ -4,6 +4,7 @@
 
 :root {
   --blue-color: #2196f3;
+  --blue900-color: #0D47A1;
   --primary-color: #153d77;
   --secondary-color: #6c757d;
   --white-color: #fff;
@@ -215,4 +216,9 @@ mat-sidenav-content {
   margin-bottom: 48px;
 }
 
+.mat-divider {
+  border-color: var(--blue900-color) !important;
+  border-top: 3px solid var(--blue900-color) !important;
+  height: 6px !important;
+}
 

@@ -18,7 +18,7 @@ import { WardList } from '../../../core/interface/ward.interface';
 export default class WardsComponent {
 
   // defualt false
-  isOpened = signal(false);
+  isOpened = signal(true);
 
   formData:WritableSignal<WardList> = signal({
     ward_id: '',

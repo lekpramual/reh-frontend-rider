@@ -2,18 +2,20 @@
   <div style="padding: 0px !important">
     <div class="row align-items-center px-2" style="height: 48px">
       <div class="col-6">
-        <span class="mat-headline-6">ตั้งค่า - เจ้าหน้าที่</span>
+        <span class="mat-headline-6 reh-txt-blue900">ตั้งค่า - เจ้าหน้าที่</span>
       </div>
       <div class="col-6" align="end">
         <button mat-stroked-button class="reh-btn-green" (click)="onMessageChange()">
           <mat-icon fontSet="material-icons-outlined">add</mat-icon>
           เจ้าหน้าที่ใหม่</button>
+
       </div>
     </div>
     <mat-divider> </mat-divider>
     <div class="row px-2 pt-3">
       <div class="col-12">
-        <div class="reh-form-sm">
+        <!-- class="reh-form-sm" -->
+        <div >
           <mat-form-field class="reh-input-full-width">
             <mat-label>ค้นหา เจ้าหน้าที่</mat-label>
             <input matInput type="text" (keyup)="applyFilter($event)" [(ngModel)]="searchValue" placeholder="ค้นหา เจ้าหน้าที่" [ngModelOptions]="{ standalone: true }" #input>
@@ -24,6 +26,7 @@
             mat-icon-button
             aria-label="Clear"
             (click)="clearSearch()"
+            style="margin-right: 8px;"
           >
             <mat-icon>close</mat-icon>
           </button>

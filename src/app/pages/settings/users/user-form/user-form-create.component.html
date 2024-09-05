@@ -1,5 +1,6 @@
+<!-- class="reh-form-sm" -->
 <form
-  class="reh-form-sm"
+
   [formGroup]="formGroupData"
   (ngSubmit)="onSubmit()"
 >
@@ -19,9 +20,9 @@
         </div>
         <div class="col-6 " align="center">
           @if(formDataSignal().emp_id != 0){
-          <span class="mat-headline-6">เจ้าหน้าที่ : {{ formDataSignal().emp_code }}</span>
+          <span class="mat-headline-6 reh-txt-blue900">เจ้าหน้าที่ : {{ formDataSignal().emp_code }}</span>
           }@else {
-          <span class="mat-headline-6">เพิ่มเจ้าหน้าที่ใหม่</span>
+          <span class="mat-headline-6 reh-txt-blue900">เพิ่มเจ้าหน้าที่ใหม่</span>
           }
         </div>
         <div class="col-3" align="end">
@@ -31,21 +32,21 @@
           </button>
         </div>
       </div>
-      <mat-divider />
+      <mat-divider> </mat-divider>
       <section class="form-container pt-2 px-2" tabindex="0">
         <section tabindex="0">
-          <div class="row" align="center">
+          <div class="row mb-2">
             <div class="col-12">
-              <span class="mat-subtitle-2">ข้อมูลเจ้าหน้าที่</span>
+              <span class="mat-subtitle-2 reh-txt-blue900">ข้อมูลเจ้าหน้าที่</span>
                 <mat-divider></mat-divider>
             </div>
           </div>
-          <div class="row mt-2">
-            <div class="col-4">
+          <div class="row">
+            <div class="col-3">
               <mat-form-field class="reh-input-full-width">
                 <mat-label>คำนำหน้า</mat-label>
                 <input
-                  style="font-size: 14px"
+
                   matInput
                   name="emp_title"
                   formControlName="emp_title"
@@ -66,7 +67,6 @@
               <mat-form-field class="reh-input-full-width">
                 <mat-label>ชื่อ</mat-label>
                 <input
-                  style="font-size: 14px"
                   matInput
                   name="emp_firstname"
                   formControlName="emp_firstname"
@@ -83,11 +83,10 @@
                 >
               </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-5">
               <mat-form-field class="reh-input-full-width">
                 <mat-label>นามสกุล</mat-label>
                 <input
-                  style="font-size: 14px"
                   matInput
                   name="emp_surname"
                   formControlName="emp_surname"
@@ -106,12 +105,26 @@
             </div>
 
           </div>
-          <div class="row mt-2">
+          <div class="row">
             <div class="col-6">
+              <mat-form-field class="reh-input-full-width">
+                <mat-label>เบอร์</mat-label>
+                <input
+
+                  matInput
+                  name="emp_tel"
+                  placeholder="เบอร์"
+                  formControlName="emp_tel"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-8">
               <mat-form-field class="reh-input-full-width">
                 <mat-label>ตำแหน่ง</mat-label>
                 <input
-                  style="font-size: 14px"
+
                   matInput
                   name="emp_position"
                   placeholder="ตำแหน่ง"
@@ -122,22 +135,11 @@
 
               </mat-form-field>
             </div>
-            <div class="col-6">
-              <mat-form-field class="reh-input-full-width">
-                <mat-label>เบอร์</mat-label>
-                <input
-                  style="font-size: 14px"
-                  matInput
-                  name="emp_tel"
-                  placeholder="เบอร์"
-                  formControlName="emp_tel"
-                />
-              </mat-form-field>
-            </div>
-          </div>
+          </div> -->
 
-          <div class="row">
-            <div class="col-12 text-center">
+
+          <!-- <div class="row">
+            <div class="col-8 text-center">
               <mat-form-field class="reh-input-full-width mt-2">
                 <mat-label>เลือก หน่วยงาน</mat-label>
 
@@ -175,7 +177,7 @@
 
 
             </div>
-          </div>
+          </div> -->
 
 
           <!-- <div class="row">
@@ -188,15 +190,12 @@
                   <span class="reh-txt-red">ยกเลิก</span>
                 }
               </mat-slide-toggle>
-
-
-
             </div>
           </div> -->
 
-          <div class="row g-3" align="center">
+          <div class="row g-3" >
             <div class="col-12">
-              <span class="mat-subtitle-2">ข้อมูลเข้าใช้งานระบบ</span>
+              <span class="mat-subtitle-2 reh-txt-blue900">ข้อมูลเข้าใช้งานระบบ</span>
                 <mat-divider></mat-divider>
             </div>
           </div>
@@ -207,7 +206,7 @@
               <mat-form-field class="reh-input-full-width">
                 <mat-label>ชื่อผู้ใช้งาน</mat-label>
                 <input
-                  style="font-size: 14px"
+
                   matInput
                   name="emp_user"
                   placeholder="ชื่อผู้ใช้งาน"
@@ -232,7 +231,7 @@
               <mat-form-field class="reh-input-full-width">
                 <mat-label>รหัสผ่าน</mat-label>
                 <input
-                  style="font-size: 14px"
+
                   matInput
                   name="emp_pass"
                   placeholder="รหัสผ่าน"

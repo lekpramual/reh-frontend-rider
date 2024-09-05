@@ -1,4 +1,6 @@
 import { Component, Input, computed, signal } from '@angular/core';
+import { RoleService } from '@core/services/role.service';
+import { MenuService } from '@core/services/menu.service';
 
 export type MenuItem = {
   icon:string;
@@ -19,54 +21,45 @@ export class CustomSidenavComponent {
     this.sideNavCollapsed.set(val)
   }
 
+  defaultAccount = {
+    userId: "",
+    userName: "",
+    levelApp: "",
+    departId: "",
+    departName: "",
+  };
 
 
-  menuItems = signal<MenuItem[]>([
-    {
-      icon: "dashboard",
-      label: "แดชบอร์ด",
-      route: "dashboard",
-    },
-    {
-      icon: "comment",
-      label: "ขอใช้เปล",
-      route: "accessible",
-    },
-    {
-      icon: "system_security_update",
-      label: "รับงาน",
-      route: "staff",
-    },
-    {
-      icon: "analytics",
-      label: "รายงาน",
-      route: "reports",
-    },
-    {
-      icon: "settings",
-      label: "ตั้งค่า",
-      route: "null",
-      subItems:[
-        {
-          icon: "domain_add",
-          label: "วอร์ด",
-          route: "settings/wards"
-        },
-        {
-          icon: "people",
-          label: "เจ้าหน้าที่",
-          route: "settings/users"
-        },
 
-        // {
-        //   icon: "post_add",
-        //   label: "Posts",
-        //   route: "posts"
-        // }
-      ]
+  menuItems = this.menu.menuManager();
 
-    },
-  ]);
+  constructor(private role: RoleService, private menu: MenuService) {
+    this.initProfile(this.role.profile());
+  }
+
+  initProfile(data: any) {
+    this.defaultAccount.userName = data.userName;
+    this.defaultAccount.departName = data.departName;
+
+    const levelApp = parseInt(data.levelApp);
+    if(levelApp === 6){
+      this.defaultAccount.levelApp = "ผู้ดูแลระบบ";
+    }else if(levelApp === 5){
+      this.defaultAccount.levelApp = "ศูนย์ OPD";
+    }else if(levelApp === 4){
+      this.defaultAccount.levelApp = "ศูนย์ IPD";
+    }else if(levelApp === 3){
+      this.defaultAccount.levelApp = "เจ้าหน้าที่ OPD";
+    }else if(levelApp === 2){
+      this.defaultAccount.levelApp = "เจ้าหน้าที่ IPD";
+    }else{
+      this.defaultAccount.levelApp = "วอร์ด";
+    }
+
+    console.log(this.menu.menuManager())
+
+  }
+
 
 
   profilePicSize = computed(() => (this.sideNavCollapsed() ? "64" : "32"));

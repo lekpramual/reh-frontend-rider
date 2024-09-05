@@ -5,9 +5,9 @@
     src="/assets/images/account.png"
   />
   <div class="header-text" [class.hide-header-text]="!sideNavCollapsed()">
-    <h2>ผู้ดูแลระบบ</h2>
-    <p>นายประมวล นัดทะยาย </p>
-
+    <h2 >{{ defaultAccount.userName }}</h2>
+    <p>{{ defaultAccount.levelApp }}</p>
+    <p>{{ defaultAccount.departName }}</p>
   </div>
 </div>
 <mat-nav-list role="list" class="sidenav-content" >
