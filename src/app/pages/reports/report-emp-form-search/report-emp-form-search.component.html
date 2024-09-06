@@ -1,12 +1,9 @@
 <form
-  class="reh-form-sm"
   [formGroup]="formGroupData"
   (ngSubmit)="onSubmit()"
 >
   <mat-card>
-
-
-      <mat-divider />
+      <!-- <mat-divider /> -->
       <section class="pt-2" tabindex="0" >
         <div class="row mt-3 mx-0 justify-content-center">
           <div class="col-6">
@@ -65,12 +62,12 @@
             <div class="col-6">
               <mat-form-field class="reh-input-full-width mt-2">
                 <mat-label>เลือก ประเภทเจ้าหน้าที่</mat-label>
-                <mat-select formControlName="emp_role_id" required style="font-size: 14px">
+                <mat-select formControlName="emp_role_id" required >
 
                   <mat-option
                     *ngFor="let dept of departments"
                     [value]="dept.id"
-                    style="font-size: 14px"
+
                   >
                     {{ dept.name }}
                   </mat-option>
@@ -89,9 +86,9 @@
           </div>
           <div class="row mx-0 mb-2  justify-content-center">
           <div class="col-6" align="end">
-            <button mat-stroked-button class="reh-btn-blue">
+            <button mat-fab extended class="reh-btn-blue">
               <mat-icon fontSet="material-icons-outlined">print</mat-icon>
-              แสดงรายงาน
+              <span class="mat-subtitle-2">แสดงรายงาน</span>
             </button>
           </div>
         </div>

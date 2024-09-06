@@ -24,7 +24,7 @@ interface Employee {
 export default class UsersComponent {
 
   // defualt false
-  isOpened = signal(false);
+  isOpened = signal(true);
 
   formData:WritableSignal<Employee> = signal({
     emp_id: 0,

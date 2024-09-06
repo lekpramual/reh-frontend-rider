@@ -14,6 +14,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AssetsService } from '@core/services/rest.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
 
@@ -116,6 +117,7 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   ];
 
   constructor(
+    public assets: AssetsService,
     public dialogRef: MatDialogRef<AccessibleFormAssignmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}

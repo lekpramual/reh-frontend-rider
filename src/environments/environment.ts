@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  APP_TITLE: "ระบบเบิกยาและสารน้ํา",
+  APP_TITLE: "ระบบขอใช้เปลออนไลน์",
   API_URL: "http://localhost:4200/",
   // node_api_url: "http://localhost:8089",
   node_api_url: "https://api.reh.go.th/comservice",

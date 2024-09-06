@@ -1,12 +1,11 @@
 <form
-  class="reh-form-sm"
   [formGroup]="formGroupData"
   (ngSubmit)="onSubmit()"
 >
   <mat-card>
 
 
-      <mat-divider />
+      <!-- <mat-divider /> -->
       <section class="pt-2" tabindex="0" >
         <div class="row mt-3 mx-0 justify-content-center">
           <div class="col-6">
@@ -71,11 +70,11 @@
           </div>
           <div class="row mx-0  justify-content-center">
             <div class="col-6">
-              <mat-form-field class="reh-input-full-width mt-2" style="font-size: 14px;">
+              <mat-form-field class="reh-input-full-width mt-2" >
                 <mat-label>เลือก วอร์ด</mat-label>
 
-                <mat-select formControlName="ward_depart" style="font-size: 14px">
-                  <mat-option style="font-size: 14px;">
+                <mat-select formControlName="ward_depart" >
+                  <mat-option >
                     <ngx-mat-select-search
                       [formControl]="searchControl"
                       placeholderLabel="ค้นหา วอร์ด"
@@ -88,7 +87,7 @@
                   </ngx-mat-select-search>
                 </mat-option>
                 @for (option of filteredOptions | async; track option) {
-                  <mat-option  [value]="option.id" style="font-size: 14px;"> {{ option.name }}</mat-option>
+                  <mat-option  [value]="option.id" > {{ option.name }}</mat-option>
                 }
 
                 </mat-select>
@@ -106,9 +105,9 @@
           </div>
           <div class="row mx-0 mb-2  justify-content-center">
           <div class="col-6" align="end">
-            <button mat-stroked-button class="reh-btn-blue">
+            <button mat-fab extended class="reh-btn-blue">
               <mat-icon fontSet="material-icons-outlined">print</mat-icon>
-              แสดงรายงาน
+              <span class="mat-subtitle-2">แสดงรายงาน</span>
             </button>
           </div>
         </div>

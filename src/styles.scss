@@ -215,4 +215,20 @@ mat-mdc-list-item:focus {
   border-radius: 10px;
 }
 
+.lj-viewer-wrapper {
+  border-radius: 12px;
+  margin: 8px 0;
+  border: 1px solid #c4c6d0;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+
+.ct-tab-group  {
+  --mdc-tab-indicator-active-indicator-color: var(--blue900-color);
+  --mat-tab-header-active-label-text-color: var(--blue900-color);
+  --mat-tab-header-active-ripple-color: var(--blue900-color);
+  --mat-tab-header-inactive-ripple-color: var(--blue900-color);
+}
+
 

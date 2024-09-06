@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, ReplaySubject, Subject, map, startWith, take, takeUntil } from 'rxjs';
 
@@ -61,7 +62,8 @@ export const BANKS: Bank[] = [
     MatRadioModule,
     MatIconModule,
     MatCardModule,
-    AsyncPipe
+    AsyncPipe,
+    MatTabsModule
   ]
 })
 export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDestroy {
@@ -89,10 +91,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   ];
 
-  optionworks:any[] = [
-    { value: 1, label: 'เช้า' },
-    { value: 2, label: 'บ่าย' },
-    { value: 3, label: 'ดึก' }
+  opds:any[] = [
+    { value: 1, label: 'กู้ชีพ' },
+    { value: 2, label: 'มาเอง' },
+    { value: 3, label: 'รถรีเฟอร์' },
+    { value: 4, label: 'ญาติ หรือ พลเมืองดี' }
   ];
 
   optiontypes:any[] = [
@@ -195,6 +198,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       ]),
       type: new FormControl('',[Validators.required]),
       status: new FormControl(null,[Validators.required]),
+      opd_status: new FormControl(null,[Validators.required]),
       select: new FormControl(null,[Validators.required]),
       out: new FormControl(null,[Validators.required]),
       work: new FormControl(null,[Validators.required]),

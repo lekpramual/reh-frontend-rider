@@ -1,4 +1,3 @@
-<!-- class="reh-form-sm" -->
 <form
 
   [formGroup]="formGroupData"
@@ -6,10 +5,10 @@
 >
   <mat-card>
     <div  style="padding: 0px !important">
-      <div class="row align-items-center px-2" style="height: 48px">
+      <div class="row align-items-center px-2" style="height: 56px">
         <div class="col-3">
           <button
-            mat-stroked-button
+            mat-fab extended
             class="reh-btn-red"
             type="button"
             (click)="onMessageChange('close')"
@@ -20,13 +19,13 @@
         </div>
         <div class="col-6 " align="center">
           @if(formDataSignal().ward_id != ''){
-          <span class="mat-headline-6 reh-txt-blue900">รหัสวอร์ด : {{ formDataSignal().ward_id }}</span>
+          <span class="mat-headline-5 reh-txt-blue900">รหัสวอร์ด : {{ formDataSignal().ward_id }}</span>
           }@else {
-          <span class="mat-headline-6 reh-txt-blue900">วอร์ดใหม่</span>
+          <span class="mat-headline-5 reh-txt-blue900">วอร์ดใหม่</span>
           }
         </div>
         <div class="col-3" align="end">
-          <button mat-stroked-button class="reh-btn-blue">
+          <button  mat-fab extended class="reh-btn-blue">
             <mat-icon fontSet="material-icons-outlined">save</mat-icon>
             บันทึก
           </button>

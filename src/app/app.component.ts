@@ -6,6 +6,7 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { MatSidenav } from '@angular/material/sidenav';
 import { Subscription, single } from 'rxjs';
 import { ConfigService } from './shared/services/config.service';
+import {environment} from '@env/environment';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +20,12 @@ export class AppComponent {
   subscription!: Subscription;
 
 
-  titleApp = '';
-  showFiller = false;
-
-  loading = false;
-
+  // Variable Data Default
+  titleApp:string = '';
+  loading:boolean = false;
   isMenuOpened = signal(true);
   isBackDrop = signal(false);
   isSidenavOpen = true;
-
   isSmallScreen: boolean = false;
 
   events: string[] = [];
@@ -37,7 +35,6 @@ export class AppComponent {
 
   collapsed = signal(false);
   sidenavWidth = computed(() => (this.isMenuOpened() ? "250px" : "65px"));
-  // sidenavWidth = computed(() => (this.isBackDrop() ? !this.isMenuOpened()  ? "250px" :"250px" : this.isMenuOpened() ? "65px" : "250px"));
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,private breakpointObserver: BreakpointObserver,private configService: ConfigService) {}
 
@@ -50,8 +47,6 @@ export class AppComponent {
         Breakpoints.XSmall,
       ])
       .subscribe((result) => {
-        // result.matches && !this.collapsed() ?   this.sidenavWidth = "65px" : this.sidenavWidth = '23px';
-
         this.isMenuOpened.set(!result.matches);
         this.isBackDrop.set(result.matches ? true : false);
 
@@ -71,7 +66,7 @@ export class AppComponent {
       }
     });
 
-    this.titleApp = this.configService.getTitleApp();
+    this.titleApp = environment.APP_TITLE;
   }
 
   isActiveLink(link: string): boolean {

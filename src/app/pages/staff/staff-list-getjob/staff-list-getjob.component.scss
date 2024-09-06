@@ -29,4 +29,10 @@ tr.example-element-row:not(.example-expanded-row):active {
   cursor: pointer;
 }
 
+.lj-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
+
 
