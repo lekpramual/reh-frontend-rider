@@ -4,32 +4,16 @@
   (ngSubmit)="onSubmit()"
 >
   <mat-card>
-    <div  style="padding: 0px !important">
+    <div  style="padding: 0px !important;">
       <div class="row align-items-center px-2" style="height: 56px">
-        <div class="col-3">
-          <button
-            mat-fab extended
-            class="reh-btn-red"
-            type="button"
-            (click)="onMessageChange('close')"
-          >
-            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-            ปิด
-          </button>
-        </div>
-        <div class="col-6 " align="center">
+        <div class="col-12 " align="center">
           @if(formDataSignal().ward_id != ''){
           <span class="mat-headline-5 reh-txt-blue900">รหัสวอร์ด : {{ formDataSignal().ward_id }}</span>
           }@else {
-          <span class="mat-headline-5 reh-txt-blue900">วอร์ดใหม่</span>
+          <span class="mat-headline-5 reh-txt-green">วอร์ดใหม่</span>
           }
         </div>
-        <div class="col-3" align="end">
-          <button  mat-fab extended class="reh-btn-blue">
-            <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-            บันทึก
-          </button>
-        </div>
+
       </div>
       <mat-divider />
       <section class="form-container pt-2 px-2" tabindex="0">
@@ -85,6 +69,27 @@
 
         </section>
       </section>
+
+      <mat-divider></mat-divider>
+      <div class="row px-2 py-2">
+        <div class="col-6">
+          <button
+            mat-fab extended
+            class="reh-btn-red"
+            type="button"
+            (click)="onMessageChange('close')"
+          >
+            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+            ปิด
+          </button>
+        </div>
+        <div class="col-6" align="end">
+          <button  mat-fab extended class="reh-btn-blue">
+            <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+            บันทึก
+          </button>
+        </div>
+      </div>
     </div>
   </mat-card>
 </form>

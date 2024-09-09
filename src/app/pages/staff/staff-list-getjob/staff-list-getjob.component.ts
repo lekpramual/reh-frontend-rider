@@ -61,7 +61,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 export default class StaffListGetJobComponent{
 
-  displayedColumns = ['date', 'type', 'name', 'equipment', 'in'];
+  displayedColumns = ['date', 'type', 'name', 'equipment', 'in','actions'];
   dataSource = ELEMENT_DATA;
 
   constructor(

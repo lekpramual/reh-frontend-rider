@@ -3,8 +3,8 @@
     <app-user-list [sideopen]="isOpened()" (messageChange)="onMessageChange($event)" (formChange)="onFormData($event)"/>
   </div>
   @if(isOpened()){
-    <div  class="col-lg-6 col-md-12">
-      <app-user-form-create [sideopen]="isOpened()" [formdata]="formData()" (messageChange)="onMessageChange($event)"   />
+    <div class="col-lg-6 col-md-12 mb-md-4 mb-sm-4">
+      <app-user-form-create [sideopen]="isOpened()" [formdata]="formData()" (messageChange)="onMessageChange($event)" @sidenavAnimation  />
     </div>
   }
 

@@ -3,34 +3,17 @@
   <mat-card>
     <div style="padding: 0px !important">
       <div class="row align-items-center px-2" style="height: 56px">
-        <div class="col-3">
-          <button
-            mat-fab
-            extended
-            class="reh-btn-red"
-            type="button"
-            (click)="onMessageChange('close')"
-          >
-            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-            <span class="mat-subtitle-2">ปิด</span>
-          </button>
-        </div>
-        <div class="col-6" align="center">
+
+        <div class="col-12" align="center">
           @if(formDataSignal().emp_id != 0){
           <span class="mat-headline-5 reh-txt-blue900"
             >เจ้าหน้าที่ : {{ formDataSignal().emp_code }}</span
           >
           }@else {
-          <span class="mat-headline-5 reh-txt-blue900"
+          <span class="mat-headline-5 reh-txt-green"
             >เพิ่มเจ้าหน้าที่ใหม่</span
           >
           }
-        </div>
-        <div class="col-3" align="end">
-          <button mat-fab extended class="reh-btn-blue">
-            <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-            <span class="mat-subtitle-2">บันทึก</span>
-          </button>
         </div>
       </div>
       <mat-divider> </mat-divider>
@@ -226,7 +209,7 @@
               </div>
             </div>
 
-            <div class="row mt-3 justify-content-center">
+            <div class="row mt-3">
               <div class="col-6">
                 <mat-form-field class="reh-input-full-width">
                   <mat-label>ชื่อผู้ใช้งาน</mat-label>
@@ -248,8 +231,6 @@
                   >
                 </mat-form-field>
               </div>
-            </div>
-            <div class="row justify-content-center">
               <div class="col-6">
                 <mat-form-field class="reh-input-full-width">
                   <mat-label>รหัสผ่าน</mat-label>
@@ -272,8 +253,32 @@
                 </mat-form-field>
               </div>
             </div>
+
           </div>
         </section>
+        <mat-divider></mat-divider>
+        <div class="row px-2 py-2">
+          <div class="col-6">
+            <button
+              mat-fab
+              extended
+              class="reh-btn-red"
+              type="button"
+              (click)="onMessageChange('close')"
+            >
+              <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+              <span class="mat-subtitle-2">ปิด</span>
+            </button>
+          </div>
+
+          <div class="col-6" align="end">
+            <button mat-fab extended class="reh-btn-blue">
+              <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+              <span class="mat-subtitle-2">บันทึก</span>
+            </button>
+          </div>
+
+        </div>
       </section>
     </div>
   </mat-card>

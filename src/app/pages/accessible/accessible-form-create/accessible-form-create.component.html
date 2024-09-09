@@ -1,4 +1,4 @@
-<div mat-dialog-title style="display: flex; align-items: center; height: 48px">
+<div mat-dialog-title style="display: flex; align-items: center;justify-content: center; height: 48px">
   <span class="mat-headline-5 btn-action-green mb-0">ขอใช้เปลใหม่</span>
 </div>
 <mat-divider></mat-divider>
@@ -320,23 +320,28 @@
     </div> -->
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions align="end">
-    <!-- <button mat-button (click)="onNoClick()">ยกเลิก</button> -->
-    <button mat-fab extended class="reh-btn-red" (click)="onNoClick()">
-      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-      <span class="mat-subtitle-2">ปิดหน้าจอ</span>
-    </button>
+  <mat-dialog-actions class="row">
 
-    <!-- <button mat-button  type="submit" cdkFocusInitial>บันทึก</button> -->
-    <button
-      mat-fab
-      extended
-      class="reh-btn-green"
-      type="submit"
-      cdkFocusInitial
-    >
-      <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-      <span class="mat-subtitle-2">คำขอใช้เปลใหม่</span>
-    </button>
+      <div class="col-6">
+        <button mat-fab extended class="reh-btn-red" (click)="onNoClick()">
+          <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+          <span class="mat-subtitle-2">ปิดหน้าจอ</span>
+        </button>
+      </div>
+      <div class="col-6" align="end">
+        <button
+        mat-fab
+        extended
+        class="reh-btn-green"
+        type="submit"
+        cdkFocusInitial
+      >
+        <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+        <span class="mat-subtitle-2">คำขอใช้เปลใหม่</span>
+      </button>
+      </div>
+
+
+
   </mat-dialog-actions>
 </form>

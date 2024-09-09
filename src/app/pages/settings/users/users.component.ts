@@ -1,6 +1,7 @@
 import { Component, WritableSignal, signal } from '@angular/core';
 import { UserFormComponent } from './user-form/user-form-create.component';
 import UserListComponent from './user-list/user-list.component';
+import { state, style, transition, trigger,animate } from '@angular/animations';
 
 
 interface Employee {
@@ -19,12 +20,27 @@ interface Employee {
   imports:[
     UserListComponent,
     UserFormComponent
+  ],
+  animations:[
+
+    trigger('sidenavAnimation', [
+      state('side', style({
+        transform: 'translateX(0)'
+      })),
+      state('over', style({
+        transform: 'translateX(-100%)'
+      })),
+      transition('side <=> over', [
+        animate('500ms ease-in-out', style({opacity:0, height:'0px'}))
+      ])
+    ])
+
   ]
 })
 export default class UsersComponent {
 
   // defualt false
-  isOpened = signal(true);
+  isOpened = signal(false);
 
   formData:WritableSignal<Employee> = signal({
     emp_id: 0,

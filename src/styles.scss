@@ -231,4 +231,11 @@ mat-mdc-list-item:focus {
   --mat-tab-header-inactive-ripple-color: var(--blue900-color);
 }
 
+.lj-txt-dot {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // display: block;
+    // width: 100%;
+}
 

@@ -70,11 +70,10 @@ $reh-typography-config: mat.define-typography-config(
   $headline-4: mat.define-typography-level(34px, 40px, 400,$heading-font-family),
   $headline-5: mat.define-typography-level(24px, 32px, 400,$heading-font-family),
   $headline-6: mat.define-typography-level(20px, 32px, 400,$heading-font-family),
-  $subtitle-1: mat.define-typography-level(16px, 28px, 400),
-  $subtitle-2: mat.define-typography-level(16px, 28px, 400,$heading-font-family),
+  $subtitle-1: mat.define-typography-level(18px, 28px, 400),
+  $subtitle-2: mat.define-typography-level(18px, 28px, 400,$heading-font-family),
   $body-1: mat.define-typography-level(20px, 20px, 400),
   $body-2: mat.define-typography-level(20px, 20px, 400),
-
   $caption: mat.define-typography-level(20px, 20px, 400),
 );
 
@@ -185,10 +184,16 @@ mat-sidenav-content {
   align-items: center;
 }
 
+.mat-mdc-cell{
+  border-bottom-color: #c4c6d0 !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+}
+
 .mat-mdc-row .mat-mdc-cell {
   border-bottom: 1px solid transparent;
   border-top: 1px solid transparent;
-  cursor: pointer;
+  // cursor: pointer;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
@@ -221,5 +226,19 @@ mat-sidenav-content {
   border-color: var(--blue900-color) !important;
   border-top: 3px solid var(--blue900-color) !important;
   height: 6px !important;
+}
+
+.mat-mdc-tab-label-container {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  z-index: 1;
+  border-bottom-style: solid;
+  border-bottom-width: 1px !important;
+  border-bottom-color: #e0e2ec !important;
+}
+
+.mat-mdc-mini-fab  {
+  border-radius: 12px !important;
 }
 

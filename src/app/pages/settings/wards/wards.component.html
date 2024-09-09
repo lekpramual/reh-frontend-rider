@@ -3,7 +3,7 @@
     <app-ward-list [sideopen]="isOpened()" (messageChange)="onMessageChange($event)" (formChange)="onFormData($event)"/>
   </div>
   @if(isOpened()){
-    <div  class="col-lg-4 col-md-12">
+    <div  class="col-lg-4 col-md-12 mb-md-4 mb-sm-4">
       <app-ward-form [sideopen]="isOpened()" [formdata]="formData()" (messageChange)="onMessageChange($event)"   />
     </div>
   }

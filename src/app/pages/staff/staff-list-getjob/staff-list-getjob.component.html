@@ -2,7 +2,7 @@
   <div style="padding: 0px !important;">
     <div class="row" style="padding: 10px;">
       <div class="col-12">
-        <span class="mat-headline-6">รับงาน</span>
+        <span class="mat-headline-5 reh-txt-blue900">รับงาน</span>
       </div>
 
     </div>
@@ -32,8 +32,14 @@
               </td>
             </ng-container> -->
 
+            <ng-container matColumnDef="date" >
+              <th mat-header-cell *matHeaderCellDef style="width: 120px;"> <span class="mat-subtitle-2">รับงาน</span> </th>
+              <td mat-cell *matCellDef="let element">
+                <span class="mat-subtitle-1"> {{element.time}}</span>
+              </td>
+            </ng-container>
             <ng-container matColumnDef="type">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> <strong>ประเภท</strong> </th>
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> <span class="mat-subtitle-2">ประเภท</span> </th>
               <td mat-cell *matCellDef="let element">
 
                   <mat-chip style="width: 124px;" [class]="{
@@ -42,18 +48,18 @@
                     'reh-chip-orange' : element.type_id == 3,
                     'reh-chip-red' : element.type_id == 4,
                   }">
-                    <span class="label">{{element.type}}</span>
+                    <span class="label mat-subtitle-1">{{element.type}}</span>
                   </mat-chip>
               </td>
             </ng-container>
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef > <strong>ชื่อ</strong> </th>
-              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              <th mat-header-cell *matHeaderCellDef > <span class="mat-subtitle-2">ชื่อ</span> </th>
+              <td mat-cell *matCellDef="let element"> <span class="mat-subtitle-1">{{element.name}}</span> </td>
             </ng-container>
 
             <ng-container matColumnDef="equipment">
-              <th mat-header-cell *matHeaderCellDef > <strong>อุปกรณ์</strong> </th>
-              <td mat-cell *matCellDef="let element"> {{element.equipment}} </td>
+              <th mat-header-cell *matHeaderCellDef > <span class="mat-subtitle-2">อุปกรณ์</span> </th>
+              <td mat-cell *matCellDef="let element"> <span class="mat-subtitle-1">{{element.equipment}}</span> </td>
             </ng-container>
 
             <!-- Symbol Column -->
@@ -61,21 +67,33 @@
               <th mat-header-cell *matHeaderCellDef> <strong>รับ-ส่ง</strong> </th>
               <td mat-cell *matCellDef="let element">
                 <div class="row">
-                  <div class="col-12"><strong>รับ:</strong> {{element.in}} </div>
-                  <div class="col-12"><strong>ส่ง:</strong> {{element.out}} </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">รับ: </span> <span class="mat-subtitle-1">{{ element.in }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">ส่ง: </span> <span classs="mat-subtitle-1">{{ element.out }}</span>
+                  </div>
                 </div>
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef > <strong>รับงาน</strong> </th>
+
+            <ng-container matColumnDef="actions" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;"><span class="mat-subtitle-2">#</span></th>
               <td mat-cell *matCellDef="let element">
-                <span class="h4"> {{element.time}}</span>
+                <div class="row">
+                  <div class="col-12">
+                    <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green" (click)="clickedJob(element)">
+                      <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+                    </button>
+                  </div>
+
+                </div>
               </td>
             </ng-container>
 
             <tr mat-header-row  *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row (click)="clickedJob(row)" class="example-element-row"   *matRowDef="let row; columns: displayedColumns;">
+            <tr mat-row    *matRowDef="let row; columns: displayedColumns;">
 
             </tr>
           </table>

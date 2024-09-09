@@ -61,7 +61,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 export default class AccessibleListGetJobComponent{
 
-  displayedColumns = ['star','date', 'type', 'name', 'equipment', 'in'];
+  displayedColumns = ['date', 'type', 'name', 'equipment', 'in','star'];
   dataSource = ELEMENT_DATA;
 
   constructor(

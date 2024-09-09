@@ -1,8 +1,8 @@
 <div
   mat-dialog-title
-  style="display: flex; align-items: center;height: 48px;"
+  style="display: flex; align-items: center;justify-content: center;height: 48px;"
 >
-<span class="mat-headline-5 btn-action-blue mb-0">จ่ายงาน เลขที่ : J1000</span>
+  <span class="mat-headline-5 btn-action-blue mb-0">จ่ายงาน เลขที่ : J1000</span>
 
 </div>
 <mat-divider></mat-divider>
@@ -11,27 +11,45 @@
     <div class="lj-viewer-wrapper">
       <div class="row">
         <div class="col-12">
-            <span class="mat-headline-5 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+            <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
             <mat-divider></mat-divider>
         </div>
       </div>
+
       <div class="row">
-        <div class="col-6"><strong>ชื่อ: </strong>น.ส.เกษร เหนือโท</div>
-        <div class="col-6"><strong>เวลา: </strong>11:20</div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">ชื่อ: </span
+          ><span class="mat-subtitle-1">น.ส.เกษร เหนือโท</span>
+        </div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">เวลา: </span
+          ><span class="mat-subtitle-1">11:20</span>
+        </div>
       </div>
       <div class="row">
         <div class="col-6">
-          <strong>ประเภท: </strong><span class="reh-txt-green">ปกติ [0-60]</span>
+          <span class="mat-subtitle-2">ประเภท: </span
+          ><span class="reh-txt-green mat-subtitle-1">ปกติ [0-60]</span>
         </div>
-        <div class="col-6"><strong>อุปกรณ์: </strong>เปลนอน</div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">อุปกรณ์: </span
+          ><span class="mat-subtitle-1">เปลนอน</span>
+        </div>
       </div>
       <div class="row">
-        <div class="col-12"><strong>จุดรับ: </strong>เปลนอน</div>
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดรับ: </span
+          ><span class="mat-subtitle-1">มาเอง</span>
+        </div>
       </div>
       <div class="row">
-        <div class="col-12"  ><strong>จุดส่ง: </strong>ส่งผู้ป่วยกลับบ้าน</div>
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดส่ง: </span
+          ><span class="mat-subtitle-1">ส่งผู้ป่วยกลับบ้าน</span>
+        </div>
       </div>
     </div>
+
     <div class="lj-viewer-wrapper">
       <div class="row mt-2 mb-3">
         <div class="col-12">
@@ -131,7 +149,7 @@
   </div>
   </mat-dialog-content>
   <mat-divider></mat-divider>
-  <mat-dialog-actions align="end">
+  <mat-dialog-actions align="center">
     <!-- <button mat-button (click)="onNoClick()">ยกเลิก</button> -->
     <button
       mat-fab

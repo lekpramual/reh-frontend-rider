@@ -89,7 +89,7 @@ export default class UserListComponent{
     //  this.sideCreate.set(true)
    }
 
-  displayedColumns = ['emp_code','emp_name','emp_tel', 'emp_role_name', 'emp_status_name','emp_date'];
+  displayedColumns = ['emp_code','emp_name','emp_tel', 'emp_role_name', 'emp_status_name','emp_date','actions'];
 
   // dataSource = UserData;
 

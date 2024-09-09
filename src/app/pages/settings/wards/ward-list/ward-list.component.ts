@@ -796,11 +796,12 @@ export default class WardListComponent implements  AfterViewInit{
     //  this.sideCreate.set(true)
   }
   displayedColumns: string[] = [
-    'star',
+
     'ward_id',
     'ward_name',
     'ward_status_name',
     'ward_date',
+    'actions',
   ];
 
 
@@ -943,12 +944,12 @@ export default class WardListComponent implements  AfterViewInit{
     });
 
     doc.addFont(
-      this.assets.assets() + '/fonts/FC_Iconic/FC_Iconic_Regular.ttf',
+      this.assets.assets() + '/fonts/THSarabunNew/THSarabunNew.ttf',
       'THSarabun',
       'normal'
     );
     doc.addFont(
-      this.assets.assets() + '/fonts/FC_Iconic/FC_Iconic_Bold.ttf',
+      this.assets.assets() + '/fonts/THSarabunNew/THSarabunNew Bold.ttf',
       'THSarabun',
       'bold'
     );

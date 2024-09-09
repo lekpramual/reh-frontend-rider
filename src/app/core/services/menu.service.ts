@@ -29,8 +29,9 @@ export class MenuService {
   }
 
   public menuManager(){
-    // const levelData = parseInt(this.levelApp);
-    const levelData = parseInt('5');
+
+    // TODO Staff
+    const levelData = parseInt('6');
 
     console.log(levelData);
     if(levelData === 6){

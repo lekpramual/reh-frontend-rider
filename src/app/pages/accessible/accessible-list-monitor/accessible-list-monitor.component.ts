@@ -79,8 +79,8 @@ const ELEMENT_MONI_DATA: MoniElement[] = [
 })
 
 export default class AccessibleListMonitorComponent {
-  displayedColumns = ['star','date', 'type', 'name', 'equipment', 'in'];
-  displayedColumnsMoni = ['star','status', 'type','date','date_end','officer', 'name', 'equipment', 'in'];
+  displayedColumns = ['date', 'type', 'name', 'equipment', 'in','star'];
+  displayedColumnsMoni = ['status', 'type','date','date_end','officer', 'name', 'equipment', 'in','star'];
   dataSource = ELEMENT_DATA;
   dataSourceMoni = ELEMENT_MONI_DATA;
 
