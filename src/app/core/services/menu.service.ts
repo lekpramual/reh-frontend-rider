@@ -29,8 +29,6 @@ export class MenuService {
   }
 
   public menuManager(){
-
-    // TODO Staff
     const levelData = parseInt('6');
 
     console.log(levelData);

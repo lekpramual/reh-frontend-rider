@@ -119,9 +119,7 @@ export class ReportEmpFormSearchComponent implements OnInit {
 
   departments = [
     { id: 2, name: 'เจ้าหน้าที่ IPD' },
-    { id: 3, name: 'เจ้าหน้าที่ OPD' },
-    { id: 4, name: 'ศูนย์ OPD' },
-    { id: 5, name: 'ศูนย์ IPD' },
+    { id: 3, name: 'เจ้าหน้าที่ OPD' }
   ];
 
   options: any[] = [

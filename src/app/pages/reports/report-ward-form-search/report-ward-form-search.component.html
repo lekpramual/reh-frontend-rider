@@ -101,6 +101,41 @@
               </mat-form-field>
             </div>
           </div>
+          <div class="row mx-0  justify-content-center">
+            <div class="col-6">
+              <mat-form-field class="reh-input-full-width mt-2" >
+                <mat-label>เลือก ประเภท</mat-label>
+
+                <mat-select formControlName="ward_quick" >
+                  <mat-option >
+                    <ngx-mat-select-search
+                      [formControl]="searchQuickControl"
+                      placeholderLabel="ค้นหา ประเภท"
+                      [preventHomeEndKeyPropagation]="true"
+
+                    >
+                        <span  ngxMatSelectNoEntriesFound>
+                          ไม่พบข้อมูล
+                        </span>
+                  </ngx-mat-select-search>
+                </mat-option>
+                @for (option of filteredOptionquicks | async; track option) {
+                  <mat-option  [value]="option.id" > {{ option.name }}</mat-option>
+                }
+
+                </mat-select>
+
+                <mat-error
+                  *ngIf="
+                    formGroupData.get('ward_quick')?.invalid ||
+                    formGroupData.get('ward_quick')?.touched
+                  "
+                >
+                  *โปรดเลือก ประเภท</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
           <mat-divider></mat-divider>
           <div class="row mx-0 mb-2  justify-content-center">
           <div class="col-6" align="center">

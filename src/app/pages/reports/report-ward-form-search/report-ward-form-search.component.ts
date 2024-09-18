@@ -118,6 +118,7 @@ export class ReportWardFormSearchComponent implements OnInit {
     ward_start: '',
     ward_end: '',
     ward_depart: '',
+    ward_quick: '',
   });
 
   wards: any[] = [
@@ -129,12 +130,24 @@ export class ReportWardFormSearchComponent implements OnInit {
     { name: 'หน่วยงาน 5', id: 5 },
   ];
 
+
+  quicks: any[] = [
+    { name: 'ทั้งหมด', id: 0 },
+    { name: 'Start (ปกติ)', id: 1 },
+    { name: 'Start (ด่วน) เพื่อเตรียมผู้ป่วยทำหัตถการ', id: 2 },
+    { name: 'Start (ด่วน) เฉพาะผู้ป่วยที่มีอาการชั้นวิกฤติ', id: 3 }
+  ];
+
+
+
   accessibleId: string = '';
   currentDate = new Date();
   formGroupData!: FormGroup;
 
   filteredOptions!: Observable<any[]>;
+  filteredOptionquicks!: Observable<any[]>;
   searchControl: FormControl = new FormControl();
+  searchQuickControl: FormControl = new FormControl();
 
   // date max min
   maxDate!: Date;
@@ -173,6 +186,11 @@ export class ReportWardFormSearchComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+
+    this.filteredOptionquicks = this.searchQuickControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterquicks(value))
+    );
   }
 
   async onSubmit() {
@@ -185,6 +203,7 @@ export class ReportWardFormSearchComponent implements OnInit {
         let ward_start = this.formGroupData.value.ward_start;
         let ward_end = this.formGroupData.value.ward_end;
         let ward_depart = this.formGroupData.value.ward_depart;
+        let ward_quick = this.formGroupData.value.ward_quick;
 
 
         this.showPDF(ward_start, ward_end,ward_depart);
@@ -722,6 +741,7 @@ export class ReportWardFormSearchComponent implements OnInit {
       ward_start: new FormControl(this.currentDate, [Validators.required]),
       ward_end: new FormControl(this.currentDate, [Validators.required]),
       ward_depart: new FormControl(0, [Validators.required]),
+      ward_quick: new FormControl(0, [Validators.required]),
     });
   }
 
@@ -744,6 +764,12 @@ export class ReportWardFormSearchComponent implements OnInit {
   private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
     return this.wards.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+  private _filterquicks(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    return this.quicks.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }

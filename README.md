@@ -52,3 +52,6 @@ my-angular-project/
 ├── package.json                # NPM package configuration
 ├── tsconfig.json               # TypeScript configuration
 └── tslint.json                 # TSLint configuration (if using TSLint)
+
+
+
