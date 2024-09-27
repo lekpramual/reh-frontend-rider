@@ -122,7 +122,6 @@ export class ReportWardFormSearchComponent implements OnInit {
   });
 
   wards: any[] = [
-    { name: 'ทั้งหมด', id: 0 },
     { name: 'หน่วยงาน 1', id: 1 },
     { name: 'หน่วยงาน 2', id: 2 },
     { name: 'หน่วยงาน 3', id: 3 },
