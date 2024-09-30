@@ -29,7 +29,7 @@ export class MenuService {
   }
 
   public menuManager(){
-    const levelData = parseInt('6');
+    const levelData = parseInt('0');
 
     console.log(levelData);
     if(levelData === 6){
