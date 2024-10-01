@@ -176,7 +176,7 @@ export class MenuService {
         {
           icon: "comment",
           label: "ขอใช้เปล",
-          route: "accessible",
+          route: "ward/accessible",
         },
         {
           icon: "analytics",

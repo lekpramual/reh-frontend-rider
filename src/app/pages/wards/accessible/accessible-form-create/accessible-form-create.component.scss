@@ -1,0 +1,19 @@
+.divider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.mat-divider {
+  width: 100%;
+}
+
+.divider-title {
+  position: absolute;
+  background-color: white; /* Match background color to hide divider behind text */
+  padding: 0 10px;
+  font-weight: bold;
+}
+

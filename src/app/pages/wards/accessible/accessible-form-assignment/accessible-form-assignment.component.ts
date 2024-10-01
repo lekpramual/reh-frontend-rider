@@ -1,6 +1,7 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
@@ -10,43 +11,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AssetsService } from '@core/services/rest.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { Observable, ReplaySubject, Subject, map, startWith, take, takeUntil } from 'rxjs';
-
-export interface Bank {
-  id: string;
-  name: string;
-}
-
-/** list of banks */
-export const BANKS: Bank[] = [
-  {name: 'Bank A (Switzerland)', id: 'A'},
-  {name: 'Bank B (Switzerland)', id: 'B'},
-  {name: 'Bank C (France)', id: 'C'},
-  {name: 'Bank D (France)', id: 'D'},
-  {name: 'Bank E (France)', id: 'E'},
-  {name: 'Bank F (Italy)', id: 'F'},
-  {name: 'Bank G (Italy)', id: 'G'},
-  {name: 'Bank H (Italy)', id: 'H'},
-  {name: 'Bank I (Italy)', id: 'I'},
-  {name: 'Bank J (Italy)', id: 'J'},
-  {name: 'Bank Kolombia (United States of America)', id: 'K'},
-  {name: 'Bank L (Germany)', id: 'L'},
-  {name: 'Bank M (Germany)', id: 'M'},
-  {name: 'Bank N (Germany)', id: 'N'},
-  {name: 'Bank O (Germany)', id: 'O'},
-  {name: 'Bank P (Germany)', id: 'P'},
-  {name: 'Bank Q (Germany)', id: 'Q'},
-  {name: 'Bank R (Germany)', id: 'R'}
-];
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-accessible-form-create',
+  selector: 'app-accessible-form-assignment',
   standalone: true,
-  templateUrl: './accessible-form-create.component.html',
-  styleUrl: './accessible-form-create.component.scss',
+  templateUrl: './accessible-form-assignment.component.html',
+  styleUrl: './accessible-form-assignment.component.scss',
   imports:[
     CommonModule,
     FormsModule,
@@ -58,23 +34,23 @@ export const BANKS: Bank[] = [
     MatDialogModule,
     MatButtonToggleModule,
     MatSelectModule,
+    MatSelectModule,
     NgxMatSelectSearchModule,
     MatRadioModule,
     MatIconModule,
     MatCardModule,
-    AsyncPipe,
-    MatTabsModule
+    MatBadgeModule,
+    MatTooltipModule,
+
+
   ]
 })
-export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDestroy {
-
+export class AccessibleFormAssignmentComponent implements OnInit{
 
   accessibleId: string = "";
   formAccessible!: FormGroup;
 
-  // filteredOptions!: Observable<any[]>;
-
-  filteredOptions!: Observable<Bank[]>;
+  filteredOptions!: Observable<any[]>;
   searchControl: FormControl = new FormControl();
 
   /** list of banks */
@@ -91,11 +67,10 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   ];
 
-  opds:any[] = [
-    { value: 1, label: 'กู้ชีพ' },
-    { value: 2, label: 'มาเอง' },
-    { value: 3, label: 'รถรีเฟอร์' },
-    { value: 4, label: 'ญาติ หรือ พลเมืองดี' }
+  optionworks:any[] = [
+    { value: 1, label: 'เช้า' },
+    { value: 2, label: 'บ่าย' },
+    { value: 3, label: 'ดึก' }
   ];
 
   optiontypes:any[] = [
@@ -141,15 +116,9 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   }
   ];
 
-  optionworks:any[] = [
-    { value: 1, label: 'เช้า' },
-    { value: 2, label: 'บ่าย' },
-    { value: 3, label: 'ดึก' }
-  ];
-
-
   constructor(
-    public dialogRef: MatDialogRef<AccessibleFormCreateComponent>,
+    public assets: AssetsService,
+    public dialogRef: MatDialogRef<AccessibleFormAssignmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -161,15 +130,6 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       startWith(''),
       map(value => this._filter(value))
     );
-  }
-
-  ngAfterViewInit() {
-    // this.setInitialValue();
-  }
-
-  ngOnDestroy() {
-    // this._onDestroy.next();
-    // this._onDestroy.complete();
   }
 
   async onSubmit() {
@@ -204,7 +164,6 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       ]),
       type: new FormControl('',[Validators.required]),
       status: new FormControl(null,[Validators.required]),
-      opd_status: new FormControl(null,[Validators.required]),
       select: new FormControl(null,[Validators.required]),
       out: new FormControl(null,[Validators.required]),
       work: new FormControl(null,[Validators.required]),
@@ -219,5 +178,6 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
   }
+
 
 }

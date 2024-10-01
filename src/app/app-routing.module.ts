@@ -56,6 +56,12 @@ const routes: Routes = [
         loadComponent : (() => import("../app/pages/accessible/accessible.component")),
       },
 
+
+      {
+        path: 'ward/accessible',
+        loadComponent : (() => import("../app/pages/wards/accessible/accessible.component")),
+      },
+
     ],
   },
 
