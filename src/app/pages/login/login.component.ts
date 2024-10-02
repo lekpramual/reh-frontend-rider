@@ -16,6 +16,8 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatCardModule } from "@angular/material/card";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {environment} from "@env/environment";
+import { AuthService } from "@core/services/auth.service";
+import { firstValueFrom } from "rxjs";
 
 @Component({
   selector: "app-login",
@@ -50,7 +52,7 @@ export class LoginComponent implements OnInit {
   formInitial!: FormGroup;
 
   constructor(
-
+    public _authService: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
   ) {}
@@ -64,14 +66,15 @@ export class LoginComponent implements OnInit {
       // Handle form submission
       try {
         // Handle successful form submission
+        let response = await firstValueFrom(
+          this._authService.login(this.formInitial.value)
+        );
 
-        const username = this.formInitial.controls['username'].value;
-        const password = this.formInitial.controls['password'].value;
-        if (username === 'admin' && password === 'abc123==') {
+        if (response.token) {
+          let _token = response.token;
+          this.error = null;
 
-          const tokens = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2NywidXNlck5hbWUiOiLguJvguKPguLDguKHguKfguKUg4LiZ4Lix4LiU4LiX4Liw4Lii4Liy4LiiIiwibGV2ZWxBcHAiOjYsImRlcGFydElkIjoiMDE0IiwiZGVwYXJ0TmFtZSI6IkExMzAwLeC4q-C4meC5iOC4p-C4ouC4h-C4suC4meC4qOC4ueC4meC4ouC5jOC4hOC4reC4oeC4nuC4tOC4p-C5gOC4leC4reC4o-C5jCIsImlzcyI6InJlaC5nby50aCIsImlhdCI6MTcyNTM1NTkwMywiZXhwIjoxNzI1OTYwNzAzfQ.re6MWlZbLR1movnk1G1X5ZGpk-2PNTSMopYySRg8HZs";
-
-          localStorage.setItem(environment.LOGIN_TOKENS, tokens);
+          localStorage.setItem(environment.LOGIN_TOKENS, _token);
           localStorage.setItem(environment.LOGIN_STATUS, 'ok');
 
           this._snackBar.open(`ยินดีต้อนรับเข้าสู่ระบบ`, '', {
@@ -82,17 +85,23 @@ export class LoginComponent implements OnInit {
           }).afterDismissed().subscribe(() => {
             this.router.navigate(['dashboard']);
           });
+
         } else {
-          this._snackBar.open('ชื่อผู้ใช้งาน หรือ รหัสผ่าน ไม่ถูกต้อง', '', {
-            duration:3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass:['error-snackbar']
-          }).onAction().subscribe(() => {
-            // Handle the action button click here
-            console.log('Snackbar action button clicked!');
-            // this.initForm();
-          });
+          this.error = response.message;
+          localStorage.removeItem(environment.token);
+
+
+            this._snackBar.open('ชื่อผู้ใช้งาน หรือ รหัสผ่าน ไม่ถูกต้อง', '', {
+              duration:3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass:['error-snackbar']
+            }).onAction().subscribe(() => {
+              // Handle the action button click here
+              console.log('Snackbar action button clicked!');
+              // this.initForm();
+            });
+
         }
       } catch (error: any) {
         console.error(error);

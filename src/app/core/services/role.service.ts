@@ -42,6 +42,22 @@ export class RoleService {
     }
   }
 
+  ward() {
+    if (this.isLoggedIn) {
+      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      try {
+        const decodeToken: any = jwt_decode(token);
+        return Number(decodeToken.departId);
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+        return null;
+      }
+    } else {
+      console.error("Error decoding ...");
+      return null;
+    }
+  }
+
   //--------------------------
   public get isLoggedIn(): boolean {
     return localStorage.getItem(environment.LOGIN_STATUS) === 'ok';

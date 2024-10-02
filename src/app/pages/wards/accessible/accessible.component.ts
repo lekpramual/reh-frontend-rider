@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,10 +8,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import AccessibleListGetJobComponent from './accessible-list-getjob/accessible-list-getjob.component';
+import { AcsService } from '@core/services/acs.service';
+import { firstValueFrom, timer } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RoleService } from '@core/services/role.service';
 
 
 export interface PeriodicElement {
@@ -60,10 +64,12 @@ const ELEMENT_MONI_DATA: MoniElement[] = [
 @Component({
   selector: 'app-accessible',
   standalone: true,
+
   templateUrl: './accessible.component.html',
   styleUrl: './accessible.component.scss',
 
   imports: [
+    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -79,11 +85,36 @@ const ELEMENT_MONI_DATA: MoniElement[] = [
   ],
 })
 
-export default class AccessibleComponent {
+export default class AccessibleComponent implements OnInit{
   displayedColumns = ['star','date', 'type', 'name', 'equipment', 'in'];
   displayedColumnsMoni = ['star','status', 'type','date','date_end','officer', 'name', 'equipment', 'in'];
   dataSource = ELEMENT_DATA;
-  dataSourceMoni = ELEMENT_MONI_DATA;
+  // dataSourceMoni = ELEMENT_MONI_DATA;
+
+  ward =  ""
+  data:any;
+  // ข้อมูลตาราง
+  dataSourceWard = new MatTableDataSource<any>();
+  // แสดงโหลดข้อมูล
+  isLoading: boolean = false;
+
+  constructor(private _acsService : AcsService,private _roleService: RoleService){
+    this.initProfile(this._roleService.profile());
+  }
+
+  ngOnInit() : void{
+    const wardId =  this._roleService.ward();
+    if(wardId){
+      this.getAcsByWards(wardId);
+    }
+
+  }
+
+
+  async initProfile(data: any) {
+    console.log(data);
+    this.ward = await data.departId;
+  }
 
   clickedJob(row:any){
     console.log('Clicked Job', row);
@@ -92,6 +123,23 @@ export default class AccessibleComponent {
   onButtonClick(row: any, event: Event) {
     event.stopPropagation();
     // console.log('Button clicked: ', row);
+  }
+
+  //โหลดข้อมูลรายการยา
+  async getAcsByWards(wardId:number) {
+    try {
+      this.isLoading = true;
+      const response: any = await firstValueFrom(this._acsService.getAcsByWard(wardId));
+      // console.log(response.result);
+      this.data = response.result;
+      //this.dataSource.data = response.results;
+
+    } catch (error) {
+      this.isLoading = false;
+      console.error("Error fetching data:", error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
 }

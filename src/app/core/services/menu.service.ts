@@ -25,12 +25,16 @@ export class MenuService {
   }
 
   initProfile(data: any) {
+    console.log(data);
     this.levelApp = data.levelApp;
   }
 
   public menuManager(){
-    const levelData = parseInt('0');
 
+    // const levelData = parseInt('3');
+    const levelData = parseInt(this.levelApp)
+
+    console.log(this.levelApp);
     console.log(levelData);
     if(levelData === 6){
       // ผู้ดูแลระบบ
