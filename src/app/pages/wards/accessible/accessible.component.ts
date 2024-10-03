@@ -112,7 +112,7 @@ export default class AccessibleComponent implements OnInit{
 
 
   async initProfile(data: any) {
-    console.log(data);
+    // console.log(data);
     this.ward = await data.departId;
   }
 

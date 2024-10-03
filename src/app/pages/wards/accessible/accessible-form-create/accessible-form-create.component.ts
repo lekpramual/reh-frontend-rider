@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -11,36 +11,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
+import { EquipsList } from '@core/interface/equips.interface';
+import { OpdTypeList } from '@core/interface/opdtype.interface';
+import { QuicksList } from '@core/interface/quicks.interface';
+import { WardCreate } from '@core/interface/ward.interface';
+import { EquipsService } from '@core/services/equips.service';
+import { OpdTypeService } from '@core/services/opdtype.service';
+import { QuicksService } from '@core/services/quicks.service';
+import { WardService } from '@core/services/ward.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { Observable, ReplaySubject, Subject, map, startWith, take, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject, firstValueFrom, map, single, startWith, take, takeUntil } from 'rxjs';
 
-export interface Bank {
-  id: string;
-  name: string;
-}
-
-/** list of banks */
-export const BANKS: Bank[] = [
-  {name: 'Bank A (Switzerland)', id: 'A'},
-  {name: 'Bank B (Switzerland)', id: 'B'},
-  {name: 'Bank C (France)', id: 'C'},
-  {name: 'Bank D (France)', id: 'D'},
-  {name: 'Bank E (France)', id: 'E'},
-  {name: 'Bank F (Italy)', id: 'F'},
-  {name: 'Bank G (Italy)', id: 'G'},
-  {name: 'Bank H (Italy)', id: 'H'},
-  {name: 'Bank I (Italy)', id: 'I'},
-  {name: 'Bank J (Italy)', id: 'J'},
-  {name: 'Bank Kolombia (United States of America)', id: 'K'},
-  {name: 'Bank L (Germany)', id: 'L'},
-  {name: 'Bank M (Germany)', id: 'M'},
-  {name: 'Bank N (Germany)', id: 'N'},
-  {name: 'Bank O (Germany)', id: 'O'},
-  {name: 'Bank P (Germany)', id: 'P'},
-  {name: 'Bank Q (Germany)', id: 'Q'},
-  {name: 'Bank R (Germany)', id: 'R'}
-];
 
 @Component({
   selector: 'app-accessible-form-create',
@@ -70,11 +52,10 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
 
   accessibleId: string = "";
+  type_io = signal('ipd');
   formAccessible!: FormGroup;
 
-  // filteredOptions!: Observable<any[]>;
-
-  filteredOptions!: Observable<Bank[]>;
+  filteredOptionsDepart!: Observable<WardCreate[]>;
   searchControl: FormControl = new FormControl();
 
   /** list of banks */
@@ -95,7 +76,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     { value: 1, label: 'กู้ชีพ' },
     { value: 2, label: 'มาเอง' },
     { value: 3, label: 'รถรีเฟอร์' },
-    { value: 4, label: 'ญาติ หรือ พลเมืองดี' }
+    { value: 4, label: '  ' }
   ];
 
   optiontypes:any[] = [
@@ -147,20 +128,66 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     { value: 3, label: 'ดึก' }
   ];
 
+  optionWards:WardCreate[] = [];
+  optionQuicks:QuicksList[] = [];
+  optionEquips:EquipsList[] = [];
+  optionOpdType:OpdTypeList[] = [];
+
 
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormCreateComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _wardService: WardService,
+    private _quicksService:QuicksService,
+    private _equipsService: EquipsService,
+    private _opdTypeService: OpdTypeService
   ) {}
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
     this.initForm();
 
-    this.filteredOptions = this.searchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+
+    this._wardService.getWards().subscribe({
+        next:(data) => {
+          this.optionWards = data.result;
+          // Set up the filtered options logic
+          this.filteredOptionsDepart = this.searchControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterDepart(value))
+          );
+        },
+        error:(error) => {
+          console.error('Error fetching departments', error);
+        }
+      });
+
+    this._quicksService.getQuicks().subscribe({
+      next:(data) => {
+        this.optionQuicks = data.result;
+      },
+      error:(error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
+
+    this._equipsService.getEquips().subscribe({
+      next:(data) => {
+        this.optionEquips = data.result;
+      },
+      error:(error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
+
+    this._opdTypeService.getOpdType().subscribe({
+      next:(data) => {
+        this.optionOpdType= data.result;
+      },
+      error:(error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -174,18 +201,25 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   async onSubmit() {
     if (this.formAccessible.valid) {
+
+      console.log(this.formAccessible.valid);
       // Handle form submission
       try {
-        const data: any = {};
-        data.name = this.formAccessible.value.activity_name;
-        data.indicator = this.formAccessible.value.activity_indicator;
-        data.amount = this.formAccessible.value.activity_amount;
-        data.productId = this.accessibleId;
+        console.log(this.formAccessible.value);
+
+        let _opdtype = this.formAccessible.value.opdtype;
+        if(_opdtype != null){
+          console.log(this.getSelectedOptionLabel())
+        }
+        // const data: any = {};
+        // data.name = this.formAccessible.value.activity_name;
+        // data.indicator = this.formAccessible.value.activity_indicator;
+        // data.amount = this.formAccessible.value.activity_amount;
+        // data.productId = this.accessibleId;
         this.dialogRef.close("ok");
       } catch (error: any) {
         // Handle error during form submission
         console.error(error);
-
       }
     } else {
       // Handle form validation errors
@@ -196,18 +230,14 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   initForm() {
     // choice_depart choice_stamp
     this.formAccessible = new FormGroup({
-      activity_name: new FormControl(null, [Validators.required]),
-      activity_indicator: new FormControl(null, [Validators.required]),
-      activity_amount: new FormControl(0, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      type: new FormControl('',[Validators.required]),
-      status: new FormControl(null,[Validators.required]),
-      opd_status: new FormControl(null,[Validators.required]),
-      select: new FormControl(null,[Validators.required]),
-      out: new FormControl(null,[Validators.required]),
+      hn: new FormControl(null, [Validators.required]),
+      od_rem: new FormControl(null, [Validators.required]),
+      opdtype: new FormControl(null),
+      quicks: new FormControl(null,[Validators.required]),
+      equips: new FormControl(null,[Validators.required]),
       work: new FormControl(null,[Validators.required]),
+      wcode_sta: new FormControl(null,[Validators.required]),
+      wcode_sto: new FormControl(null,[Validators.required])
     });
   }
 
@@ -215,9 +245,75 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     this.dialogRef.close();
   }
 
-  private _filter(value: string): any[] {
+  onSetTypeIO(type:string) {
+    console.log(type);
+    this.type_io.set(type)
+  }
+
+  onTabClick(event: MatTabChangeEvent) {
+    // console.log("Selected Index: ", event.index);
+    // console.log("Selected Tab: ", event.tab.textLabel);
+
+    // Handle tab click logic here
+    if (event.index === 0) {
+      // console.log('First tab clicked');
+      this.type_io.set('ipd');
+
+      this.formAccessible.controls["hn"].setValidators([Validators.required]);
+
+      this.formAccessible.controls["od_rem"].setValidators([
+        Validators.required,
+      ]);
+
+      this.formAccessible.controls["opdtype"].clearValidators();
+    } else if (event.index === 1) {
+      // console.log('Second tab clicked');
+      this.type_io.set('opd');
+
+      this.formAccessible.controls["opdtype"].setValidators([
+        Validators.required,
+      ]);
+
+      this.formAccessible.controls["hn"].clearValidators();
+      this.formAccessible.controls["od_rem"].clearValidators();
+
+    }
+
+    this.formAccessible.controls["hn"].updateValueAndValidity();
+    this.formAccessible.controls["od_rem"].updateValueAndValidity();
+    this.formAccessible.controls["opdtype"].updateValueAndValidity();
+    // You can add more logic for other tabs as needed.
+  }
+
+
+
+  private _filterDepart(value: string): any[] {
     const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.optionWards.filter(option => option.ward_name.toLowerCase().includes(filterValue));
+  }
+
+
+  //โหลดข้อมูลรายการยา
+  async getAcsByWards() {
+    try {
+
+      const response: any = await firstValueFrom(this._wardService.getWards());
+      // console.log(response.result);
+      this.optionWards = response.result;
+      //this.dataSource.data = response.results;
+
+    } catch (error) {
+
+      console.error("Error fetching data:", error);
+    } finally {
+     console.log('loaddata success..')
+    }
+  }
+
+  // Method to retrieve the selected option label
+  getSelectedOptionLabel(): string | undefined {
+    const selectedValue = this.formAccessible.get('opdtype')?.value;
+    return this.optionOpdType.find(option => option.opd_type_id === selectedValue)?.opd_type_name;
   }
 
 }

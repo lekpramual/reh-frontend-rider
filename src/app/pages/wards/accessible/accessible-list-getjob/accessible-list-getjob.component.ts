@@ -17,6 +17,8 @@ import { AccessibleFormCreateComponent } from '../accessible-form-create/accessi
 import { AccessibleFormCancelComponent } from '../accessible-form-cancel/accessible-form-cancel.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
+import moment from 'moment';
+import 'moment/locale/th';
 
 export interface PeriodicElement {
   name: string;
@@ -67,7 +69,7 @@ export default class AccessibleListGetJobComponent{
 
   @Input() set data(val:any){
     this.dataSource.data = val;
-    console.log(val);
+    // console.log(val);
   }
 
   // @Output() messageChange = new EventEmitter<string>();
@@ -79,7 +81,24 @@ export default class AccessibleListGetJobComponent{
   constructor(
     private dialog: MatDialog,
 
-  ) {}
+  ) {
+
+    moment.updateLocale('th', {
+      longDateFormat: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY เวลา HH:mm',
+        LLLL: 'วันddddที่ D MMMM YYYY เวลา HH:mm',
+      },
+      // Function to add 543 years to the Gregorian year
+      postformat: (str: any) =>
+        str.replace(/(\d{4})/g, (year: any) =>
+          (parseInt(year, 10) + 543).toString()
+        ),
+    });
+  }
 
   clickedJob(row:any){
     console.log('Clicked Job', row);
@@ -134,6 +153,12 @@ export default class AccessibleListGetJobComponent{
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  //ฟังก์ชั่น: ปีภาษาไทย
+  formatDateThai(date: Date): string {
+    // return moment(date).format("LL"); // Customize the format as needed
+    return moment(date).format("ll"); // Customize the format as needed
   }
 
 

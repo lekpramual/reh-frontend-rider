@@ -25,7 +25,7 @@ export class MenuService {
   }
 
   initProfile(data: any) {
-    console.log(data);
+    // console.log(data);
     this.levelApp = data.levelApp;
   }
 
@@ -34,8 +34,8 @@ export class MenuService {
     // const levelData = parseInt('3');
     const levelData = parseInt(this.levelApp)
 
-    console.log(this.levelApp);
-    console.log(levelData);
+    // console.log(this.levelApp);
+    // console.log(levelData);
     if(levelData === 6){
       // ผู้ดูแลระบบ
       this.menuItems.set([

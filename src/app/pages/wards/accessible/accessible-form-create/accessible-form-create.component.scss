@@ -17,3 +17,14 @@
   font-weight: bold;
 }
 
+.cto-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0;
+  align-items: flex-start;
+}
+
+.cto-radio-button {
+  margin: 0px;
+}
+

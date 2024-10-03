@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
     const isAuthenticated = localStorage.getItem(environment.LOGIN_STATUS) === 'ok';
 
-    console.log(isAuthenticated);
+    // console.log(isAuthenticated);
     if (!isAuthenticated) {
       this.router.navigate(['/login']); // Redirect to login page if not authenticated
       return false;

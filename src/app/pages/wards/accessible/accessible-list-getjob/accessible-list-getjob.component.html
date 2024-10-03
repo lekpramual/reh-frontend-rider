@@ -18,9 +18,9 @@
           <table mat-table class="accept" [dataSource]="dataSource">
 
             <ng-container matColumnDef="go_date">
-              <th mat-header-cell *matHeaderCellDef  style="width: 124px;"><span class="mat-subtitle-2">วันที่แจ้ง</span></th>
+              <th mat-header-cell *matHeaderCellDef  style="width: 136px;"><span class="mat-subtitle-2">วันที่แจ้ง</span></th>
               <td mat-cell *matCellDef="let element">
-                <span class="mat-subtitle-2"> {{ element.go_date }}</span>
+                <span class="mat-subtitle-2"> {{ formatDateThai(element.go_date) }}</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="go_time">
