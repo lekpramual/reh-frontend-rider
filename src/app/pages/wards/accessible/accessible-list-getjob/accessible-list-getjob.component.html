@@ -78,21 +78,53 @@
                 </div>
               </td>
             </ng-container>
+            <ng-container matColumnDef="status_work">
+              <th mat-header-cell *matHeaderCellDef style="width: 158px;">
+                <span class="mat-subtitle-2">สถานะ</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
+                @if(element.status_work == 1){
+                    <mat-chip
+                    style="width: 124px"
+                    class="reh-chip-red"
+                  >
+                    <span class="label mat-subtitle-1">ยกเลิก</span>
+                  </mat-chip>
+                }@else {
+                  <mat-chip
+                    style="width: 124px"
+                    class="reh-chip-green"
+                  >
+                    <span class="label mat-subtitle-1">ปกติ</span>
+                  </mat-chip>
+                }
+
+
+              </td>
+            </ng-container>
             <ng-container matColumnDef="star" stickyEnd >
               <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;width: 56px;" class="mat-subtitle-2">#</th>
               <td mat-cell *matCellDef="let element" >
                 <div class="row">
                   <div class="col-12" align="center" style="margin-left: -8px;">
-                    <button  mat-mini-fab matTooltip="ยกเลิก" class="reh-btn-red" (click)="openDialogCancel()">
-                      <mat-icon
-                      fontSet="material-icons-outlined"
-                      >phonelink_erase</mat-icon
-                    >
-                    </button>
+                    @if(element.status_work == 1){
+                      <button  mat-mini-fab matTooltip="ยกเลิก" class="reh-btn-red disabled" >
+                        <mat-icon
+                        fontSet="material-icons-outlined"
+                        >phonelink_erase</mat-icon
+                      >
+                      </button>
+                    }@else {
+                      <button  mat-mini-fab matTooltip="ยกเลิก" class="reh-btn-red" (click)="openDialogCancel(element.id)">
+                        <mat-icon
+                        fontSet="material-icons-outlined"
+                        >phonelink_erase</mat-icon
+                      >
+                      </button>
+                    }
+
                   </div>
                 </div>
-
-
               </td>
             </ng-container>
 

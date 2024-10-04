@@ -19,6 +19,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 import moment from 'moment';
 import 'moment/locale/th';
+import { AcsService } from '@core/services/acs.service';
+import { RoleService } from '@core/services/role.service';
+import { firstValueFrom } from 'rxjs';
 
 export interface PeriodicElement {
   name: string;
@@ -63,24 +66,23 @@ export interface PeriodicElement {
 
 })
 
-export default class AccessibleListGetJobComponent{
+export default class AccessibleListGetJobComponent {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
-  @Input() set data(val:any){
-    this.dataSource.data = val;
-    // console.log(val);
-  }
 
+  wardId:any =  ""
+  data:any;
   // @Output() messageChange = new EventEmitter<string>();
 
-  displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','star'];
+  displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','status_work','star'];
   // dataSource = new MatTableDataSource<TPatient>();
   dataSource = new MatTableDataSource<any>();
 
   constructor(
     private dialog: MatDialog,
-
+    private _acsService : AcsService,
+    private _roleService: RoleService
   ) {
 
     moment.updateLocale('th', {
@@ -98,6 +100,30 @@ export default class AccessibleListGetJobComponent{
           (parseInt(year, 10) + 543).toString()
         ),
     });
+  }
+
+  ngOnInit() : void{
+    const _wardId =  this._roleService.ward();
+    if(_wardId){
+
+      this.getAcsByWards(_wardId);
+      this.wardId = _wardId;
+    }
+
+  }
+
+  //โหลดข้อมูลรายการยา
+  async getAcsByWards(wardId:number) {
+    try {
+      const response: any = await firstValueFrom(this._acsService.getAcsByWard(wardId));
+      // console.log(response.result);
+      // this.data = response.result;
+      this.dataSource.data = response.result;
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+    }
   }
 
   clickedJob(row:any){
@@ -127,19 +153,16 @@ export default class AccessibleListGetJobComponent{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      // result === "ok" && this.getActivityInProjectById(this.id);
+      result === "ok" && this.getAcsByWards(this.wardId);
     });
   }
 
-  openDialogCancel(): void {
+  openDialogCancel(Id:number): void {
     const dialogRef = this.dialog.open(
       AccessibleFormCancelComponent,
       {
         data: {
-          accessible_id: "",
-          activity_name: "",
-          activity_indicator: "",
-          activity_amount: "",
+          Id: Id
         },
         width: "640px",
       }

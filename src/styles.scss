@@ -126,6 +126,12 @@ mat-mdc-list-item:focus {
   color: #fff !important;
   border-radius: 20px !important;
   // height: 36px!important;
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
 }
 
 .reh-txt-blue {

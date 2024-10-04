@@ -14,8 +14,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AcsService } from '@core/services/acs.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
+import moment from 'moment';
+import 'moment/locale/th';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-accessible-form-cancel',
@@ -46,11 +50,11 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class AccessibleFormCancelComponent implements OnInit{
 
-  accessibleId: string = "";
+  _Id: string = "";
+  _data:any;
   formAccessible!: FormGroup;
 
-  filteredOptions!: Observable<any[]>;
-  searchControl: FormControl = new FormControl();
+
 
   /** list of banks */
   options: any[] = [
@@ -117,28 +121,80 @@ export class AccessibleFormCancelComponent implements OnInit{
 
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormCancelComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _acsService: AcsService,
+    private _snackBar: MatSnackBar
+  ) {
+
+    moment.updateLocale('th', {
+      longDateFormat: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY เวลา HH:mm',
+        LLLL: 'วันddddที่ D MMMM YYYY เวลา HH:mm',
+      },
+      // Function to add 543 years to the Gregorian year
+      postformat: (str: any) =>
+        str.replace(/(\d{4})/g, (year: any) =>
+          (parseInt(year, 10) + 543).toString()
+        ),
+    });
+  }
 
   ngOnInit(): void {
-    this.accessibleId = this.data?.accessible_id;
+    this._Id = this.data?.Id;
     this.initForm();
 
-    this.filteredOptions = this.searchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    if(this._Id){
+      this._acsService.getAcsByWId(parseInt(this._Id)).subscribe({
+        next:(data) => {
+          this._data = data.result[0];
+        },
+        error:(error) => {
+          console.error('Error fetching departments', error);
+        }
+      });
+    }
   }
 
   async onSubmit() {
     if (this.formAccessible.valid) {
       // Handle form submission
       try {
-        const data: any = {};
-        data.name = this.formAccessible.value.activity_name;
-        data.indicator = this.formAccessible.value.activity_indicator;
-        data.amount = this.formAccessible.value.activity_amount;
-        data.productId = this.accessibleId;
+
+        const comment = this.formAccessible.value.comment;
+        const Id = parseInt(this._Id);
+        this._acsService.cancelAcsByWId(Id,comment).subscribe({
+          next:(data)=> {
+            const result = data.ok;
+            if(result === 'ok'){
+              this._snackBar.open(`ยกเลิกเรียบร้อย`, '', {
+                duration:1500,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass:['success-snackbar']
+              }).afterDismissed().subscribe(() => {
+                // this.messageChange.emit('reset');
+                this.dialogRef.close("ok");
+              });
+            }
+          },
+          error:(error) => {
+            console.error('Error fetching departments', error);
+            this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
+              duration:3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass:['error-snackbar']
+            }).afterDismissed().subscribe(() => {
+              // this.onMessageChange('close');
+              // this.initForm();
+            });
+          }
+        });
+
         this.dialogRef.close("ok");
       } catch (error: any) {
         // Handle error during form submission
@@ -154,17 +210,7 @@ export class AccessibleFormCancelComponent implements OnInit{
   initForm() {
     // choice_depart choice_stamp
     this.formAccessible = new FormGroup({
-      activity_name: new FormControl(null, [Validators.required]),
-      activity_indicator: new FormControl(null, [Validators.required]),
-      activity_amount: new FormControl(0, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      type: new FormControl('',[Validators.required]),
-      status: new FormControl(null,[Validators.required]),
-      select: new FormControl(null,[Validators.required]),
-      out: new FormControl(null,[Validators.required]),
-      work: new FormControl(null,[Validators.required]),
+      comment: new FormControl(null, [Validators.required])
     });
   }
 
@@ -172,10 +218,12 @@ export class AccessibleFormCancelComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  private _filter(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  //ฟังก์ชั่น: ปีภาษาไทย
+  formatDateThai(date: Date): string {
+    // return moment(date).format("LL"); // Customize the format as needed
+    return moment(date).format("ll"); // Customize the format as needed
   }
+
 
 
 }

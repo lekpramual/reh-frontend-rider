@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -11,17 +11,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { EquipsList } from '@core/interface/equips.interface';
 import { OpdTypeList } from '@core/interface/opdtype.interface';
 import { QuicksList } from '@core/interface/quicks.interface';
 import { WardCreate } from '@core/interface/ward.interface';
+import { WorkList } from '@core/interface/work.interface';
+import { AcsService } from '@core/services/acs.service';
 import { EquipsService } from '@core/services/equips.service';
 import { OpdTypeService } from '@core/services/opdtype.service';
 import { QuicksService } from '@core/services/quicks.service';
+import { RoleService } from '@core/services/role.service';
 import { WardService } from '@core/services/ward.service';
+import { WorkService } from '@core/services/work.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { Observable, ReplaySubject, Subject, firstValueFrom, map, single, startWith, take, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject, firstValueFrom, lastValueFrom, map, single, startWith, take, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -50,7 +55,10 @@ import { Observable, ReplaySubject, Subject, firstValueFrom, map, single, startW
 })
 export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDestroy {
 
+  @Output() messageChange = new EventEmitter<string>();
 
+  wardId:number =  0;
+  userId:number = 0;
   accessibleId: string = "";
   type_io = signal('ipd');
   formAccessible!: FormGroup;
@@ -58,80 +66,12 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   filteredOptionsDepart!: Observable<WardCreate[]>;
   searchControl: FormControl = new FormControl();
 
-  /** list of banks */
-  options: any[] = [
-    {name: 'กรุงไทย', id: 1},
-    {name: 'กรุงศรี', id: 2},
-    {name: 'ธนชาติ', id: 3},
-    {name: 'กสิกร', id: 4},
-    {name: 'กสิกร5', id: 5},
-    {name: 'กสิกร6', id: 6},
-    {name: 'กสิกร7', id: 7},
-    {name: 'กสิกร8', id: 8},
-    {name: 'กสิกร9', id: 9},
-
-  ];
-
-  opds:any[] = [
-    { value: 1, label: 'กู้ชีพ' },
-    { value: 2, label: 'มาเอง' },
-    { value: 3, label: 'รถรีเฟอร์' },
-    { value: 4, label: '  ' }
-  ];
-
-  optiontypes:any[] = [
-    {
-      value: "1",
-      label: "รถนั่ง",
-
-  },
-  {
-      value: "2",
-      label: "เปลนอน",
-
-  },
-  {
-      value: "3",
-      label: "เปลนอน+ออกซิเจน",
-
-  },
-  {
-      value: "4",
-      label: "เปลนอน+ออกซิเจน+แผ่น slide board",
-
-  },
-  {
-      value: "5",
-      label: "เปลนอน+แผ่น  slide board",
-
-  },
-  {
-      value: "6",
-      label: "ขอคนเปล OPD",
-      "equstatus": "1"
-  },
-  {
-      value: "7",
-      label: "เฉพาะพนักงานเปล",
-
-  },
-  {
-      value: "8",
-      label: "เปลนอน+ออกซิเจน+tube",
-
-  }
-  ];
-
-  optionworks:any[] = [
-    { value: 1, label: 'เช้า' },
-    { value: 2, label: 'บ่าย' },
-    { value: 3, label: 'ดึก' }
-  ];
 
   optionWards:WardCreate[] = [];
   optionQuicks:QuicksList[] = [];
   optionEquips:EquipsList[] = [];
   optionOpdType:OpdTypeList[] = [];
+  optionWork:WorkList[] = [];
 
 
   constructor(
@@ -140,11 +80,25 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     private _wardService: WardService,
     private _quicksService:QuicksService,
     private _equipsService: EquipsService,
-    private _opdTypeService: OpdTypeService
+    private _opdTypeService: OpdTypeService,
+    private _roleService: RoleService,
+    private _acsService: AcsService,
+    private _workService: WorkService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
+
+    const _wardId =  this._roleService.ward();
+    if(_wardId){
+      this.wardId = _wardId;
+    }
+    const _userId =  this._roleService.userId();
+    if(_userId){
+      this.userId = _userId;
+    }
+
     this.initForm();
 
 
@@ -188,6 +142,15 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
         console.error('Error fetching departments', error);
       }
     });
+
+    this._workService.getWorks().subscribe({
+      next:(data) => {
+        this.optionWork= data.result;
+      },
+      error:(error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -199,27 +162,84 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     // this._onDestroy.complete();
   }
 
+
   async onSubmit() {
     if (this.formAccessible.valid) {
 
       console.log(this.formAccessible.valid);
       // Handle form submission
       try {
-        console.log(this.formAccessible.value);
+        const data: any = {};
 
-        let _opdtype = this.formAccessible.value.opdtype;
-        if(_opdtype != null){
-          console.log(this.getSelectedOptionLabel())
+        if(this.type_io() == 'opd'){
+          data.type_oi = this.type_io()
+          data.hn = this.formAccessible.value.opdtype;
+          data.od_rem = this.getSelectedOptionLabel();
+          data.equip = this.formAccessible.value.equips;
+          data.quick = this.formAccessible.value.quicks;
+          data.time_work = this.formAccessible.value.work;
+          data.wcode_sta = this.formAccessible.value.wcode_sta;
+          data.wcode_sto = this.formAccessible.value.wcode_sto;
+          data.wcode_sto = this.formAccessible.value.wcode_sto;
+          data.user_ward = this.wardId;
+          data.user_save = this.userId;
+          console.log('data ', data)
+
+        }else{
+          data.type_oi = this.type_io()
+          data.hn = this.formAccessible.value.hn;
+          data.od_rem = this.formAccessible.value.od_rem;
+          data.equip = this.formAccessible.value.equips;
+          data.quick = this.formAccessible.value.quicks;
+          data.time_work = this.formAccessible.value.work;
+          data.wcode_sta = this.formAccessible.value.wcode_sta;
+          data.wcode_sto = this.formAccessible.value.wcode_sto;
+          data.wcode_sto = this.formAccessible.value.wcode_sto;
+          data.user_ward = this.wardId;
+          data.user_save = this.userId;
+          console.log('data ', data)
         }
-        // const data: any = {};
-        // data.name = this.formAccessible.value.activity_name;
-        // data.indicator = this.formAccessible.value.activity_indicator;
-        // data.amount = this.formAccessible.value.activity_amount;
-        // data.productId = this.accessibleId;
-        this.dialogRef.close("ok");
+
+        this._acsService.addAcsByWard(data).subscribe({
+          next:(data)=> {
+            const result = data.ok;
+            if(result === 'ok'){
+              this._snackBar.open(`บันทึกข้อมูลเรียบร้อย`, '', {
+                duration:1500,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass:['success-snackbar']
+              }).afterDismissed().subscribe(() => {
+                // this.messageChange.emit('reset');
+                this.dialogRef.close("ok");
+              });
+            }
+          },
+          error:(error) => {
+            console.error('Error fetching departments', error);
+            this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
+              duration:3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass:['error-snackbar']
+            }).afterDismissed().subscribe(() => {
+              // this.onMessageChange('close');
+              // this.initForm();
+            });
+          }
+        });
       } catch (error: any) {
         // Handle error during form submission
         console.error(error);
+        this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
+          duration:3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass:['error-snackbar']
+        }).afterDismissed().subscribe(() => {
+          // this.onMessageChange('close');
+          // this.initForm();
+        });
       }
     } else {
       // Handle form validation errors

@@ -6,12 +6,12 @@ import { User } from "@core/interface/user.model";
 @Injectable({
   providedIn: "root",
 })
-export class WardService {
+export class WorkService {
 
   constructor(private http: HttpClient) {}
 
   private hostUrl = environment.node_api_url_dev;
-  private apiUrl = `${this.hostUrl}/riders/ward`;
+  private apiUrl = `${this.hostUrl}/riders/work/active`;
 
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
@@ -20,10 +20,8 @@ export class WardService {
   });
 
 
-  getWards() {
+  getWorks() {
     const url = `${this.apiUrl}`;
     return this.http.get<any>(url, { headers: this.headers });
   }
-
-
 }

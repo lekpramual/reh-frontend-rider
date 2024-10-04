@@ -91,7 +91,7 @@ export default class AccessibleComponent implements OnInit{
   dataSource = ELEMENT_DATA;
   // dataSourceMoni = ELEMENT_MONI_DATA;
 
-  ward =  ""
+  wardId:any =  ""
   data:any;
   // ข้อมูลตาราง
   dataSourceWard = new MatTableDataSource<any>();
@@ -99,22 +99,19 @@ export default class AccessibleComponent implements OnInit{
   isLoading: boolean = false;
 
   constructor(private _acsService : AcsService,private _roleService: RoleService){
-    this.initProfile(this._roleService.profile());
+
   }
 
   ngOnInit() : void{
-    const wardId =  this._roleService.ward();
-    if(wardId){
-      this.getAcsByWards(wardId);
+    const _wardId =  this._roleService.ward();
+    if(_wardId){
+
+      this.getAcsByWards(_wardId);
+      this.wardId = _wardId;
     }
 
   }
 
-
-  async initProfile(data: any) {
-    // console.log(data);
-    this.ward = await data.departId;
-  }
 
   clickedJob(row:any){
     console.log('Clicked Job', row);

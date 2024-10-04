@@ -244,10 +244,10 @@
         <div class="col-12 text-center">
             <mat-radio-group formControlName="work" color="primary">
               <mat-radio-button
-                *ngFor="let option of optionworks"
-                [value]="option.value"
+                *ngFor="let option of optionWork"
+                [value]="option.time_workid"
               >
-                <strong>{{ option.label }}</strong>
+                <strong>{{ option.time_workname }}</strong>
               </mat-radio-button>
             </mat-radio-group>
 
