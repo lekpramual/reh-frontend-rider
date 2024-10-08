@@ -185,7 +185,7 @@ export class MenuService {
         {
           icon: "analytics",
           label: "รายงาน",
-          route: "reports",
+          route: "ward/reports",
         }
       ]);
     }

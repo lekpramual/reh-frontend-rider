@@ -105,8 +105,6 @@ export default class AccessibleComponent implements OnInit{
   ngOnInit() : void{
     const _wardId =  this._roleService.ward();
     if(_wardId){
-
-      this.getAcsByWards(_wardId);
       this.wardId = _wardId;
     }
 
@@ -123,7 +121,7 @@ export default class AccessibleComponent implements OnInit{
   }
 
   //โหลดข้อมูลรายการยา
-  async getAcsByWards(wardId:number) {
+  async getDateByQuick(wardId:number) {
     try {
       this.isLoading = true;
       const response: any = await firstValueFrom(this._acsService.getAcsByWard(wardId));

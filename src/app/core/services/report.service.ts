@@ -6,12 +6,12 @@ import { User } from "@core/interface/user.model";
 @Injectable({
   providedIn: "root",
 })
-export class WorkService {
+export class ReportService {
 
   constructor(private http: HttpClient) {}
 
   private hostUrl = environment.node_api_url_dev;
-  private apiUrl = `${this.hostUrl}/riders/work/active`;
+  private apiUrl = `${this.hostUrl}/riders/report/quick`;
 
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
@@ -20,8 +20,10 @@ export class WorkService {
   });
 
 
-  getWorks() {
-    const url = `${this.apiUrl}`;
-    return this.http.get<any>(url, { headers: this.headers });
+  getDateByQuick(bodyParams:any) {
+    console.log(bodyParams)
+    return this.http.post<any>(this.apiUrl,bodyParams,{
+        headers: this.headers,
+      });
   }
 }

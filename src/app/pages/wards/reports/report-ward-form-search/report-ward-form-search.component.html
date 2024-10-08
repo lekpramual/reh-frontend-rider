@@ -1,0 +1,122 @@
+<form
+  [formGroup]="formGroupData"
+  (ngSubmit)="onSubmit()"
+>
+  <mat-card>
+      <!-- <mat-divider /> -->
+      <section class="pt-2" tabindex="0" >
+        <div class="row mt-3 mx-0 justify-content-center">
+          <div class="col-6">
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>วันที่เริ่ม</mat-label>
+              <!-- datePickerFormat="YYYY/MM/DD" -->
+              <input
+                matInput
+                name="ward_start"
+                formControlName="ward_start"
+                placeholder="วันที่เริ่ม"
+                [max]="maxDate"
+                [min]="minDate"
+                [matDatepicker]="picker_start"
+                datePickerFormat = "YYYY/MM/DD"
+
+              />
+
+              <mat-datepicker-toggle matIconSuffix [for]="picker_start"></mat-datepicker-toggle>
+              <mat-datepicker #picker_start></mat-datepicker>
+
+              <mat-error
+                  *ngIf="
+                    formGroupData.get('ward_start')?.invalid ||
+                    formGroupData.get('ward_start')?.touched
+                  "
+                >
+                  *โปรดระบุ วันที่สิ้นสุด</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+          <div class="row mx-0  justify-content-center" >
+            <div class="col-6">
+              <mat-form-field class="reh-input-full-width">
+                <mat-label>วันที่สิ้นสุด</mat-label>
+                <input
+                  matInput
+                  name="ward_end"
+                  formControlName="ward_end"
+                  placeholder="วันที่สิ้นสุด"
+                  [max]="maxDate"
+                  [min]="minDate"
+                  [matDatepicker]="picker_end"
+                  datePickerFormat="DD MMM YYYY"
+
+                />
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker_end"></mat-datepicker-toggle>
+                <mat-datepicker #picker_end></mat-datepicker>
+
+
+                <mat-error
+                  *ngIf="
+                    formGroupData.get('ward_end')?.invalid ||
+                    formGroupData.get('ward_end')?.touched
+                  "
+                >
+                  *โปรดระบุ วันที่สิ้นสุด</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row mx-0  justify-content-center">
+            <div class="col-6">
+              <mat-form-field class="reh-input-full-width mt-2" >
+                <mat-label>เลือก ประเภท</mat-label>
+
+                <mat-select formControlName="ward_quick">
+                  @for (opd of optionQuicks; track opd) {
+                  <mat-option [value]="opd.quick_id">{{ opd.quick_name }}</mat-option>
+                  }
+                </mat-select>
+                <!-- <mat-select formControlName="ward_quick" >
+                  <mat-option >
+                    <ngx-mat-select-search
+                      [formControl]="searchQuickControl"
+                      placeholderLabel="ค้นหา ประเภท"
+                      [preventHomeEndKeyPropagation]="true"
+
+                    >
+                        <span  ngxMatSelectNoEntriesFound>
+                          ไม่พบข้อมูล
+                        </span>
+                  </ngx-mat-select-search>
+                </mat-option>
+                @for (option of filteredOptionquicks | async; track option) {
+                  <mat-option  [value]="option.id" > {{ option.name }}</mat-option>
+                }
+
+                </mat-select>
+
+                <mat-error
+                  *ngIf="
+                    formGroupData.get('ward_quick')?.invalid ||
+                    formGroupData.get('ward_quick')?.touched
+                  "
+                >
+                  *โปรดเลือก ประเภท</mat-error
+                > -->
+              </mat-form-field>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="row mx-0 mb-2  justify-content-center">
+          <div class="col-6" align="center">
+            <button mat-fab extended class="reh-btn-blue">
+              <mat-icon fontSet="material-icons-outlined">print</mat-icon>
+              <span class="mat-subtitle-2">แสดงรายงาน</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+  </mat-card>
+</form>

@@ -16,7 +16,7 @@ export class WardService {
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
     Authorization:
-      "Bearer " + localStorage.getItem(environment.LOGIN_TOKENS) ?? "no-token",
+      "Bearer " + localStorage.getItem(environment.LOGIN_TOKENS) || "no-token",
   });
 
 

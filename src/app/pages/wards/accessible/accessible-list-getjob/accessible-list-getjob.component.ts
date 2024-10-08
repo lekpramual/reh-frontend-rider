@@ -21,7 +21,7 @@ import moment from 'moment';
 import 'moment/locale/th';
 import { AcsService } from '@core/services/acs.service';
 import { RoleService } from '@core/services/role.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 export interface PeriodicElement {
   name: string;
@@ -71,11 +71,13 @@ export default class AccessibleListGetJobComponent {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
 
+  searchValue = "";
+  searchTerm = new Subject<string>();
   wardId:any =  ""
   data:any;
   // @Output() messageChange = new EventEmitter<string>();
 
-  displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','status_work','star'];
+  displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','type_oi','status_work','star'];
   // dataSource = new MatTableDataSource<TPatient>();
   dataSource = new MatTableDataSource<any>();
 
@@ -112,6 +114,19 @@ export default class AccessibleListGetJobComponent {
 
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  }
+
+  clearSearch() {
+    this.searchValue = "";
+    this.searchTerm.next("");
+
+    this.dataSource.filter = '';
+
+  }
   //โหลดข้อมูลรายการยา
   async getAcsByWards(wardId:number) {
     try {
@@ -170,7 +185,7 @@ export default class AccessibleListGetJobComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      // result === "ok" && this.getActivityInProjectById(this.id);
+      result === "ok" && this.getAcsByWards(this.wardId);
     });
   }
 
