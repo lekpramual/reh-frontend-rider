@@ -175,7 +175,7 @@ export class MenuService {
         {
           icon: "dashboard",
           label: "แดชบอร์ด",
-          route: "dashboard",
+          route: "ward/dashboard",
         },
         {
           icon: "comment",

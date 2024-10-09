@@ -18,6 +18,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import {environment} from "@env/environment";
 import { AuthService } from "@core/services/auth.service";
 import { firstValueFrom } from "rxjs";
+import { RoleService } from "@core/services/role.service";
 
 @Component({
   selector: "app-login",
@@ -55,6 +56,7 @@ export class LoginComponent implements OnInit {
     public _authService: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
+    private _roleService:RoleService
   ) {}
 
   ngOnInit(): void {
@@ -82,8 +84,16 @@ export class LoginComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
             panelClass:['success-snackbar']
-          }).afterDismissed().subscribe(() => {
-            this.router.navigate(['dashboard']);
+          }).afterDismissed().subscribe(async () => {
+            let role = await this._roleService.role();
+            console.log('role...',role);
+
+            if(role == 0){
+              this.router.navigate(['ward/dashboard']);
+            }else{
+              this.router.navigate(['dashboard']);
+            }
+
           });
 
         } else {
@@ -97,6 +107,8 @@ export class LoginComponent implements OnInit {
               verticalPosition: 'bottom',
               panelClass:['error-snackbar']
             }).onAction().subscribe(() => {
+
+
               // Handle the action button click here
               console.log('Snackbar action button clicked!');
               // this.initForm();

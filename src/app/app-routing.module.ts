@@ -64,6 +64,10 @@ const routes: Routes = [
       {
         path: 'ward/reports',
         loadComponent : (() => import("../app/pages/wards/reports/reports.component")),
+      },
+      {
+        path: 'ward/dashboard',
+        loadComponent : (() => import("../app/pages/wards/dashboard/dashboard.component")),
       }
 
     ],
