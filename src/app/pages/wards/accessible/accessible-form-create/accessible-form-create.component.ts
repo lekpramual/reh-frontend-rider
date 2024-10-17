@@ -183,7 +183,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
           data.wcode_sto = this.formAccessible.value.wcode_sto;
           data.user_ward = this.wardId;
           data.user_save = this.userId;
-          console.log('data ', data)
+          // console.log('data ', data)
 
         }else{
           data.type_oi = this.type_io()
@@ -197,7 +197,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
           data.wcode_sto = this.formAccessible.value.wcode_sto;
           data.user_ward = this.wardId;
           data.user_save = this.userId;
-          console.log('data ', data)
+          // console.log('data ', data)
         }
 
         this._acsService.addAcsByWard(data).subscribe({
@@ -259,7 +259,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       wcode_sta: new FormControl(null,[Validators.required]),
       wcode_sto: new FormControl(null,[Validators.required])
     });
+
+    // this.formAccessible.get('od_rem')?.disable();
   }
+
+
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -334,6 +338,42 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   getSelectedOptionLabel(): string | undefined {
     const selectedValue = this.formAccessible.get('opdtype')?.value;
     return this.optionOpdType.find(option => option.opd_type_id === selectedValue)?.opd_type_name;
+  }
+
+
+   // Prevent the modal from closing when Enter key is pressed
+   onKeyDown(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      console.log('Enter key pressed');
+      event.preventDefault(); // Prevent form submission and modal closing on Enter
+      // Handle your Enter key logic here
+      const hn = this.formAccessible.value.hn;
+      if(hn != ''){
+        console.log('>>>',hn);
+        this._acsService.getPatientByHn(hn).subscribe({
+          next:(data) => {
+            const _data = data.results;
+            if(_data.length > 0){
+              console.log(data.results);
+              const _hn = data.results[0].hn;
+              const _full_name = data.results[0].full_name;
+
+              this.formAccessible.controls["hn"].setValue(_hn);
+              this.formAccessible.controls["od_rem"].setValue(_full_name);
+
+              console.log(_hn,_full_name);
+            }
+
+            this.formAccessible.controls["hn"].updateValueAndValidity();
+            this.formAccessible.controls["od_rem"].updateValueAndValidity();
+
+          },
+          error:(error) => {
+            console.error('Error fetching departments', error);
+          }
+        });
+      }
+    }
   }
 
 }

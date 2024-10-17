@@ -9,7 +9,7 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  private hostUrl = environment.node_api_url_dev;
+  private hostUrl = environment.node_api_url;
   private apiUrl = `${this.hostUrl}/riders/dashboard/ward`;
 
   private headers = new HttpHeaders({

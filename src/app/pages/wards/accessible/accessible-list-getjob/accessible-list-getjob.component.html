@@ -41,7 +41,7 @@
           <table mat-table class="accept" [dataSource]="dataSource">
 
             <ng-container matColumnDef="go_date">
-              <th mat-header-cell *matHeaderCellDef  style="width: 136px;"><span class="mat-subtitle-2">วันที่แจ้ง</span></th>
+              <th mat-header-cell *matHeaderCellDef  style="width: 164px;"><span class="mat-subtitle-2">วันที่แจ้ง</span></th>
               <td mat-cell *matCellDef="let element">
                 <span class="mat-subtitle-2"> {{ formatDateThai(element.go_date) }}</span>
               </td>
@@ -54,12 +54,12 @@
             </ng-container>
 
             <ng-container matColumnDef="quick">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 124px;">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 256px;">
                 <span class="mat-subtitle-2">ประเภท</span>
               </th>
               <td mat-cell *matCellDef="let element">
                 <mat-chip
-                  style="width: 124px"
+                  style="width: 256px"
                   [class]="{
                     'reh-chip-green' : element.quick == 1,
                     'reh-chip-yellow' : element.quick == 2,
@@ -102,7 +102,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="status_work">
-              <th mat-header-cell *matHeaderCellDef style="width: 158px;">
+              <th mat-header-cell *matHeaderCellDef style="width: 158px; text-align: center;">
                 <span class="mat-subtitle-2">สถานะ</span>
               </th>
               <td mat-cell *matCellDef="let element" class="lj-txt-dot">

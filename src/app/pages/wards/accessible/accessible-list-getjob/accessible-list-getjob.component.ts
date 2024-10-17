@@ -196,7 +196,7 @@ export default class AccessibleListGetJobComponent {
   //ฟังก์ชั่น: ปีภาษาไทย
   formatDateThai(date: Date): string {
     // return moment(date).format("LL"); // Customize the format as needed
-    return moment(date).format("ll"); // Customize the format as needed
+    return moment(date).format("l"); // Customize the format as needed
   }
 
 

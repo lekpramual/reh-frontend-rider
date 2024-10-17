@@ -33,6 +33,9 @@ import { MY_FORMATS } from './core/custom-date-format';
 
 import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../app/core/interceptors/auth.interceptor'; // Adjust the path as necessary
+
 export function initializeApp(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
 }
@@ -90,6 +93,8 @@ export function initializeApp(configService: ConfigService) {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: "outline" },
     },
+
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

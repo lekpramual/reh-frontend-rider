@@ -4,6 +4,7 @@ export const environment = {
   API_URL: "http://localhost:4200/",
   node_api_url: "https://api.reh.go.th/comservice",
   // node_api_url: 'http://localhost:8082',
+  node_api_his: "https://api.reh.go.th/rehapi-backend-his",
   node_static_url: "https://api.reh.go.th/comservice/public",
   baseUrl: "/app-rider",
   token: "token_32",
@@ -13,5 +14,6 @@ export const environment = {
   adminRole: 5,
   userRole: 0,
   LOGIN_STATUS:'LOGIN_STATUS',
-  LOGIN_TOKENS:'LOGIN_TOKENS'
+  LOGIN_TOKENS:'LOGIN_TOKENS',
+  accessKeySecret:"96Udcddbo9y[gfHdovos]y["
 };

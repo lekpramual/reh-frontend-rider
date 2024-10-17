@@ -10,7 +10,7 @@ export class EquipsService {
 
   constructor(private http: HttpClient) {}
 
-  private hostUrl = environment.node_api_url_dev;
+  private hostUrl = environment.node_api_url;
   private apiUrl = `${this.hostUrl}/riders/equips/active`;
 
   private headers = new HttpHeaders({

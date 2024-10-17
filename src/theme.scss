@@ -85,7 +85,7 @@ $my-theme: mat.define-light-theme(
       warn: $warn,
     ),
     typography: $reh-typography-config,
-    density: 0,
+    density: -4,
     // กำหนด input เป็น outline
     "mat-form-field":
       (

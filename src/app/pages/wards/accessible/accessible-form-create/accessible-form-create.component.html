@@ -19,13 +19,14 @@
                 <mat-form-field class="reh-input-full-width">
                   <mat-label>HN</mat-label>
                   <input
-                    style="font-size: 14px"
+
                     matInput
                     name="hn"
                     placeholder="HN (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)"
                     aria-label="hn label "
                     formControlName="hn"
                     required
+                    (keydown)="onKeyDown($event)"
                   />
 
                   <mat-error
@@ -42,7 +43,7 @@
                 <mat-form-field class="reh-input-full-width">
                   <mat-label>ชื่อ-สกุล</mat-label>
                   <input
-                    style="font-size: 14px"
+
                     matInput
                     name="od_rem"
                     placeholder="ชื่อ-สกุล"

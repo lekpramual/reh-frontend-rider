@@ -10,8 +10,11 @@ export class AcsService {
 
   constructor(private http: HttpClient) { }
 
-  private hostUrl = environment.node_api_url_dev;
+  private hostUrl = environment.node_api_url;
+  private hostUrlHis = environment.node_api_his;
+  private accessKeySecret = environment.accessKeySecret;
   private acsUrl = `${this.hostUrl}/riders/acs`;
+  private hisUrl = `${this.hostUrlHis}/rider/patientByHn`;
 
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
@@ -45,5 +48,15 @@ export class AcsService {
       },{
         headers: this.headers,
       });
+  }
+
+  getPatientByHn(hn: string) {
+    const data = {
+        "hn":hn,
+        "accessKeySecret": this.accessKeySecret
+    }
+    return this.http.post<any>(this.hisUrl, data, {
+      headers: this.headers,
+    });
   }
 }
