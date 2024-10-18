@@ -1,0 +1,60 @@
+.divider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.mat-divider {
+  width: 100%;
+}
+
+.divider-title {
+  position: absolute;
+  background-color: white; /* Match background color to hide divider behind text */
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.badge-container {
+  position: absolute; /* Position badge container absolutely */
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%); /* Adjust the badge position to top-right */
+  z-index: 1; /* Ensure the badge is above other elements */
+}
+
+.mat-badge-content {
+  font-size: 0.75rem; /* Adjust badge text size if needed */
+}
+
+
+/* app.component.css */
+.example-card {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.example-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.custom-tooltip {
+  background-color: #4caf50;
+  color: white;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.avatar-img {
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
+  width: 84px;
+  height: 84px;
+}

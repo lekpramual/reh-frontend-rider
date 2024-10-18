@@ -1,0 +1,114 @@
+<div mat-dialog-title style="display: flex; align-items: center;justify-content: center; height: 48px">
+  <span class="mat-headline-5 btn-action-red mb-0">ยกเลิก เลขที่ : {{_Id}}</span>
+</div>
+<mat-divider></mat-divider>
+<form [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="lj-viewer-wrapper pb-2">
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <span class="mat-subtitle-2">ชื่อ: </span
+          ><span class="mat-subtitle-1">{{_data.od_rem}}</span>
+        </div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">วันที่เวลา: </span
+          ><span class="mat-subtitle-1">{{formatDateThai(_data.go_date)}} {{_data.go_time}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <span class="mat-subtitle-2">ประเภท: </span>
+          @if(_data.quick == 1){
+            <span class="reh-txt-green mat-subtitle-1">{{_data.quick_name}}</span>
+          }@else if(_data.quick == 2){
+            <span class="reh-txt-yellow mat-subtitle-1">{{_data.quick_name}}</span>
+          }@else if(_data.quick == 3){
+            <span class="reh-txt-red mat-subtitle-1">{{_data.quick_name}}</span>
+          }@else {
+            <span class="reh-txt-blue mat-subtitle-1">{{_data.quick_name}}</span>
+          }
+
+        </div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">อุปกรณ์: </span
+          ><span class="mat-subtitle-1">{{_data.equip_name}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดรับ: </span
+          ><span class="mat-subtitle-1">{{_data.wcode_staname}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดส่ง: </span
+          ><span class="mat-subtitle-1">{{_data.wcode_stoname}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lj-viewer-wrapper">
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-headline-6 reh-txt-blue900">สาเหตุการยกเลิก</span>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field class="reh-input-full-width">
+            <mat-label>สาเหตุการยกเลิก</mat-label>
+            <textarea
+              matInput
+              name="comment"
+              placeholder="สาเหตุการยกเลิก"
+              formControlName="comment"
+            ></textarea>
+            <mat-error
+              *ngIf="
+                formAccessible.get('comment')?.invalid ||
+                formAccessible.get('comment')?.touched
+              "
+            >
+              *โปรดระบุ ระบุ สาเหตุการยกเลิก</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions class="row">
+    <div class="col-6">
+      <button mat-fab extended class="reh-btn-red" (click)="onNoClick()">
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+        ปิดหน้าจอ
+      </button>
+    </div>
+    <div class="col-6" align="end">
+      <button
+        mat-fab
+        extended
+        class="reh-btn-green"
+        type="submit"
+        cdkFocusInitial
+      >
+        <mat-icon fontSet="material-icons-outlined">phonelink_erase</mat-icon>
+        ยืนยันยกเลิก
+      </button>
+
+    </div>
+
+
+
+
+  </mat-dialog-actions>
+</form>

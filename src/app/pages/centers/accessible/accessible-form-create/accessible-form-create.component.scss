@@ -1,0 +1,30 @@
+.divider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.mat-divider {
+  width: 100%;
+}
+
+.divider-title {
+  position: absolute;
+  background-color: white; /* Match background color to hide divider behind text */
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.cto-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0;
+  align-items: flex-start;
+}
+
+.cto-radio-button {
+  margin: 0px;
+}
+

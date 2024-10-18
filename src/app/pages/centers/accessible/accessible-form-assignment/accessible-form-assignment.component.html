@@ -1,0 +1,173 @@
+<div
+  mat-dialog-title
+  style="display: flex; align-items: center;justify-content: center;height: 48px;"
+>
+  <span class="mat-headline-5 btn-action-blue mb-0">จ่ายงาน เลขที่ : J1000</span>
+
+</div>
+<mat-divider></mat-divider>
+<form  [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="lj-viewer-wrapper">
+      <div class="row">
+        <div class="col-12">
+            <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+            <mat-divider></mat-divider>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <span class="mat-subtitle-2">ชื่อ: </span
+          ><span class="mat-subtitle-1">น.ส.เกษร เหนือโท</span>
+        </div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">เวลา: </span
+          ><span class="mat-subtitle-1">11:20</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <span class="mat-subtitle-2">ประเภท: </span
+          ><span class="reh-txt-green mat-subtitle-1">ปกติ [0-60]</span>
+        </div>
+        <div class="col-6">
+          <span class="mat-subtitle-2">อุปกรณ์: </span
+          ><span class="mat-subtitle-1">เปลนอน</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดรับ: </span
+          ><span class="mat-subtitle-1">มาเอง</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <span class="mat-subtitle-2">จุดส่ง: </span
+          ><span class="mat-subtitle-1">ส่งผู้ป่วยกลับบ้าน</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lj-viewer-wrapper">
+      <div class="row mt-2 mb-3">
+        <div class="col-12">
+            <span class="mat-headline-6 reh-txt-blue900"
+              >รับและจ่ายงานให้ จนท.เปล นัดรับผู้ป่วย</span
+            >
+            <mat-divider></mat-divider>
+
+        </div>
+      </div>
+      <div class="row g-3 py-2" >
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
+            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
+            <div class="row" align="center">
+              <div class="col-12">
+                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+              </div>
+            </div>
+            <mat-divider class="mt-2"></mat-divider>
+            <mat-card-footer align="center">
+              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      </div>
+  </div>
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="center">
+    <!-- <button mat-button (click)="onNoClick()">ยกเลิก</button> -->
+    <button
+      mat-fab
+      extended
+      class="reh-btn-red" (click)="onNoClick()">
+      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      ปิดหน้าจอ
+    </button>
+
+    <!-- <button mat-button  type="submit" cdkFocusInitial>บันทึก</button> -->
+    <!-- <button
+      mat-stroked-button
+      class="reh-btn-green"
+      type="submit"
+      cdkFocusInitial
+    >
+      <mat-icon fontSet="material-icons-outlined">send_to_mobile</mat-icon>
+      จ่ายงาน
+    </button> -->
+  </mat-dialog-actions>
+</form>

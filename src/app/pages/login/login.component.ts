@@ -90,6 +90,8 @@ export class LoginComponent implements OnInit {
 
             if(role == 0){
               this.router.navigate(['ward/dashboard']);
+            }else if(role == 5 || role == 4){
+              this.router.navigate(['center/dashboard']);
             }else{
               this.router.navigate(['dashboard']);
             }

@@ -56,7 +56,7 @@ const routes: Routes = [
         loadComponent : (() => import("../app/pages/accessible/accessible.component")),
       },
 
-
+      // Ward
       {
         path: 'ward/accessible',
         loadComponent : (() => import("../app/pages/wards/accessible/accessible.component")),
@@ -68,7 +68,17 @@ const routes: Routes = [
       {
         path: 'ward/dashboard',
         loadComponent : (() => import("../app/pages/wards/dashboard/dashboard.component")),
-      }
+      },
+
+      // CENTER
+      {
+        path: 'center/dashboard',
+        loadComponent : (() => import("../app/pages/centers/dashboard/dashboard.component")),
+      },
+      {
+        path: 'center/accessible',
+        loadComponent : (() => import("../app/pages/centers/accessible/accessible.component")),
+      },
 
     ],
   },

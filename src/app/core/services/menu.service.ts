@@ -79,12 +79,12 @@ export class MenuService {
         {
           icon: "dashboard",
           label: "แดชบอร์ด",
-          route: "dashboard",
+          route: "center/dashboard",
         },
         {
           icon: "comment",
           label: "ขอใช้เปล",
-          route: "accessible",
+          route: "center/accessible",
         },
         {
           icon: "analytics",
@@ -108,12 +108,12 @@ export class MenuService {
         {
           icon: "dashboard",
           label: "แดชบอร์ด",
-          route: "dashboard",
+          route: "center/dashboard",
         },
         {
           icon: "comment",
           label: "ขอใช้เปล",
-          route: "accessible",
+          route: "center/accessible",
         },
         {
           icon: "analytics",
