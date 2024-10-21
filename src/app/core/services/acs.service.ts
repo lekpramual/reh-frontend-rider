@@ -41,11 +41,10 @@ export class AcsService {
 
   cancelAcsByWId(Id: number, comment:string) {
     const url = `${this.acsUrl}/${Id}/cancel`;
-    return this.http.post<any>(url,{
-      body: {
-        comment:comment
-      }
-      },{
+    const data = {
+      comment:comment
+    }
+    return this.http.post<any>(url,data,{
         headers: this.headers,
       });
   }
@@ -59,4 +58,10 @@ export class AcsService {
       headers: this.headers,
     });
   }
+
+  getAcsByCenterGetJobs(type_oi: string, rxdate:string) {
+    const url = `${this.acsUrl}/center?type_oi=${type_oi}&rxdate=${rxdate}`;
+    return this.http.get<any>(url, { headers: this.headers });
+  }
+
 }

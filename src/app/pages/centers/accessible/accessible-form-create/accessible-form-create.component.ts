@@ -59,6 +59,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   wardId:number =  0;
   userId:number = 0;
+  levelApp:string =  '';
   accessibleId: string = "";
   type_io = signal('ipd');
   formAccessible!: FormGroup;
@@ -89,6 +90,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
+
+    const _levelApp =  this._roleService.role();
+    if(_levelApp){
+      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    }
 
     const _wardId =  this._roleService.ward();
     if(_wardId){
@@ -151,6 +157,8 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
         console.error('Error fetching departments', error);
       }
     });
+
+    this.type_io.set(this.levelApp)
   }
 
   ngAfterViewInit() {
@@ -260,7 +268,35 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       wcode_sto: new FormControl(null,[Validators.required])
     });
 
-    // this.formAccessible.get('od_rem')?.disable();
+
+
+    // Handle tab click logic here
+    if (this.levelApp == 'ipd') {
+      // console.log('First tab clicked');
+      this.type_io.set('ipd');
+
+      this.formAccessible.controls["hn"].setValidators([Validators.required]);
+
+      this.formAccessible.controls["od_rem"].setValidators([
+        Validators.required,
+      ]);
+
+      this.formAccessible.controls["opdtype"].clearValidators();
+    } else if (this.levelApp == 'opd') {
+
+      this.formAccessible.controls["opdtype"].setValidators([
+        Validators.required,
+      ]);
+
+      this.formAccessible.controls["hn"].clearValidators();
+      this.formAccessible.controls["od_rem"].clearValidators();
+
+    }
+
+    this.formAccessible.controls["hn"].updateValueAndValidity();
+    this.formAccessible.controls["od_rem"].updateValueAndValidity();
+    this.formAccessible.controls["opdtype"].updateValueAndValidity();
+
   }
 
 

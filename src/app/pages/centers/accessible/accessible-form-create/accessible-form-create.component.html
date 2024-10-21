@@ -6,95 +6,100 @@
   <mat-dialog-content style="max-height: 75vh;">
     <div class="lj-viewer-wrapper">
       <mat-tab-group dynamicHeight class="ct-tab-group" (selectedTabChange)="onTabClick($event)">
-        <mat-tab >
-          <ng-template mat-tab-label>
-            <span class="mat-headline-6 reh-txt-blue900"
-              >ประเภทผู้ป่วย IPD</span
-            >
-          </ng-template>
+        @if(this.levelApp == 'ipd'){
+          <mat-tab >
+            <ng-template mat-tab-label>
+              <span class="mat-headline-6 reh-txt-blue900"
+                >ประเภทผู้ป่วย IPD</span
+              >
+            </ng-template>
 
-          <div class="p-2">
-            <div class="row">
-              <div class="col-6">
-                <mat-form-field class="reh-input-full-width">
-                  <mat-label>HN</mat-label>
-                  <input
+            <div class="p-2">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="reh-input-full-width">
+                    <mat-label>HN</mat-label>
+                    <input
 
-                    matInput
-                    name="hn"
-                    placeholder="HN (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)"
-                    aria-label="hn label "
-                    formControlName="hn"
-                    required
-                    (keydown)="onKeyDown($event)"
-                  />
+                      matInput
+                      name="hn"
+                      placeholder="HN (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)"
+                      aria-label="hn label "
+                      formControlName="hn"
+                      required
+                      (keydown)="onKeyDown($event)"
+                    />
 
-                  <mat-error
-                    *ngIf="
-                      formAccessible.get('hn')?.invalid ||
-                      formAccessible.get('hn')?.touched
-                    "
-                  >
-                    *โปรดระบุ (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)</mat-error
-                  >
-                </mat-form-field>
-              </div>
-              <div class="col-6">
-                <mat-form-field class="reh-input-full-width">
-                  <mat-label>ชื่อ-สกุล</mat-label>
-                  <input
+                    <mat-error
+                      *ngIf="
+                        formAccessible.get('hn')?.invalid ||
+                        formAccessible.get('hn')?.touched
+                      "
+                    >
+                      *โปรดระบุ (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="reh-input-full-width">
+                    <mat-label>ชื่อ-สกุล</mat-label>
+                    <input
 
-                    matInput
-                    name="od_rem"
-                    placeholder="ชื่อ-สกุล"
-                    aria-label="od_rem label "
-                    formControlName="od_rem"
-                    required
-                  />
-                  <mat-error
-                    *ngIf="
-                      formAccessible.get('od_rem')?.invalid ||
-                      formAccessible.get('od_rem')?.touched
-                    "
-                  >
-                    *โปรดระบุ ระบุ ชื่อ-สกุล</mat-error
-                  >
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-        <mat-tab >
-          <ng-template mat-tab-label>
-            <span class="mat-headline-6 reh-txt-blue900"
-              >ประเภทผู้ป่วย OPD</span
-            >
-          </ng-template>
-          <div class="p-2">
-            <div class="row">
-              <div class="col-12">
-                <mat-form-field class="reh-input-full-width">
-                  <mat-label>เลือก ประเภทนำส่ง</mat-label>
-                  <mat-select formControlName="opdtype">
-                    @for (opd of optionOpdType; track opd) {
-                    <mat-option [value]="opd.opd_type_id">{{ opd.opd_type_name }}</mat-option>
-                    }
-                  </mat-select>
-
-                  <mat-error
-                    *ngIf="
-                      formAccessible.get('opdtype')?.invalid ||
-                      formAccessible.get('opdtype')?.touched
-                    "
-                  >
-                    *โปรดเลือก ประเภทนำส่ง</mat-error
-                  >
-                </mat-form-field>
-
+                      matInput
+                      name="od_rem"
+                      placeholder="ชื่อ-สกุล"
+                      aria-label="od_rem label "
+                      formControlName="od_rem"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        formAccessible.get('od_rem')?.invalid ||
+                        formAccessible.get('od_rem')?.touched
+                      "
+                    >
+                      *โปรดระบุ ระบุ ชื่อ-สกุล</mat-error
+                    >
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-          </div>
-        </mat-tab>
+          </mat-tab>
+        }
+
+        @if(this.levelApp == 'opd'){
+          <mat-tab >
+            <ng-template mat-tab-label>
+              <span class="mat-headline-6 reh-txt-blue900"
+                >ประเภทผู้ป่วย OPD</span
+              >
+            </ng-template>
+            <div class="p-2">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class="reh-input-full-width">
+                    <mat-label>เลือก ประเภทนำส่ง</mat-label>
+                    <mat-select formControlName="opdtype">
+                      @for (opd of optionOpdType; track opd) {
+                      <mat-option [value]="opd.opd_type_id">{{ opd.opd_type_name }}</mat-option>
+                      }
+                    </mat-select>
+
+                    <mat-error
+                      *ngIf="
+                        formAccessible.get('opdtype')?.invalid ||
+                        formAccessible.get('opdtype')?.touched
+                      "
+                    >
+                      *โปรดเลือก ประเภทนำส่ง</mat-error
+                    >
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        }
       </mat-tab-group>
     </div>
     <div class="lj-viewer-wrapper">

@@ -94,6 +94,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     if(_wardId){
       this.wardId = _wardId;
     }
+
     const _userId =  this._roleService.userId();
     if(_userId){
       this.userId = _userId;
@@ -261,6 +262,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     });
 
     // this.formAccessible.get('od_rem')?.disable();
+
   }
 
 
