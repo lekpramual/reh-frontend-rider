@@ -57,7 +57,7 @@ export interface PeriodicElement {
 
 export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
-  displayedColumns = ['go_date', 'go_time', 'quick', 'od_rem', 'equip','wcode_staname','type_oi','star'];
+  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
   dataSource = new MatTableDataSource<any>();
 
   data: any;
