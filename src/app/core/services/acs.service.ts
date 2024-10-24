@@ -64,4 +64,22 @@ export class AcsService {
     return this.http.get<any>(url, { headers: this.headers });
   }
 
+  getAcsByCenterRiderJobs(type_oi: string, rxdate:string) {
+    const url = `${this.acsUrl}/centerriderjob?type_oi=${type_oi}&rxdate=${rxdate}`;
+    return this.http.get<any>(url, { headers: this.headers });
+  }
+
+  updateAcsByCenterRiderJobs(Id:string,data: any) {
+    const url = `${this.acsUrl}/${Id}/centerrider`;
+
+    return this.http.put<any>(url, data, {
+      headers: this.headers,
+    });
+  }
+
+  getAcsByCenterMonitor(type_oi: string, rxdate:string, eddate:string) {
+    const url = `${this.acsUrl}/centermonitor?type_oi=${type_oi}&rxdate=${rxdate}&eddate=${eddate}`;
+    return this.http.get<any>(url, { headers: this.headers });
+  }
+
 }

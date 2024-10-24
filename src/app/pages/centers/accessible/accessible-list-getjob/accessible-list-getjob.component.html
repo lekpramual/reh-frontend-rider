@@ -3,7 +3,7 @@
     <div class="row align-items-center px-2" style="height: 56px">
       <div class="col-6">
         <span class="mat-headline-5 reh-txt-blue900">รับ-จ่ายงาน</span>
-        <span class="mat-headline-5 reh-txt-green blinking-text"> อัปเดตอัตโนมัติ ทุก 1 นาที</span>
+        <span class="mat-headline-5 reh-txt-green blinking-text"> อัปเดตอัตโนมัติ ทุก 30 วินาที</span>
       </div>
       <div class="col-6" align="end">
         <button mat-fab extended class="reh-btn-green" (click)="openDialog()">
@@ -24,7 +24,7 @@
           <table mat-table class="accept" [dataSource]="dataSource">
 
             <ng-container matColumnDef="go_datetime">
-              <th mat-header-cell *matHeaderCellDef style="width: 124px;">
+              <th mat-header-cell *matHeaderCellDef style="width: 96px;">
                 <span class="mat-subtitle-2">วันที่เวลา</span>
               </th>
               <td mat-cell *matCellDef="let element" class="lj-txt-dot">

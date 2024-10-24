@@ -19,6 +19,7 @@ import { AcsService } from '@core/services/acs.service';
 import { interval, Subscription } from 'rxjs';
 import moment from 'moment';
 import { RoleService } from '@core/services/role.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 export interface PeriodicElement {
@@ -68,7 +69,8 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
   constructor(
     private dialog: MatDialog,
     private _acsService: AcsService,
-    private _roleService: RoleService
+    private _roleService: RoleService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -100,8 +102,16 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
     console.log('_currentDate >>>',this.currentDate);
 
     this.fetchData(); // Initial fetch // 60000ms = 1 minute
-    this.subscription = interval(60000).subscribe(() => {
-      this.fetchData();
+    this.subscription = interval(30000).subscribe(() => {
+      this._snackBar.open(`กำลังโหลดข้อมูล รับ-จ่ายงาน...`, '', {
+        duration:1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['success-snackbar']
+      }).afterDismissed().subscribe(() => {
+        // this.messageChange.emit('reset');
+        this.fetchData();
+      });
     });
 
 
@@ -119,6 +129,7 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
     this._acsService.getAcsByCenterGetJobs(this.levelApp,this.currentDate).subscribe({
       next:(data:any) =>{
         this.dataSource.data = data.result;
+
       },
       error:(error:any) => {
       console.error('Error fetching data', error);
@@ -174,7 +185,7 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      // result === "ok" && this.getActivityInProjectById(this.id);
+      result === "ok" && this.fetchData();
     });
   }
 

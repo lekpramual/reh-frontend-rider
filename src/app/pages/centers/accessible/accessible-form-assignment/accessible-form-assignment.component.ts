@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AcsService } from '@core/services/acs.service';
 import { AssetsService } from '@core/services/rest.service';
+import { RoleService } from '@core/services/role.service';
 import moment from 'moment';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
@@ -51,7 +52,11 @@ import { Observable, map, startWith } from 'rxjs';
 export class AccessibleFormAssignmentComponent implements OnInit{
 
   _Id: string = "";
+  levelApp:string = '';
+  currentDate: string ='';
   _data:any;
+  _dataRiderJob:any;
+  _userId:string = "";
   accessibleId: string = "";
   formAccessible!: FormGroup;
 
@@ -65,11 +70,30 @@ export class AccessibleFormAssignmentComponent implements OnInit{
     public dialogRef: MatDialogRef<AccessibleFormAssignmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _acsService: AcsService,
+    private _roleService:RoleService,
     private _snackBar: MatSnackBar
-  ) {}
+  ) {
+
+    moment.updateLocale('th', {
+      longDateFormat: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY เวลา HH:mm',
+        LLLL: 'วันddddที่ D MMMM YYYY เวลา HH:mm',
+      },
+      // Function to add 543 years to the Gregorian year
+      postformat: (str: any) =>
+        str.replace(/(\d{4})/g, (year: any) =>
+          (parseInt(year, 10) + 543).toString()
+        ),
+    });
+  }
 
   ngOnInit(): void {
     this._Id = this.data?.Id;
+
     this.initForm();
 
 
@@ -83,6 +107,31 @@ export class AccessibleFormAssignmentComponent implements OnInit{
         }
       });
     }
+
+    const _levelApp =  this._roleService.role();
+    if(_levelApp){
+      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    }
+
+    const userId = this._roleService.userId();
+    if(userId){
+      this._userId = `${userId}`
+    }
+
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+
+    console.log('_levelApp >>>',this.levelApp);
+    console.log('_currentDate >>>',this.currentDate);
+
+    this._acsService.getAcsByCenterRiderJobs(this.levelApp,this.currentDate).subscribe({
+      next:(data:any) =>{
+        this._dataRiderJob = data.result;
+      },
+      error:(error:any) => {
+      console.error('Error fetching data', error);
+      }
+    });
+
   }
 
   async onSubmit() {
@@ -131,6 +180,59 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   formatDateThai(date: Date): string {
     // return moment(date).format("LL"); // Customize the format as needed
     return moment(date).format("ll"); // Customize the format as needed
+  }
+
+  sendJobRider(userId:string){
+    console.log(userId);
+
+    try {
+      const data: any = {};
+      data.wk_perid = String(userId);
+      data.admin_wk_perid = this._userId
+
+      console.log('>>> center rider job',data,this._Id);
+      this._acsService.updateAcsByCenterRiderJobs(this._Id,data).subscribe({
+        next:(data)=> {
+          const result = data.ok;
+          if(result === 'ok'){
+            this._snackBar.open(`จ่ายงานเรียบร้อย`, '', {
+              duration:1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass:['success-snackbar']
+            }).afterDismissed().subscribe(() => {
+              // this.messageChange.emit('reset');
+              this.dialogRef.close("ok");
+            });
+          }
+        },
+        error:(error) => {
+          console.error('Error fetching departments', error);
+          this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
+            duration:3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass:['error-snackbar']
+          }).afterDismissed().subscribe(() => {
+            // this.onMessageChange('close');
+            // this.initForm();
+            this.dialogRef.close();
+          });
+        }
+      });
+    } catch (error: any) {
+      // Handle error during form submission
+      console.error(error);
+      this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      }).afterDismissed().subscribe(() => {
+        // this.onMessageChange('close');
+        // this.initForm();
+      });
+    }
   }
 
 

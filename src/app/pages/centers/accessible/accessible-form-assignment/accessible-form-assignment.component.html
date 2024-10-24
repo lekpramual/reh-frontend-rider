@@ -69,7 +69,24 @@
         </div>
       </div>
       <div class="row g-3 py-2" >
-        <div class="col-4">
+        <!-- {{_dataRiderJob | json}} -->
+        @for (item of _dataRiderJob; track $index) {
+          <div class="col-4">
+            <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน" (click)="sendJobRider(item.id)">
+              <div class="badge-container  reh-badge-blue" matBadge="{{item.total}}"  matBadgeSize="medium"></div>
+              <div class="row" align="center">
+                <div class="col-12">
+                  <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
+                </div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+              <mat-card-footer align="center">
+                <mat-card-subtitle>{{item.fullname}}</mat-card-subtitle>
+              </mat-card-footer>
+            </mat-card>
+          </div>
+        }
+        <!-- <div class="col-4">
           <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
             <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
             <div class="row" align="center">
@@ -138,21 +155,7 @@
               <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
             </mat-card-footer>
           </mat-card>
-        </div>
-        <div class="col-4">
-          <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน">
-            <div class="badge-container  reh-badge-blue" matBadge="4"  matBadgeSize="medium"></div>
-            <div class="row" align="center">
-              <div class="col-12">
-                <img mat-card-image class="reh-card-img" [src]="assets.assets()+'/images/account.png' " alt="Photo of a Shiba Inu">
-              </div>
-            </div>
-            <mat-divider class="mt-2"></mat-divider>
-            <mat-card-footer align="center">
-              <mat-card-subtitle>นายชุมพล ผดุงกิจ</mat-card-subtitle>
-            </mat-card-footer>
-          </mat-card>
-        </div>
+        </div> -->
       </div>
   </div>
   </mat-dialog-content>

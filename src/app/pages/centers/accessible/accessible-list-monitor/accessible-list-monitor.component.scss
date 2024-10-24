@@ -43,3 +43,12 @@ tr.example-element-row:not(.example-expanded-row):active {
   color:var(--red-color) !important;
 }
 
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blinking-text {
+  animation: blink 1s infinite;
+}
