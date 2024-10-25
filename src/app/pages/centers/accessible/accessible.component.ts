@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import AccessibleListMonitorComponent from './accessible-list-monitor/accessible-list-monitor.component';
 import AccessibleListGetJobComponent from './accessible-list-getjob/accessible-list-getjob.component';
+import { AcsService } from '@core/services/acs.service';
+import { RoleService } from '@core/services/role.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import moment from 'moment';
+import { interval, Subscription } from 'rxjs';
 
 
 export interface PeriodicElement {
@@ -43,21 +48,6 @@ export  interface MoniElement{
 }
 
 
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {name: 'น.ส.เกษร เหนือโท',type_id:1, type:'ปกติ [0-60]',equipment:'เปลนอน', in: 'ศัลยกรรม 3', out:'ส่งผู้ป่วยกลับบ้าน',date:'15/08/2567',time:'11:20'},
-  {name: 'Mr.JOSEPH WILLIAM WILLIAM JR',type_id:2, type:'ด่วน [0-30]',equipment:'เปลนอน+ออกซิเจน', in: 'ศัลยกรรม 3', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 7',date:'15/08/2567',time:'11:21'},
-  {name: 'น.ส.ธัญญานุช ด้วงโพนแร้ง',type_id:3, type:'ด่วนมาก [0-20]',equipment:'รถนั่ง', in: 'รังสีร่วมรักษา', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 8',date:'15/08/2567',time:'11:16'},
-  {name: 'นางสมร โภคามาตย์',type_id:4, type:'ด่วนพิเศษ [0-10]',equipment:'เปลนอน', in: 'เบญจสิริ 2', out:'เบญจสิริ 2',date:'15/08/2567',time:'11:15'},
-];
-
-const ELEMENT_MONI_DATA: MoniElement[] = [
-  {status_id:1,status:'จ่ายงาน',officer:'นายไสว สอนโกษา', name: 'น.ส.เกษร เหนือโท',type_id:1, type:'ปกติ [0-60]',equipment:'เปลนอน', in: 'ศัลยกรรม 3', out:'ส่งผู้ป่วยกลับบ้าน',date:'15/08/2567',time:'11:20',date_end:'15/08/2567',time_end:''},
-  {status_id:1,status:'จ่ายงาน',officer:'นายบุญเรือง พินิจงาม',name: 'Mr.JOSEPH WILLIAM WILLIAM JR',type_id:2, type:'ด่วน [0-30]',equipment:'เปลนอน+ออกซิเจน', in: 'ศัลยกรรม 3', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 7',date:'15/08/2567',time:'11:21',date_end:'15/08/2567',time_end:''},
-  {status_id:2,status:'ปิดงาน',officer:'นายชุมพล ผดุงกิจ',name: 'น.ส.ธัญญานุช ด้วงโพนแร้ง',type_id:3, type:'ด่วนมาก [0-20]',equipment:'รถนั่ง', in: 'รังสีร่วมรักษา', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 8',date:'15/08/2567',time:'11:16',date_end:'15/08/2567',time_end:'11:30'},
-  {status_id:2,status:'ปิดงาน',officer:'นายบุญเรือง พินิจงาม',name: 'นางสมร โภคามาตย์',type_id:4, type:'ด่วนพิเศษ [0-10]',equipment:'เปลนอน', in: 'เบญจสิริ 2', out:'เบญจสิริ 2',date:'15/08/2567',time:'11:15',date_end:'15/08/2567',time_end:'11:35'},
-];
-
 @Component({
   selector: 'app-accessible',
   standalone: true,
@@ -82,11 +72,120 @@ const ELEMENT_MONI_DATA: MoniElement[] = [
   ],
 })
 
-export default class AccessibleComponent {
-  displayedColumns = ['star','date', 'type', 'name', 'equipment', 'in'];
-  displayedColumnsMoni = ['star','status', 'type','date','date_end','officer', 'name', 'equipment', 'in'];
-  dataSource = ELEMENT_DATA;
-  dataSourceMoni = ELEMENT_MONI_DATA;
+export default class AccessibleComponent implements OnInit,OnDestroy{
+
+  dataGetJob:any = [];
+  dataMonitor:any = [];
+
+  levelApp:string =  '';
+  currentDate: string ='';
+  private subscriptionGetJob!: Subscription;
+  private subscriptionMonitor!: Subscription;
+
+  constructor(
+    private _acsService: AcsService,
+    private _roleService: RoleService,
+    private _snackBar: MatSnackBar
+  ){}
+  ngOnInit(): void {
+
+    moment.updateLocale('th', {
+      longDateFormat: {
+        LT: 'HH:mm',
+        LTS: 'HH:mm:ss',
+        L: 'DD/MM/YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY เวลา HH:mm',
+        LLLL: 'วันddddที่ D MMMM YYYY เวลา HH:mm',
+      },
+      // Function to add 543 years to the Gregorian year
+      postformat: (str: any) =>
+        str.replace(/(\d{4})/g, (year: any) =>
+          (parseInt(year, 10) + 543).toString()
+        ),
+    });
+
+    const _levelApp =  this._roleService.role();
+    if(_levelApp){
+      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    }
+
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+
+    console.log('_levelApp >>>',this.levelApp);
+    console.log('_currentDate >>>',this.currentDate);
+
+    this.fetchDataGetJob(); // Initial fetch // 60000ms = 1 minute
+    this.fetchDataMonitor(); // Initial fetch // 60000ms = 1 minute
+    this.subscriptionGetJob = interval(60000).subscribe(() => {
+      this._snackBar.open(`กำลังโหลดข้อมูล ...`, '', {
+        duration:1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['success-snackbar']
+      }).afterDismissed().subscribe(() => {
+        // this.messageChange.emit('reset');
+        this.fetchDataGetJob();
+        this.fetchDataMonitor();
+      });
+    });
+
+    // this.subscriptionMonitor = interval(60000).subscribe(() => {
+    //   this._snackBar.open(`กำลังโหลดข้อมูล ติดตาม-สถานะ ...`, '', {
+    //     duration:1500,
+    //     horizontalPosition: 'right',
+    //     verticalPosition: 'bottom',
+    //     panelClass:['success-snackbar']
+    //   }).afterDismissed().subscribe(() => {
+    //     // this.messageChange.emit('reset');
+    //     this.fetchDataMonitor();
+    //   });
+    // });
+  }
+
+  fetchDataGetJob(): void {
+    this._acsService.getAcsByCenterGetJobs(this.levelApp,this.currentDate).subscribe({
+      next:(data:any) =>{
+        console.log('get job>>>',data.result)
+        this.dataGetJob = data.result;
+      },
+      error:(error:any) => {
+      console.error('Error fetching data', error);
+      }
+    });
+  }
+
+  fetchDataMonitor(): void {
+    this._acsService.getAcsByCenterMonitor(this.levelApp,this.currentDate,this.currentDate).subscribe({
+      next:(data:any) =>{
+        console.log(data);
+        this.dataMonitor = data.result;
+      },
+      error:(error:any) => {
+      console.error('Error fetching data', error);
+      }
+    });
+  }
+
+  messageChange($event:any){
+    console.log('>>> event change get job',$event);
+    if($event == 'reload'){
+      this.fetchDataGetJob();
+      this.fetchDataMonitor();
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.subscriptionGetJob) {
+      this.subscriptionGetJob.unsubscribe(); // Clean up subscription
+    }
+
+    if (this.subscriptionMonitor) {
+      this.subscriptionMonitor.unsubscribe(); // Clean up subscription
+    }
+  }
+
 
   clickedJob(row:any){
     console.log('Clicked Job', row);

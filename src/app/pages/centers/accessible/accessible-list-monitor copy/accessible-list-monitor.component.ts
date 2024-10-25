@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,19 +43,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ],
 })
 
-export default class AccessibleListMonitorComponent implements OnInit{
-
-  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
-  dataSource = new MatTableDataSource<any>();
-
-  @Input() set dataMonitor(data:any){
-    console.log('data get monitor >>>',data);
-    this.dataSource.data = data;
-  }
-
-
-  @Output() messageChange = new EventEmitter<string>();
-
+export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
 
   data: any;
   levelApp:string =  '';
@@ -63,6 +51,8 @@ export default class AccessibleListMonitorComponent implements OnInit{
   private subscription!: Subscription;
 
 
+  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
+  dataSource = new MatTableDataSource<any>();
 
   constructor(
     private dialog: MatDialog,
@@ -88,8 +78,53 @@ export default class AccessibleListMonitorComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+    const _levelApp =  this._roleService.role();
+    if(_levelApp){
+      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    }
+
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+
+    console.log('_levelApp >>>',this.levelApp);
+    console.log('_currentDate >>>',this.currentDate);
+
+    this.fetchData(); // Initial fetch // 60000ms = 1 minute
+    this.subscription = interval(60000).subscribe(() => {
+
+      this._snackBar.open(`กำลังโหลดข้อมูล ติดตาม-สถานะ...`, '', {
+        duration:1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['success-snackbar']
+      }).afterDismissed().subscribe(() => {
+        // this.messageChange.emit('reset');
+        this.fetchData();
+      });
+
+    });
+
+
   }
 
+  fetchData(): void {
+    this._acsService.getAcsByCenterMonitor(this.levelApp,this.currentDate,this.currentDate).subscribe({
+      next:(data:any) =>{
+        console.log(data);
+        this.data = data.result;
+        this.dataSource.data = data.result;
+      },
+      error:(error:any) => {
+      console.error('Error fetching data', error);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe(); // Clean up subscription
+    }
+  }
 
   clickedJob(row:any){
     console.log('Clicked Job', row);

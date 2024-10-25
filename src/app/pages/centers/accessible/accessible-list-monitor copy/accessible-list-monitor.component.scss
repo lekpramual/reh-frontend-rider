@@ -1,0 +1,54 @@
+@import '../../../../../theme.scss';
+
+.example-container {
+  height: calc(100vh - 236px);
+  overflow: auto;
+}
+
+table.monitor {
+  width: 1400px;
+}
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+td.mat-column-type {
+  width: 36px;
+  padding-right: 8px;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+  // cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+  // cursor: pointer;
+}
+
+.btn-action {
+  color:var(--primary-color) !important;
+}
+
+.btn-action-blue {
+  color:var(--primary-color) !important;
+}
+.btn-action-green {
+  color:var(--green-color) !important;
+}
+.btn-action-red {
+  color:var(--red-color) !important;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blinking-text {
+  animation: blink 1s infinite;
+}

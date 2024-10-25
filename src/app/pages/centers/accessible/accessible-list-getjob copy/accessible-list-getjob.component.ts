@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +20,18 @@ import { interval, Subscription } from 'rxjs';
 import moment from 'moment';
 import { RoleService } from '@core/services/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+
+export interface PeriodicElement {
+  name: string;
+  type:string;
+  type_id:number;
+  equipment: string;
+  in: string;
+  out: string;
+  date:string;
+  time:string;
+}
 
 
 @Component({
@@ -49,20 +61,10 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
   displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
   dataSource = new MatTableDataSource<any>();
 
-  @Input() set dataGetJob(data:any){
-    console.log('data get job >>>',data);
-    this.dataSource.data = data;
-  }
-
-
-  @Output() messageChange = new EventEmitter<string>();
-
   data: any;
   levelApp:string =  '';
   currentDate: string ='';
   private subscription!: Subscription;
-
-
 
   constructor(
     private dialog: MatDialog,
@@ -88,9 +90,44 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
           (parseInt(year, 10) + 543).toString()
         ),
     });
+
+    const _levelApp =  this._roleService.role();
+    if(_levelApp){
+      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    }
+
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+
+    console.log('_levelApp >>>',this.levelApp);
+    console.log('_currentDate >>>',this.currentDate);
+
+    this.fetchData(); // Initial fetch // 60000ms = 1 minute
+    this.subscription = interval(30000).subscribe(() => {
+      this._snackBar.open(`กำลังโหลดข้อมูล รับ-จ่ายงาน...`, '', {
+        duration:1500,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['success-snackbar']
+      }).afterDismissed().subscribe(() => {
+        // this.messageChange.emit('reset');
+        this.fetchData();
+      });
+    });
+
+
   }
 
+  fetchData(): void {
+    this._acsService.getAcsByCenterGetJobs(this.levelApp,this.currentDate).subscribe({
+      next:(data:any) =>{
+        this.dataSource.data = data.result;
 
+      },
+      error:(error:any) => {
+      console.error('Error fetching data', error);
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -122,7 +159,7 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      result === "ok" && this.messageChange.emit('reload');
+      result === "ok" && this.fetchData();
     });
   }
 
@@ -140,7 +177,7 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      result === "ok" && this.messageChange.emit('reload');
+      result === "ok" && this.fetchData();
     });
   }
 
@@ -157,7 +194,7 @@ export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      result === "ok" && this.messageChange.emit('reload');
+      result === "ok" && this.fetchData();
     });
   }
 

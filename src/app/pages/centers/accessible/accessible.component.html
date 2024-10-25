@@ -8,12 +8,20 @@
 <div class="row">
   <!-- รับ-จ่ายงาน -->
   <div class="col-lg-6 col-md-12 mb-3">
-    <app-accessible-list-getjob />
+    <app-accessible-list-getjob
+      [dataGetJob]="dataGetJob"
+
+      (messageChange)="messageChange($event)"
+    />
   </div>
 
   <!-- ติดตาม-สถานะ-->
   <div class="col-lg-6 col-md-12 mb-3">
-    <app-accessible-list-monitor/>
+    <app-accessible-list-monitor
+    [dataMonitor]="dataMonitor"
+
+    (messageChange)="messageChange($event)"
+    />
   </div>
 </div>
 
