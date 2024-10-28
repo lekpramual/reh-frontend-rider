@@ -203,6 +203,13 @@ mat-mdc-list-item:focus {
   --mat-snack-bar-button-color: var(--white-color);
 }
 
+.blue-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--blue-color);
+  // --mat-mdc-snack-bar-button-color: var(--white-color);
+  --mat-snack-bar-button-color: var(--white-color);
+}
+
 // .mat-mdc-snack-bar-container
 // .mat-mdc-button.mat-mdc-snack-bar-action
 

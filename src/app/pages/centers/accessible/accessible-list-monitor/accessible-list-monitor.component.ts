@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -45,7 +45,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export default class AccessibleListMonitorComponent implements OnInit{
 
-  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
+  displayedColumns = ['status_work','go_datetime','go_time', 'quick','name_equip','wcode_staname','star'];
   dataSource = new MatTableDataSource<any>();
 
   @Input() set dataMonitor(data:any){
@@ -57,6 +57,7 @@ export default class AccessibleListMonitorComponent implements OnInit{
   @Output() messageChange = new EventEmitter<string>();
 
 
+  _Id = signal(0);
   data: any;
   levelApp:string =  '';
   currentDate: string ='';
@@ -91,9 +92,11 @@ export default class AccessibleListMonitorComponent implements OnInit{
   }
 
 
+
+
   clickedJob(row:any){
     console.log('Clicked Job', row);
-    this.openDialogConfirm();
+    // this.openDialogConfirm();
   }
 
   onButtonClick(row: any, event: Event) {
@@ -101,15 +104,12 @@ export default class AccessibleListMonitorComponent implements OnInit{
     // console.log('Button clicked: ', row);
   }
 
-  openDialogConfirm(): void {
+  openDialogConfirm(Id:number): void {
     const dialogRef = this.dialog.open(
       AccessibleFormConfirmComponent,
       {
         data: {
-          accessible_id: "",
-          activity_name: "",
-          activity_indicator: "",
-          activity_amount: "",
+          Id: Id
         },
         width: "640px",
         disableClose: true

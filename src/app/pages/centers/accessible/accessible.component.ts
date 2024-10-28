@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -78,6 +78,11 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   dataMonitor:any = [];
 
   levelApp:string =  '';
+  wardName = signal('');
+  currentDateTime = signal(new Date());
+
+  private intervalId: any;
+
   currentDate: string ='';
   private subscriptionGetJob!: Subscription;
   private subscriptionMonitor!: Subscription;
@@ -110,6 +115,11 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
       this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
     }
 
+    const _wardName = this._roleService.wardName();
+    if(_wardName){
+      this.wardName.set(_wardName)
+    }
+
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
 
     console.log('_levelApp >>>',this.levelApp);
@@ -117,12 +127,12 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
 
     this.fetchDataGetJob(); // Initial fetch // 60000ms = 1 minute
     this.fetchDataMonitor(); // Initial fetch // 60000ms = 1 minute
-    this.subscriptionGetJob = interval(60000).subscribe(() => {
+    this.subscriptionGetJob = interval(30000).subscribe(() => {
       this._snackBar.open(`กำลังโหลดข้อมูล ...`, '', {
         duration:1500,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
-        panelClass:['success-snackbar']
+        panelClass:['blue-snackbar']
       }).afterDismissed().subscribe(() => {
         // this.messageChange.emit('reset');
         this.fetchDataGetJob();
@@ -141,6 +151,12 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     //     this.fetchDataMonitor();
     //   });
     // });
+
+
+    this.intervalId = setInterval(() => {
+
+      this.currentDateTime.set(new Date());
+    }, 1000); // Update every second
   }
 
   fetchDataGetJob(): void {
@@ -184,6 +200,8 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     if (this.subscriptionMonitor) {
       this.subscriptionMonitor.unsubscribe(); // Clean up subscription
     }
+
+    clearInterval(this.intervalId);
   }
 
 
@@ -194,6 +212,12 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   onButtonClick(row: any, event: Event) {
     event.stopPropagation();
     // console.log('Button clicked: ', row);
+  }
+
+  //ฟังก์ชั่น: ปีภาษาไทย
+  formatDateThai(date: Date): string {
+    // return moment(date).format("LL"); // Customize the format as needed
+    return moment(date).format("lll"); // Customize the format as needed
   }
 
 }

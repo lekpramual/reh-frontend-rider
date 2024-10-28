@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AcsList } from '@core/interface/acs.interface';
+import { AcsService } from '@core/services/acs.service';
+import moment from 'moment';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
 
@@ -46,7 +49,8 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class AccessibleFormConfirmComponent implements OnInit{
 
-  accessibleId: string = "";
+  _Id = signal(0);
+  _data = signal<AcsList[]>([]);
   formAccessible!: FormGroup;
 
   filteredOptions!: Observable<any[]>;
@@ -117,17 +121,33 @@ export class AccessibleFormConfirmComponent implements OnInit{
 
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormConfirmComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _acsService: AcsService
   ) {}
 
-  ngOnInit(): void {
-    this.accessibleId = this.data?.accessible_id;
+  async ngOnInit() {
+    // this._Id = this.data?.Id;
+    this._Id.set(this.data?.Id);
     this.initForm();
 
     this.filteredOptions = this.searchControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
+
+    await this.getWard();
+  }
+
+  async getWard(){
+    await this._acsService.getAcsByWId(this._Id()).subscribe({
+      next:(data) => {
+        const response:AcsList[] = data.result;
+        this._data.set(response);
+      },
+      error:(error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
   }
 
   async onSubmit() {
@@ -138,7 +158,7 @@ export class AccessibleFormConfirmComponent implements OnInit{
         data.name = this.formAccessible.value.activity_name;
         data.indicator = this.formAccessible.value.activity_indicator;
         data.amount = this.formAccessible.value.activity_amount;
-        data.productId = this.accessibleId;
+        data.productId = this._Id();
         this.dialogRef.close("ok");
       } catch (error: any) {
         // Handle error during form submission
@@ -175,6 +195,25 @@ export class AccessibleFormConfirmComponent implements OnInit{
   private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  //ฟังก์ชั่น: ปีภาษาไทย
+  formatDateThai(date: Date): string {
+    // return moment(date).format("LL"); // Customize the format as needed
+    return moment(date).format("ll"); // Customize the format as needed
+  }
+
+  calculateTimeDifferenceInMinutes(date:any,startTime: any, endTime: any): number {
+    const _startTime = moment(startTime).format('HH:mm');
+    const _endTime = moment(endTime).format('HH:mm');
+
+    console.log(_startTime,_endTime)
+    const start = new Date(`${date}T${startTime}`);
+    const end = new Date(`${date}T${endTime}`);
+
+    const diffInMs = end.getTime() - start.getTime(); // Difference in milliseconds
+    const diffInMinutes = diffInMs / (1000 * 60); // Convert milliseconds to minutes
+    return diffInMinutes;
   }
 
 
