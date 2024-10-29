@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { environment } from "@env/environment";
 import { User } from "@core/interface/user.model";
+import { firstValueFrom } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -28,7 +29,7 @@ export class AcsService {
     return this.http.get<any>(url, { headers: this.headers });
   }
 
-  getAcsByWId(Id: number) {
+  getAcsByWId(Id: string) {
     const url = `${this.acsUrl}/${Id}/list`;
     return this.http.get<any>(url, { headers: this.headers });
   }
@@ -75,6 +76,15 @@ export class AcsService {
     return this.http.put<any>(url, data, {
       headers: this.headers,
     });
+  }
+
+  // รับงานและยืนยันปิดงาน
+   async updateAcsByCenterGetAndConfirm(Id:string,data: any) :Promise<any>{
+    const courses$ = this.http.put<any>(`${this.acsUrl}/${Id}/centergetandconfirm`, data, {
+      headers: this.headers,
+    });
+
+    return await firstValueFrom(courses$)
   }
 
   getAcsByCenterMonitor(type_oi: string, rxdate:string, eddate:string) {

@@ -118,7 +118,7 @@ export default class AccessibleListMonitorComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      // result === "ok" && this.getActivityInProjectById(this.id);
+      result === "ok" && this.messageChange.emit('reload');
     });
   }
 
@@ -126,6 +126,16 @@ export default class AccessibleListMonitorComponent implements OnInit{
   formatDateThai(date: Date): string {
     // return moment(date).format("LL"); // Customize the format as needed
     return moment(date).format("l"); // Customize the format as needed
+  }
+
+  calculateTimeDifferenceInMinutes(date:any,startTime: any, endTime: any): number {
+    // console.log(_startTime,_endTime)
+    const start = new Date(`${date}T${startTime}`);
+    const end = new Date(`${date}T${endTime}`);
+
+    const diffInMs = end.getTime() - start.getTime(); // Difference in milliseconds
+    const diffInMinutes = diffInMs / (1000 * 60); // Convert milliseconds to minutes
+    return diffInMinutes;
   }
 
 }

@@ -55,70 +55,6 @@ export class AccessibleFormCancelComponent implements OnInit{
   formAccessible!: FormGroup;
 
 
-
-  /** list of banks */
-  options: any[] = [
-    {name: 'กรุงไทย', id: 1},
-    {name: 'กรุงศรี', id: 2},
-    {name: 'ธนชาติ', id: 3},
-    {name: 'กสิกร', id: 4},
-    {name: 'กสิกร5', id: 5},
-    {name: 'กสิกร6', id: 6},
-    {name: 'กสิกร7', id: 7},
-    {name: 'กสิกร8', id: 8},
-    {name: 'กสิกร9', id: 9},
-
-  ];
-
-  optionworks:any[] = [
-    { value: 1, label: 'เช้า' },
-    { value: 2, label: 'บ่าย' },
-    { value: 3, label: 'ดึก' }
-  ];
-
-  optiontypes:any[] = [
-    {
-      value: "1",
-      label: "รถนั่ง",
-
-  },
-  {
-      value: "2",
-      label: "เปลนอน",
-
-  },
-  {
-      value: "3",
-      label: "เปลนอน+ออกซิเจน",
-
-  },
-  {
-      value: "4",
-      label: "เปลนอน+ออกซิเจน+แผ่น slide board",
-
-  },
-  {
-      value: "5",
-      label: "เปลนอน+แผ่น  slide board",
-
-  },
-  {
-      value: "6",
-      label: "ขอคนเปล OPD",
-      "equstatus": "1"
-  },
-  {
-      value: "7",
-      label: "เฉพาะพนักงานเปล",
-
-  },
-  {
-      value: "8",
-      label: "เปลนอน+ออกซิเจน+tube",
-
-  }
-  ];
-
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormCancelComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -148,7 +84,7 @@ export class AccessibleFormCancelComponent implements OnInit{
     this.initForm();
 
     if(this._Id){
-      this._acsService.getAcsByWId(parseInt(this._Id)).subscribe({
+      this._acsService.getAcsByWId(this._Id).subscribe({
         next:(data) => {
           this._data = data.result[0];
         },

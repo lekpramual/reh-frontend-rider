@@ -43,23 +43,26 @@ tr.example-element-row:not(.example-expanded-row):active {
 .bg-txt-blue {
   background-color: var(--blue-color) !important;
   color:#fff !important;
+  text-align: center;
 }
 .bg-txt-green {
   background-color: var(--green-color) !important;
   color:#fff !important;
+  text-align: center;
 }
 .bg-txt-yellow {
   background-color: var(--yellow-color) !important;
-
+  text-align: center;
 }
 
 .bg-txt-orange {
   background-color: var(--orange-color) !important;
+  text-align: center;
 
 }
 .bg-txt-red {
   background-color: var(--red-color) !important;
-
+  text-align: center;
 }
 .btn-action-red {
   color:var(--red-color) !important;

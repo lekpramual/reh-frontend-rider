@@ -98,7 +98,7 @@ export class AccessibleFormAssignmentComponent implements OnInit{
 
 
     if(this._Id){
-      this._acsService.getAcsByWId(parseInt(this._Id)).subscribe({
+      this._acsService.getAcsByWId(this._Id).subscribe({
         next:(data) => {
           this._data = data.result[0];
         },
@@ -120,8 +120,6 @@ export class AccessibleFormAssignmentComponent implements OnInit{
 
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
 
-    console.log('_levelApp >>>',this.levelApp);
-    console.log('_currentDate >>>',this.currentDate);
 
     this._acsService.getAcsByCenterRiderJobs(this.levelApp,this.currentDate).subscribe({
       next:(data:any) =>{
@@ -190,7 +188,6 @@ export class AccessibleFormAssignmentComponent implements OnInit{
       data.wk_perid = String(userId);
       data.admin_wk_perid = this._userId
 
-      console.log('>>> center rider job',data,this._Id);
       this._acsService.updateAcsByCenterRiderJobs(this._Id,data).subscribe({
         next:(data)=> {
           const result = data.ok;

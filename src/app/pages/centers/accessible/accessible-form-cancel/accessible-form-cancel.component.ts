@@ -83,7 +83,7 @@ export class AccessibleFormCancelComponent implements OnInit{
     this.initForm();
 
     if(this._Id){
-      this._acsService.getAcsByWId(parseInt(this._Id)).subscribe({
+      this._acsService.getAcsByWId(this._Id).subscribe({
         next:(data) => {
           this._data = data.result[0];
         },

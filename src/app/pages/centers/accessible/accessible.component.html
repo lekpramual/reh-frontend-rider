@@ -7,16 +7,17 @@
 
 <div class="row">
   <!-- รับ-จ่ายงาน -->
-  <div class="col-lg-6 col-md-12 mb-3">
+   <!-- TODO List get test -->
+  <div class="col-lg-4 col-md-12 mb-3">
     <app-accessible-list-getjob
       [dataGetJob]="dataGetJob"
-
       (messageChange)="messageChange($event)"
     />
   </div>
 
   <!-- ติดตาม-สถานะ-->
-  <div class="col-lg-6 col-md-12 mb-3">
+
+  <div class="col-lg-8 col-md-12 mb-3">
     <app-accessible-list-monitor
     [dataMonitor]="dataMonitor"
 

@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AcsList } from '@core/interface/acs.interface';
@@ -49,91 +50,25 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class AccessibleFormConfirmComponent implements OnInit{
 
-  _Id = signal(0);
+  _Id = signal('');
   _data = signal<AcsList[]>([]);
   formAccessible!: FormGroup;
 
   filteredOptions!: Observable<any[]>;
   searchControl: FormControl = new FormControl();
 
-  /** list of banks */
-  options: any[] = [
-    {name: 'กรุงไทย', id: 1},
-    {name: 'กรุงศรี', id: 2},
-    {name: 'ธนชาติ', id: 3},
-    {name: 'กสิกร', id: 4},
-    {name: 'กสิกร5', id: 5},
-    {name: 'กสิกร6', id: 6},
-    {name: 'กสิกร7', id: 7},
-    {name: 'กสิกร8', id: 8},
-    {name: 'กสิกร9', id: 9},
-
-  ];
-
-  optionworks:any[] = [
-    { value: 1, label: 'เช้า' },
-    { value: 2, label: 'บ่าย' },
-    { value: 3, label: 'ดึก' }
-  ];
-
-  optiontypes:any[] = [
-    {
-      value: "1",
-      label: "รถนั่ง",
-
-  },
-  {
-      value: "2",
-      label: "เปลนอน",
-
-  },
-  {
-      value: "3",
-      label: "เปลนอน+ออกซิเจน",
-
-  },
-  {
-      value: "4",
-      label: "เปลนอน+ออกซิเจน+แผ่น slide board",
-
-  },
-  {
-      value: "5",
-      label: "เปลนอน+แผ่น  slide board",
-
-  },
-  {
-      value: "6",
-      label: "ขอคนเปล OPD",
-      "equstatus": "1"
-  },
-  {
-      value: "7",
-      label: "เฉพาะพนักงานเปล",
-
-  },
-  {
-      value: "8",
-      label: "เปลนอน+ออกซิเจน+tube",
-
-  }
-  ];
 
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormConfirmComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _acsService: AcsService
+    private _acsService: AcsService,
+    private _snackBar: MatSnackBar
   ) {}
 
   async ngOnInit() {
     // this._Id = this.data?.Id;
     this._Id.set(this.data?.Id);
     this.initForm();
-
-    this.filteredOptions = this.searchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
 
     await this.getWard();
   }
@@ -189,12 +124,53 @@ export class AccessibleFormConfirmComponent implements OnInit{
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close('ok');
   }
 
-  private _filter(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  async onGetJob(event: Event){
+    event.preventDefault();
+    console.log('Button clicked get job.');
+    await this.updateJob('get');
+  }
+
+  async onConfirmJob(event: Event){
+    event.preventDefault();
+    console.log('Button clicked get confirm job .');
+    await this.updateJob('confirm');
+  }
+
+
+
+  async updateJob(mode:string){
+    try {
+
+      console.log('mode',mode)
+      // await this.coursesService.deleteCourse(courseId);
+      // const courses = this.#courses();
+      // const newCourse = courses.filter(course => course.id !== courseId);
+      // this.#courses.set(newCourse);
+      const data = {
+        mode:mode
+      }
+
+      const response:any = await this._acsService.updateAcsByCenterGetAndConfirm(this._Id(),data);
+      if(response.ok){
+        this._snackBar.open(mode == 'get'? `รับงานเรียบร้อย` :`ปิดงานเรียบร้อย`, '', {
+          duration:1500,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass:['success-snackbar']
+        }).afterDismissed().subscribe(async () => {
+          // this.messageChange.emit('reset');
+          // this.dialogRef.close("ok");
+          await this.getWard();
+        });
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert(`Error update job.`)
+    }
   }
 
   //ฟังก์ชั่น: ปีภาษาไทย
@@ -204,10 +180,7 @@ export class AccessibleFormConfirmComponent implements OnInit{
   }
 
   calculateTimeDifferenceInMinutes(date:any,startTime: any, endTime: any): number {
-    const _startTime = moment(startTime).format('HH:mm');
-    const _endTime = moment(endTime).format('HH:mm');
-
-    console.log(_startTime,_endTime)
+    // console.log(_startTime,_endTime)
     const start = new Date(`${date}T${startTime}`);
     const end = new Date(`${date}T${endTime}`);
 

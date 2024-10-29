@@ -117,7 +117,7 @@
           @if(_data()[0]?.sd_date != '-'){
             <span class="mat-subtitle-1">{{formatDateThai(_data()[0]?.sd_date)}} {{_data()[0]?.sd_time}}</span>
           }@else {
-            <button mat-fab extended class="reh-btn-blue mb-2" style="width: 156px;">
+            <button mat-fab extended class="reh-btn-blue mb-2" style="width: 156px;" (click)="onGetJob($event)">
               <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
               <span class="mat-subtitle-2">คลิกรับงาน</span></button>
           }
@@ -133,8 +133,12 @@
 
           @if(_data()[0]?.ed_date != '-'){
             <span class="mat-subtitle-1">{{formatDateThai(_data()[0]?.ed_date)}} {{_data()[0]?.ed_time}}</span>
-          }@else {
-            <button mat-fab extended class="reh-btn-green disabled" style="width: 156px;" disabled>
+          }@else if(_data()[0]?.ed_date == '-' && _data()[0]?.sd_date != '-'){
+            <button mat-fab extended class="reh-btn-green" style="width: 156px;"  (click)="onConfirmJob($event)">
+              <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
+              <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
+          }@else{
+            <button mat-fab extended class="reh-btn-green disabled" style="width: 156px;" disabled (click)="onConfirmJob($event)">
               <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
               <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
           }
