@@ -1,12 +1,17 @@
 @import '../../../../../theme.scss';
 
 .example-container {
-  height: calc(100vh - 236px);
+  height: calc(100vh - 200px);
+
   overflow: auto;
 }
 
 table.accept {
   width: 1200px;
+}
+
+table.getjob {
+  width: 400px;
 }
 
 // td.mat-column-star {
@@ -33,6 +38,31 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .blinking-text {
   animation: blink 1s infinite;
+}
+
+.bg-txt-blue {
+  background-color: var(--blue-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+.bg-txt-green {
+  background-color: var(--green-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+.bg-txt-yellow {
+  background-color: var(--yellow-color) !important;
+  text-align: center;
+}
+
+.bg-txt-orange {
+  background-color: var(--orange-color) !important;
+  text-align: center;
+
+}
+.bg-txt-red {
+  background-color: var(--red-color) !important;
+  text-align: center;
 }
 
 

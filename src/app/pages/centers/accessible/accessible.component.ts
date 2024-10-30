@@ -20,34 +20,6 @@ import moment from 'moment';
 import { interval, Subscription } from 'rxjs';
 
 
-export interface PeriodicElement {
-  name: string;
-  type:string;
-  type_id:number;
-  equipment: string;
-  in: string;
-  out: string;
-  date:string;
-  time:string;
-}
-
-export  interface MoniElement{
-  status:string;
-  status_id:number;
-  officer:string;
-  name: string;
-  type:string;
-  type_id:number;
-  equipment: string;
-  in: string;
-  out: string;
-  date:string;
-  time:string;
-  date_end:string;
-  time_end:string;
-}
-
-
 @Component({
   selector: 'app-accessible',
   standalone: true,
@@ -87,6 +59,14 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   private subscriptionGetJob!: Subscription;
   private subscriptionMonitor!: Subscription;
 
+  // from defualt
+  formSearch = signal({
+    start: new Date(),
+    end:new Date(),
+    searchOption:'od_rem',
+    searchText:''
+  })
+
   constructor(
     private _acsService: AcsService,
     private _roleService: RoleService,
@@ -122,9 +102,6 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
 
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
 
-    console.log('_levelApp >>>',this.levelApp);
-    console.log('_currentDate >>>',this.currentDate);
-
     this.fetchDataGetJob(); // Initial fetch // 60000ms = 1 minute
     this.fetchDataMonitor(); // Initial fetch // 60000ms = 1 minute
     this.subscriptionGetJob = interval(30000).subscribe(() => {
@@ -139,20 +116,6 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
         this.fetchDataMonitor();
       });
     });
-
-    // this.subscriptionMonitor = interval(60000).subscribe(() => {
-    //   this._snackBar.open(`กำลังโหลดข้อมูล ติดตาม-สถานะ ...`, '', {
-    //     duration:1500,
-    //     horizontalPosition: 'right',
-    //     verticalPosition: 'bottom',
-    //     panelClass:['success-snackbar']
-    //   }).afterDismissed().subscribe(() => {
-    //     // this.messageChange.emit('reset');
-    //     this.fetchDataMonitor();
-    //   });
-    // });
-
-
     this.intervalId = setInterval(() => {
 
       this.currentDateTime.set(new Date());
@@ -160,6 +123,9 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   }
 
   fetchDataGetJob(): void {
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+
+
     this._acsService.getAcsByCenterGetJobs(this.levelApp,this.currentDate).subscribe({
       next:(data:any) =>{
         console.log('get job>>>',data.result)
@@ -172,7 +138,16 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   }
 
   fetchDataMonitor(): void {
-    this._acsService.getAcsByCenterMonitor(this.levelApp,this.currentDate,this.currentDate).subscribe({
+    const _start  = moment(this.formSearch().start).add('years',-543).format('YYYY-MM-DD')
+    const _end  = moment(this.formSearch().end).add('years',-543).format('YYYY-MM-DD')
+    const _option =  this.formSearch().searchOption;
+    const _text =  this.formSearch().searchText;
+
+
+    console.log('start >>>>: ', _start);
+    console.log('end >>>>: ', _end);
+
+    this._acsService.getAcsByCenterMonitor(this.levelApp,_start,_end, _option,_text).subscribe({
       next:(data:any) =>{
         console.log(data);
         this.dataMonitor = data.result;
@@ -188,8 +163,41 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     if($event == 'reload'){
       this.fetchDataGetJob();
       this.fetchDataMonitor();
+    }else if($event){
+      console.log('>>> reload',$event);
+      this.formSearch.update((result) => ({
+        ...result,
+        start: new Date(),
+        end:new Date(),
+        searchOption:'od_rem',
+        searchText:''
+      }))
     }
   }
+
+  formChangeSearch($event:any){
+    console.log('>>> event change Search',$event);
+
+    this.formSearch.update((result) => ({
+      ...result,
+        start: $event.start,
+        end: $event.end,
+        searchOption:$event.searchOption,
+        searchText:$event.searchText
+    }));
+
+    this.fetchDataMonitor();
+
+    // if(_option == 'name' && _value != ''){
+    //   this.fetchDataSearchName(_value);
+    // }else if(_option == 'date'  && _value != ''){
+    //   this.fetchDataSearchDate(_value)
+    // }else if(_option == 'cid'  && _value != ''){
+    //   this.fetchDataSearchCid(_value)
+    // }
+  }
+
+
 
 
   ngOnDestroy(): void {

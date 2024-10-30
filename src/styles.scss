@@ -107,12 +107,42 @@ mat-mdc-list-item:focus {
   }
 }
 
+.reh-btn-blue-txt {
+  background-color: var(--blue-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  width: 64px !important;
+  font-family: 'FC_Iconic_Bold';
+  font-size: medium;
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
+}
+
 .reh-btn-yellow {
   background-color: var(--yellow-color)!important;
   color: #212529 !important;
   border-radius: 20px !important;
   // height: 36px!important;
 
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(26, 27, 31, .12) !important;
+    border-color: rgba(26, 27, 31, .12) !important;
+  }
+}
+
+.reh-btn-red-txt {
+  background-color: var(--red-color)!important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  width: 64px !important;
+  font-family: 'FC_Iconic_Bold';
+  font-size: medium;
   &.disabled {
     cursor: default;
     pointer-events: none;

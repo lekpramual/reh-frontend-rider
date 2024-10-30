@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,16 +43,27 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ],
 })
 
-export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
+export default class AccessibleListMonitorComponent implements OnInit{
 
+  displayedColumns = ['status_work','go_datetime','go_time', 'quick','wcode_staname','star'];
+  dataSource = new MatTableDataSource<any>();
+
+  @Input() set dataMonitor(data:any){
+    console.log('data get monitor >>>',data);
+    this.dataSource.data = data;
+  }
+
+
+  @Output() messageChange = new EventEmitter<string>();
+
+
+  _Id = signal(0);
   data: any;
   levelApp:string =  '';
   currentDate: string ='';
   private subscription!: Subscription;
 
 
-  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
-  dataSource = new MatTableDataSource<any>();
 
   constructor(
     private dialog: MatDialog,
@@ -78,57 +89,14 @@ export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
   }
 
   ngOnInit(): void {
-
-    const _levelApp =  this._roleService.role();
-    if(_levelApp){
-      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
-    }
-
-    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
-
-    console.log('_levelApp >>>',this.levelApp);
-    console.log('_currentDate >>>',this.currentDate);
-
-    this.fetchData(); // Initial fetch // 60000ms = 1 minute
-    this.subscription = interval(60000).subscribe(() => {
-
-      this._snackBar.open(`กำลังโหลดข้อมูล ติดตาม-สถานะ...`, '', {
-        duration:1500,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass:['success-snackbar']
-      }).afterDismissed().subscribe(() => {
-        // this.messageChange.emit('reset');
-        this.fetchData();
-      });
-
-    });
-
-
   }
 
-  fetchData(): void {
-    this._acsService.getAcsByCenterMonitor(this.levelApp,this.currentDate,this.currentDate).subscribe({
-      next:(data:any) =>{
-        console.log(data);
-        this.data = data.result;
-        this.dataSource.data = data.result;
-      },
-      error:(error:any) => {
-      console.error('Error fetching data', error);
-      }
-    });
-  }
 
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe(); // Clean up subscription
-    }
-  }
+
 
   clickedJob(row:any){
     console.log('Clicked Job', row);
-    this.openDialogConfirm();
+    // this.openDialogConfirm();
   }
 
   onButtonClick(row: any, event: Event) {
@@ -136,15 +104,12 @@ export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
     // console.log('Button clicked: ', row);
   }
 
-  openDialogConfirm(): void {
+  openDialogConfirm(Id:number): void {
     const dialogRef = this.dialog.open(
       AccessibleFormConfirmComponent,
       {
         data: {
-          accessible_id: "",
-          activity_name: "",
-          activity_indicator: "",
-          activity_amount: "",
+          Id: Id
         },
         width: "640px",
         disableClose: true
@@ -153,7 +118,7 @@ export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      // result === "ok" && this.getActivityInProjectById(this.id);
+      result === "ok" && this.messageChange.emit('reload');
     });
   }
 
@@ -161,6 +126,16 @@ export default class AccessibleListMonitorComponent implements OnInit,OnDestroy{
   formatDateThai(date: Date): string {
     // return moment(date).format("LL"); // Customize the format as needed
     return moment(date).format("l"); // Customize the format as needed
+  }
+
+  calculateTimeDifferenceInMinutes(date:any,startTime: any, endTime: any): number {
+    // console.log(_startTime,_endTime)
+    const start = new Date(`${date}T${startTime}`);
+    const end = new Date(`${date}T${endTime}`);
+
+    const diffInMs = end.getTime() - start.getTime(); // Difference in milliseconds
+    const diffInMinutes = diffInMs / (1000 * 60); // Convert milliseconds to minutes
+    return diffInMinutes;
   }
 
 }

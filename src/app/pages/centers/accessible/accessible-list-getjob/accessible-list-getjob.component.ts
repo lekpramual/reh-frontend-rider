@@ -46,7 +46,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
-  displayedColumns = ['go_datetime', 'quick','name_equip','wcode_staname','star'];
+  displayedColumns = ['go_datetime', 'quick','wcode_staname','star'];
   dataSource = new MatTableDataSource<any>();
 
   @Input() set dataGetJob(data:any){

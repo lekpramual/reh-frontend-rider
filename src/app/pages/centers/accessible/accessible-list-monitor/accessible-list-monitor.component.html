@@ -1,11 +1,74 @@
 <!-- ติดตาม-สถานะ-->
 <mat-card>
   <div  style="padding: 0px !important;">
-    <div class="row align-items-center px-2" style="height: 56px">
+    <div class="row align-items-center px-2" style="height: 64px">
       <div class="col-12" style="margin-bottom: 4px;">
         <span class="mat-headline-5 reh-txt-blue900">ติดตาม-สถานะ</span>
         <span class="mat-headline-5 reh-txt-green blinking-text"> อัปเดตทุก 30 วินาที</span>
       </div>
+    </div>
+    <div class="lj-viewer-wrapper pt-2 pb-0 mt-0 mx-2">
+      <form [formGroup]="formSearch" (ngSubmit)="onSubmit()" class="reh-form-sm">
+      <div class="row">
+        <div class="col-md-3 col-lg-4">
+
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>วันที่</mat-label>
+              <mat-date-range-input
+
+                [rangePicker]="campaignOnePicker"
+                [comparisonStart]="formSearch.get('start')?.value"
+                [comparisonEnd]="formSearch.get('end')?.value">
+                <input matStartDate placeholder="Start date" formControlName="start">
+                <input matEndDate placeholder="End date" formControlName="end">
+              </mat-date-range-input>
+              <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+              <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+              <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+            </mat-form-field>
+
+        </div>
+        <div class="col-md-2 col-lg-2">
+          <mat-form-field class="reh-input-full-width">
+            <mat-label>ประเภทค้นหา</mat-label>
+            <mat-select formControlName="searchOption" name="searchOption" (selectionChange)="onSelectionChange($event)">
+              <mat-option *ngFor="let option of searchOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4 col-lg-4">
+          <mat-form-field class="reh-input-full-width">
+            <mat-label>ชื่อ-สุกล</mat-label>
+            <input
+              matInput
+              name="searchText"
+              formControlName="searchText"
+              placeholder="กรอก ชื่อ-สุกล"
+            />
+          </mat-form-field>
+          {{this.formSearch.get('searchOption')?.value}}
+          <!-- searchText -->
+        </div>
+        <div class="col-md-3 col-lg-2">
+          <!-- <button mat-stroked-button color="primary" >
+             ค้นหา
+          </button> -->
+
+          <button mat-mini-fab matTooltip="ค้นหา" class="reh-btn-blue-txt" >
+            <mat-icon>search</mat-icon>
+            ค้นหา
+          </button>
+          {{" "}}
+          <button mat-mini-fab matTooltip="ล้าง"  class="reh-btn-red-txt" (click)="onClear()">
+            <mat-icon>clear</mat-icon>
+            รีเซต
+          </button>
+        </div>
+
+      </div>
+    </form>
     </div>
     <mat-divider>
     </mat-divider>
@@ -16,99 +79,8 @@
       <div class="col-12">
         <section class="example-container" tabindex="0">
           <table mat-table class="monitor" [dataSource]="dataSource">
-
-            <ng-container matColumnDef="go_datetime">
-              <th mat-header-cell *matHeaderCellDef style="width: 96px;">
-                <span class="mat-subtitle-2">วันที่แจ้ง</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
-                <div class="row">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">วันที่: </span> <span class="mat-subtitle-1">{{formatDateThai(element.go_date) }}</span>
-                  </div>
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">เวลา: </span> <span classs="mat-subtitle-1">{{ element.go_time }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="go_time">
-              <th mat-header-cell *matHeaderCellDef style="width: 196px;" ><span class="mat-subtitle-2">รับงาน/รับผู้ป่วย/ส่งผู้ป่วย</span></th>
-              <td mat-cell *matCellDef="let element">
-                <div class="row" style="width: 196px">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">จนท: </span> <span classs="mat-subtitle-1">{{ element.wk_pername }}</span>
-                  </div>
-                  <div class="col-12">
-                    @if(element.status_work == '1'){
-                      <span class="mat-subtitle-2">สาเหตุ: </span> <span class="mat-subtitle-1">{{element.comment}}</span>
-                    }@else {
-                      <span class="mat-subtitle-2">เวลา: </span> <span class="mat-subtitle-1">{{element.rd_time}}/{{element.sd_time}}/{{element.ed_time}}</span>
-                    }
-                  </div>
-                </div>
-
-                <!-- <span class="mat-subtitle-1"> {{element.rd_time}}/{{element.sd_time}}/{{element.ed_time}}</span> -->
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="quick">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 264px;">
-                <span class="mat-subtitle-2">ประเภท</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <mat-chip
-                  style="width: 264px"
-                  [class]="{
-                    'reh-chip-green' : element.quick == 1,
-                    'reh-chip-yellow' : element.quick == 2,
-                    'reh-chip-orange' : element.quick == 3,
-                    'reh-chip-red' : element.quick == 4,
-                  }"
-                >
-                  <span class="label mat-subtitle-1">{{ element.quick_name }}
-                    [{{element.type_oi}}]</span>
-                </mat-chip>
-              </td>
-            </ng-container>
-
-
-
-            <ng-container matColumnDef="name_equip">
-              <th mat-header-cell *matHeaderCellDef style="width: 256px;">
-                <span class="mat-subtitle-2">ชื่อ-อุปกรณ์</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
-                <div class="row">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">ชื่อ-สกุล: </span> <span class="mat-subtitle-1">{{element.od_rem }}</span>
-                  </div>
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">อุปกรณ์: </span> <span classs="mat-subtitle-1">{{ element.equip_name }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="wcode_staname">
-              <th mat-header-cell *matHeaderCellDef style="width: 256px;">
-                <span class="mat-subtitle-2">รับ-ส่ง</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
-                <div class="row">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">รับ: </span> <span class="mat-subtitle-1">{{ element.wcode_staname }}</span>
-                  </div>
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">ส่ง: </span> <span classs="mat-subtitle-1">{{ element.wcode_stoname }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-
-
             <ng-container matColumnDef="status_work">
-              <th mat-header-cell *matHeaderCellDef style="width: 100px; text-align: center;">
+              <th mat-header-cell *matHeaderCellDef style="width: 96px; text-align: center;">
                 <span class="mat-subtitle-2">สถานะ</span>
               </th>
               <td mat-cell *matCellDef="let element"
@@ -132,7 +104,6 @@
                       <span class="mat-subtitle-2"> [{{calculateTimeDifferenceInMinutes(element.go_date,element.go_time,element.ed_time)}} น.]</span>
                     </div>
                   </div>
-
                 }@else if (element.ed_date == '-' && element.sd_date != '-' && element.go_date != '-' && element.rd_date != '-' && element.status_work == '0') {
                   <span class="label mat-subtitle-2 blinking-text" >รับผู้ป่วย</span>
                 }@else if ( element.ed_date == '-' && element.sd_date == '-' && element.rd_date != '-' && element.go_date != '-' && element.status_work == '0') {
@@ -143,15 +114,137 @@
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="go_datetime">
+              <th mat-header-cell *matHeaderCellDef style="width: 96px;">
+                <span class="mat-subtitle-2">วันที่แจ้ง</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
+                <div class="row">
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">ชื่อ-สกุล: </span> <span class="mat-subtitle-1">{{element.od_rem }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">วันที่: </span> <span class="mat-subtitle-1">{{formatDateThai(element.go_date) }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">เวลา: </span> <span classs="mat-subtitle-1">{{ element.go_time }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
 
+            <ng-container matColumnDef="go_time">
+              <th mat-header-cell *matHeaderCellDef style="width: 256px;" ><span class="mat-subtitle-2">รับงาน/รับผู้ป่วย/ส่งผู้ป่วย</span></th>
+              <td mat-cell *matCellDef="let element">
+                <div class="row" style="width: 256px">
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">จนท: </span> <span classs="mat-subtitle-1">{{ element.wk_pername }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">อุปกรณ์: </span> <span classs="mat-subtitle-1">{{ element.equip_name }}</span>
+                  </div>
+                  <div class="col-12">
+                    @if(element.status_work == '1'){
+                      <span class="mat-subtitle-2">สาเหตุ: </span> <span class="mat-subtitle-1">{{element.comment}}</span>
+                    }@else {
+                      <span class="mat-subtitle-2">เวลา: </span> <span class="mat-subtitle-1">{{element.rd_time}}/{{element.sd_time}}/{{element.ed_time}}</span>
+                    }
+                  </div>
+                </div>
+
+                <!-- <span class="mat-subtitle-1"> {{element.rd_time}}/{{element.sd_time}}/{{element.ed_time}}</span> -->
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quick">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 72px;">
+                <span class="mat-subtitle-2">ประเภท</span>
+              </th>
+              <td mat-cell *matCellDef="let element" style="width: 72px"
+                [class]="{
+                  'bg-txt-green' : element.quick == 1,
+                  'bg-txt-yellow' : element.quick == 2,
+                  'bg-txt-orange' : element.quick == 3,
+                  'bg-txt-red' : element.quick == 4,
+                }">
+
+                <span class="label mat-subtitle-1">{{ element.quick_name.slice(0,12) }}</span>
+
+              </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="quick">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 264px;">
+                <span class="mat-subtitle-2">ประเภท</span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-chip
+                  style="width: 264px"
+                  [class]="{
+                    'reh-chip-green' : element.quick == 1,
+                    'reh-chip-yellow' : element.quick == 2,
+                    'reh-chip-orange' : element.quick == 3,
+                    'reh-chip-red' : element.quick == 4,
+                  }"
+                >
+                  <span class="label mat-subtitle-1">{{ element.quick_name }}
+                    [{{element.type_oi}}]</span>
+                </mat-chip>
+              </td>
+            </ng-container> -->
+
+
+
+            <!-- <ng-container matColumnDef="name_equip">
+              <th mat-header-cell *matHeaderCellDef style="width: 256px;">
+                <span class="mat-subtitle-2">ชื่อ-อุปกรณ์</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
+                <div class="row">
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">ชื่อ-สกุล: </span> <span class="mat-subtitle-1">{{element.od_rem }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">อุปกรณ์: </span> <span classs="mat-subtitle-1">{{ element.equip_name }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="wcode_staname">
+              <th mat-header-cell *matHeaderCellDef style="width: 200px;">
+                <span class="mat-subtitle-2">รับ-ส่ง</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
+                <div class="row">
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">รับ: </span> <span class="mat-subtitle-1">{{ element.wcode_staname }}</span>
+                  </div>
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">ส่ง: </span> <span classs="mat-subtitle-1">{{ element.wcode_stoname }}</span>
+                  </div>
+
+                  <div class="col-12">
+                    <span class="mat-subtitle-2">ประเภท: </span> <span classs="mat-subtitle-1">{{ element.type_oi }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
             <ng-container matColumnDef="star" stickyEnd >
-              <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;width: 96px;" class="mat-subtitle-2">#</th>
+              <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;width: 56px;" class="mat-subtitle-2">#</th>
               <td mat-cell *matCellDef="let element" >
                 <div class="row">
                   <div class="col-12">
-                    <button mat-mini-fab   matTooltip="ปิดงาน" [class]="element.ed_date != '-' ? 'reh-btn-green disabled':'reh-btn-green'" (click)="openDialogConfirm(element.id)" [disabled]="element.status_work == 2 ? true: false">
-                      <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
-                    </button>
+                    @if(element.ed_date != '-'){
+                      <button mat-mini-fab   matTooltip="ดูข้อมูล" class='reh-btn-blue' (click)="openDialogConfirm(element.id)">
+                        <mat-icon fontSet="material-icons-outlined" >visibility</mat-icon>
+                      </button>
+                    }@else {
+                      <button mat-mini-fab   matTooltip="ปิดงาน" class='reh-btn-green' (click)="openDialogConfirm(element.id)" >
+                        <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
+                      </button>
+                    }
+
                   </div>
 
                 </div>
@@ -170,6 +263,9 @@
               *matRowDef="let row; columns: displayedColumns"
             ></tr>
           </table>
+
+          <mat-paginator class="mt-2" [pageSize]="6" [pageSizeOptions]="[6, 10]">
+          </mat-paginator>
         </section>
       </div>
     </div>

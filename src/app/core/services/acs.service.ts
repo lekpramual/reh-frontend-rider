@@ -87,8 +87,8 @@ export class AcsService {
     return await firstValueFrom(courses$)
   }
 
-  getAcsByCenterMonitor(type_oi: string, rxdate:string, eddate:string) {
-    const url = `${this.acsUrl}/centermonitor?type_oi=${type_oi}&rxdate=${rxdate}&eddate=${eddate}`;
+  getAcsByCenterMonitor(type_oi: string, rxdate:string, eddate:string,option:string,text:string) {
+    const url = `${this.acsUrl}/centermonitor?type_oi=${type_oi}&rxdate=${rxdate}&eddate=${eddate}&option=${option}&text=${text}`;
     return this.http.get<any>(url, { headers: this.headers });
   }
 

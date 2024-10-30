@@ -20,7 +20,9 @@
   <div class="col-lg-8 col-md-12 mb-3">
     <app-accessible-list-monitor
     [dataMonitor]="dataMonitor"
+    [formSearchMonitor]="formSearch()"
 
+    (formChangeSearch)="formChangeSearch($event)"
     (messageChange)="messageChange($event)"
     />
   </div>

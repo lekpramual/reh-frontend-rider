@@ -1,12 +1,12 @@
 @import '../../../../../theme.scss';
 
 .example-container {
-  height: calc(100vh - 236px);
+  height: calc(100vh - 290px);
   overflow: auto;
 }
 
 table.monitor {
-  width: 1400px;
+  width: 1000px;
 }
 
 td.mat-column-star {
@@ -63,6 +63,8 @@ tr.example-element-row:not(.example-expanded-row):active {
 .bg-txt-red {
   background-color: var(--red-color) !important;
   text-align: center;
+
+
 }
 .btn-action-red {
   color:var(--red-color) !important;
