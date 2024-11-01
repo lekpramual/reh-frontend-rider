@@ -123,8 +123,14 @@ export class AccessibleFormConfirmComponent implements OnInit{
     });
   }
 
-  onNoClick(): void {
-    this.dialogRef.close('ok');
+  onNoClick(ed_date:any): void {
+    console.log(ed_date);
+    if(ed_date != '-'){
+      this.dialogRef.close('close');
+    }else{
+      this.dialogRef.close('ok');
+    }
+
   }
 
   async onGetJob(event: Event){

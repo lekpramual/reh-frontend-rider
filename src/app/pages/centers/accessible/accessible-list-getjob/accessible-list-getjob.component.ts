@@ -20,6 +20,9 @@ import { interval, Subscription } from 'rxjs';
 import moment from 'moment';
 import { RoleService } from '@core/services/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AcsGetJobList } from '@core/interface/acs.interface';
+import { NoDataComponent } from '@core/components/nodata/nodata.component';
+import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 
 
 @Component({
@@ -39,21 +42,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatDividerModule,
     MatChipsModule,
     MatTooltipModule,
-    CommonModule
+    CommonModule,
+
+    NoDataComponent,
+    LoadingIndicatorComponent
   ],
 
 })
 
 export default class AccessibleListGetJobComponent implements OnInit, OnDestroy{
 
-  displayedColumns = ['go_datetime', 'quick','wcode_staname','star'];
-  dataSource = new MatTableDataSource<any>();
+  displayedColumns:string[] = ['go_datetime', 'quick','wcode_staname','star'];
+  dataSource = new MatTableDataSource<AcsGetJobList>;
 
-  @Input() set dataGetJob(data:any){
+  @Input() set dataGetJobNew(data:any){
     console.log('data get job >>>',data);
-    this.dataSource.data = data;
+    const initialData: AcsGetJobList[] = data;
+    // this.dataSource.data = data;
+    this.dataSource = new MatTableDataSource<AcsGetJobList>(initialData);
   }
-
 
   @Output() messageChange = new EventEmitter<string>();
 

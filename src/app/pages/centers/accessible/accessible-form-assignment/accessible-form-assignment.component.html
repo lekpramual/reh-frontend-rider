@@ -69,8 +69,8 @@
         </div>
       </div>
       <div class="row g-3 py-2" >
-        <!-- {{_dataRiderJob | json}} -->
-        @for (item of _dataRiderJob; track $index) {
+        {{ personOprions | json}}
+        @for (item of personOprions(); track $index) {
           <div class="col-4">
             <mat-card class="reh-card card-with-badge p-2"  matTooltip="คลิกจ่ายงาน" (click)="sendJobRider(item.id)">
               <div class="badge-container  reh-badge-blue" matBadge="{{item.total}}"  matBadgeSize="medium"></div>

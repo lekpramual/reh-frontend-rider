@@ -15,7 +15,7 @@ import { AccessibleFormConfirmComponent } from '../accessible-form-confirm/acces
 import { AcsService } from '@core/services/acs.service';
 import { RoleService } from '@core/services/role.service';
 import moment from 'moment';
-import { interval, Subscription } from 'rxjs';
+import { interval, map, Observable, startWith, Subscription } from 'rxjs';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatCommonModule, provideNativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,6 +25,12 @@ import { MY_FORMATS } from '@core/custom-date-format';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { getThaiPaginatorIntl } from '@core/interface/thai-paginator-intl';
+import { WardService } from '@core/services/ward.service';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { WardCreate } from '@core/interface/ward.interface';
+import { UserList } from '@core/interface/user.model';
+import { NoDataComponent } from '@core/components/nodata/nodata.component';
+import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 
 
 const today = new Date();
@@ -54,7 +60,14 @@ const year = today.getFullYear();
     MatMomentDateModule,
     MatSelectModule,
     MatPaginatorModule,
-    CommonModule
+    MatSelectModule,
+    NgxMatSelectSearchModule,
+    CommonModule,
+
+    NoDataComponent,
+    LoadingIndicatorComponent
+
+
   ],
   providers: [
     { provide: MatPaginatorIntl, useValue: getThaiPaginatorIntl() },
@@ -74,17 +87,26 @@ export default class AccessibleListMonitorComponent implements OnInit{
 
   formSearch!: FormGroup;
 
+  filteredWardOptions!: Observable<WardCreate[]>;
+  searchWardControl: FormControl = new FormControl();
+
   searchType = signal({
     searchOption:'od_rem',
     searchValue:'',
   });
 
+  wardOptions = signal<any>([]);
+  personOprions = signal<UserList[] | []>([]);
+  roleType = signal<number | any>(null);
+
+
   searchOptions = [
     {value: 'od_rem', label: 'ชื่อ-สกุล'},
+    {value: 'wk_pername', label  : 'จนท. เปล'},
     {value: 'wcode_staname', label  : 'วอร์ด'}
   ];
 
-  @Input() set dataMonitor(data:any){
+  @Input() set dataMonitorNew(data:any){
     console.log('data get monitor >>>',data);
     this.dataSource.data = data;
   }
@@ -111,7 +133,8 @@ export default class AccessibleListMonitorComponent implements OnInit{
     private dialog: MatDialog,
     private _acsService: AcsService,
     private _roleService: RoleService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _wardService: WardService,
   ) {
 
     moment.updateLocale('th', {
@@ -133,7 +156,8 @@ export default class AccessibleListMonitorComponent implements OnInit{
 
   ngOnInit(): void {
 
-
+    this.getWards();
+    this.getRiderByRole();
   }
 
   ngAfterViewInit() {
@@ -147,7 +171,62 @@ export default class AccessibleListMonitorComponent implements OnInit{
       end: new FormControl(data.end),
       searchOption: new FormControl(data.searchOption,[Validators.required]),
       searchText: new FormControl(data.searchText),
+      searchWard: new FormControl(data.searchWard),
+      searchPerson: new FormControl(data.searchPerson)
     });
+  }
+
+
+  async getRiderByRole(){
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+    try {
+
+      const results = await this._roleService.role();
+      if(results == 5){
+        this.roleType.set('opd');
+      }else{
+        this.roleType.set('ipd');
+      }
+
+      const resultRider = await this._acsService.getAcsByCenterRiderJobsNew(this.roleType(),this.currentDate)
+      console.log('resultRider >>> ',resultRider)
+      this.personOprions.set(resultRider);
+
+    } catch (error) {
+      console.error(error);
+      this._snackBar.open('โหลดข้อมูลเจ้าหน้าที่เปลผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+    }
+
+  }
+  async getWards(){
+    try {
+      const wards = await this._wardService.getWardsNew();
+      console.log(`wards >>>`,wards);
+      this.wardOptions.set(wards);
+      this.filteredWardOptions = this.searchWardControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterWard(value))
+      );
+
+    } catch (error) {
+      console.error(error);
+      this._snackBar.open('โหลดข้อมูลหน่วยงานผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+    }
+  }
+
+  private _filterWard(value: string): WardCreate[] {
+    const filterValue = value.toLowerCase();
+    return this.wardOptions().filter((option:WardCreate) => option.ward_name.toLowerCase().includes(filterValue));
   }
 
 

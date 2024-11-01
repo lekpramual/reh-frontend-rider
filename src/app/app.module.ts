@@ -19,7 +19,7 @@ import { MenuItemComponent } from './components/menu-item/menu-item.component';
 import { CustomSidenavSMComponent } from './components/custom-sidenav-sm/custom-sidenav-sm.component';
 import { MenuItemSMComponent } from './components/menu-item-sm/menu-item-sm.component';
 import { ConfigService } from './shared/services/config.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -35,6 +35,7 @@ import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../app/core/interceptors/auth.interceptor'; // Adjust the path as necessary
+import { loadingIntercaptor } from '@core/interceptors/loading.interceptor';
 
 export function initializeApp(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
@@ -72,6 +73,12 @@ export function initializeApp(configService: ConfigService) {
     HttpClientModule
   ],
   providers: [
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([
+        loadingIntercaptor
+      ])
+    ),
     provideAnimationsAsync(),
     ConfigService,
     {

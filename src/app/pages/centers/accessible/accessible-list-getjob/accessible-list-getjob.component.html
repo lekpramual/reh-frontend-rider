@@ -21,6 +21,9 @@
     <div class="row">
       <div class="col-12">
         <section class="example-container" tabindex="0">
+
+          <loading/>
+
           <table mat-table class="getjob" [dataSource]="dataSource">
 
             <ng-container matColumnDef="go_datetime">
@@ -54,27 +57,11 @@
                   'bg-txt-red' : element.quick == 4,
                 }">
 
-                <span class="label mat-subtitle-1">{{ element.quick_name.slice(0,12) }}</span>
-
+                @if(element.quick_name !== ''){
+                  <span class="label mat-subtitle-1">{{ element.quick_name.slice(0,12) }}</span>
+                }
               </td>
             </ng-container>
-
-            <!-- <ng-container matColumnDef="name_equip">
-              <th mat-header-cell *matHeaderCellDef style="width: 256px;">
-                <span class="mat-subtitle-2">ชื่อ-อุปกรณ์</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
-                <div class="row">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">ชื่อ-สกุล: </span> <span class="mat-subtitle-1">{{element.od_rem }}</span>
-                  </div>
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">อุปกรณ์: </span> <span classs="mat-subtitle-1">{{ element.equip_name }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container> -->
-
             <ng-container matColumnDef="wcode_staname">
               <th mat-header-cell *matHeaderCellDef style="width: 156px;">
                 <span class="mat-subtitle-2">รับ-ส่ง</span>
@@ -115,26 +102,6 @@
                   </div>
 
                 </div>
-
-                <!-- <div class="row justify-content-between">
-                  <div class="col-6" >
-                    <button mat-mini-fab   matTooltip="จ่ายงาน" class="reh-btn-blue" (click)="openDialogAssignment(element.id)">
-                      <mat-icon
-                      fontSet="material-icons-outlined"
-                      >send_to_mobile</mat-icon>
-                    </button>
-                  </div>
-                  <div class="col-6" >
-                    <button  mat-mini-fab matTooltip="ยกเลิก" class="reh-btn-red" (click)="openDialogCancel(element.id)">
-                      <mat-icon
-                      fontSet="material-icons-outlined"
-                      >phonelink_erase</mat-icon
-                    >
-                    </button>
-                  </div>
-                </div> -->
-
-
               </td>
             </ng-container>
 
@@ -147,7 +114,13 @@
 
               *matRowDef="let row; columns: displayedColumns"
             ></tr>
+            <tr class="mat-row" *matNoDataRow style="text-align: center;height: 50vh;">
+              <td class="mat-cell" colspan="6">
+                <nodata />
+              </td>
+            </tr>
           </table>
+
         </section>
       </div>
     </div>

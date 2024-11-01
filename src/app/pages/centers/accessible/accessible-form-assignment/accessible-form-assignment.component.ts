@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UserList } from '@core/interface/user.model';
 import { AcsService } from '@core/services/acs.service';
 import { AssetsService } from '@core/services/rest.service';
 import { RoleService } from '@core/services/role.service';
@@ -59,6 +60,9 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   _userId:string = "";
   accessibleId: string = "";
   formAccessible!: FormGroup;
+
+  roleType = signal<number | any>(null);
+  personOprions = signal<UserList[] | []>([]);
 
   filteredOptions!: Observable<any[]>;
   searchControl: FormControl = new FormControl();
@@ -120,15 +124,42 @@ export class AccessibleFormAssignmentComponent implements OnInit{
 
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
 
+    this.getRiderByRole();
 
-    this._acsService.getAcsByCenterRiderJobs(this.levelApp,this.currentDate).subscribe({
-      next:(data:any) =>{
-        this._dataRiderJob = data.result;
-      },
-      error:(error:any) => {
-      console.error('Error fetching data', error);
+    // this._acsService.getAcsByCenterRiderJobsNew(this.levelApp,this.currentDate).subscribe({
+    //   next:(data:any) =>{
+    //     this._dataRiderJob = data.result;
+    //   },
+    //   error:(error:any) => {
+    //   console.error('Error fetching data', error);
+    //   }
+    // });
+
+  }
+
+  async getRiderByRole(){
+    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+    try {
+      const results = await this._roleService.role();
+      if(results == 5){
+        this.roleType.set('opd');
+      }else{
+        this.roleType.set('ipd');
       }
-    });
+
+      const resultRider = await this._acsService.getAcsByCenterRiderJobsNew(this.roleType(),this.currentDate)
+      console.log('resultRider >>> ',resultRider)
+      this.personOprions.set(resultRider);
+
+    } catch (error) {
+      console.error(error);
+      this._snackBar.open('โหลดข้อมูลเจ้าหน้าที่เปลผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+    }
 
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -18,6 +18,7 @@ import { RoleService } from '@core/services/role.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { interval, Subscription } from 'rxjs';
+import { AcsGetJobList, AcsList } from '@core/interface/acs.interface';
 
 
 @Component({
@@ -46,16 +47,18 @@ import { interval, Subscription } from 'rxjs';
 
 export default class AccessibleComponent implements OnInit,OnDestroy{
 
-  dataGetJob:any = [];
-  dataMonitor:any = [];
 
-  levelApp:string =  '';
+  dataGetJobNew = signal<AcsGetJobList[] | undefined>([]);
+  dataMonitorNew = signal<AcsList[] | []>([]);
+
+  levelApp = signal('');
   wardName = signal('');
   currentDateTime = signal(new Date());
 
   private intervalId: any;
 
-  currentDate: string ='';
+  // currentDate: string ='';
+  currentDate = signal<string | ''>('');
   private subscriptionGetJob!: Subscription;
   private subscriptionMonitor!: Subscription;
 
@@ -64,7 +67,9 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     start: new Date(),
     end:new Date(),
     searchOption:'od_rem',
-    searchText:''
+    searchText:'',
+    searchWard:'',
+    searchPerson:'',
   })
 
   constructor(
@@ -73,7 +78,6 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     private _snackBar: MatSnackBar
   ){}
   ngOnInit(): void {
-
     moment.updateLocale('th', {
       longDateFormat: {
         LT: 'HH:mm',
@@ -92,7 +96,8 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
 
     const _levelApp =  this._roleService.role();
     if(_levelApp){
-      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+      // this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+      this.levelApp.set(_levelApp == 5 ? 'opd' : 'ipd')
     }
 
     const _wardName = this._roleService.wardName();
@@ -100,21 +105,14 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
       this.wardName.set(_wardName)
     }
 
-    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+    this.currentDate.set(moment().add('years',-543).format('YYYY-MM-DD'));
 
-    this.fetchDataGetJob(); // Initial fetch // 60000ms = 1 minute
-    this.fetchDataMonitor(); // Initial fetch // 60000ms = 1 minute
+
+    this.fetchDataGetJobNew(); // Initial fetch // 60000ms = 1 minute
+    this.fetchDataMonitorNew(); // Initial fetch // 60000ms = 1 minute
     this.subscriptionGetJob = interval(30000).subscribe(() => {
-      this._snackBar.open(`กำลังโหลดข้อมูล ...`, '', {
-        duration:1500,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass:['blue-snackbar']
-      }).afterDismissed().subscribe(() => {
-        // this.messageChange.emit('reset');
-        this.fetchDataGetJob();
-        this.fetchDataMonitor();
-      });
+        this.fetchDataGetJobNew();
+        this.fetchDataMonitorNew();
     });
     this.intervalId = setInterval(() => {
 
@@ -122,83 +120,83 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     }, 1000); // Update every second
   }
 
-  fetchDataGetJob(): void {
-    this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
+  async fetchDataGetJobNew() {
+    try {
+      const results = await this._acsService.getAcsByCenterGetJobNew(this.levelApp(),this.currentDate())
+      this.dataGetJobNew.set(results);
 
-
-    this._acsService.getAcsByCenterGetJobs(this.levelApp,this.currentDate).subscribe({
-      next:(data:any) =>{
-        console.log('get job>>>',data.result)
-        this.dataGetJob = data.result;
-      },
-      error:(error:any) => {
-      console.error('Error fetching data', error);
-      }
-    });
+    } catch (error) {
+      this._snackBar.open('โหลดข้อมูรับงานผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+    }
   }
 
-  fetchDataMonitor(): void {
+
+
+  async fetchDataMonitorNew() {
     const _start  = moment(this.formSearch().start).add('years',-543).format('YYYY-MM-DD')
     const _end  = moment(this.formSearch().end).add('years',-543).format('YYYY-MM-DD')
     const _option =  this.formSearch().searchOption;
     const _text =  this.formSearch().searchText;
+    const _persion =  this.formSearch().searchPerson;
+    const _ward =  this.formSearch().searchWard;
 
+    try {
+      const results = await this._acsService.getAcsByCenterMonitorNew(this.levelApp(),_start,_end, _option,_text,_persion,_ward)
+      this.dataMonitorNew.set(results);
 
-    console.log('start >>>>: ', _start);
-    console.log('end >>>>: ', _end);
-
-    this._acsService.getAcsByCenterMonitor(this.levelApp,_start,_end, _option,_text).subscribe({
-      next:(data:any) =>{
-        console.log(data);
-        this.dataMonitor = data.result;
-      },
-      error:(error:any) => {
-      console.error('Error fetching data', error);
-      }
-    });
+    } catch (error) {
+      this._snackBar.open('โหลดข้อมูลติดตามผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+      console.error(error);
+    }
   }
 
   messageChange($event:any){
-    console.log('>>> event change get job',$event);
     if($event == 'reload'){
-      this.fetchDataGetJob();
-      this.fetchDataMonitor();
+      this.fetchDataGetJobNew();
+      this.fetchDataMonitorNew();
     }else if($event){
-      console.log('>>> reload',$event);
       this.formSearch.update((result) => ({
         ...result,
         start: new Date(),
         end:new Date(),
         searchOption:'od_rem',
-        searchText:''
+        searchText:'',
+        searchWard:'',
+        searchPerson:'',
       }))
     }
   }
 
   formChangeSearch($event:any){
-    console.log('>>> event change Search',$event);
+    const start = $event.start;
+    const end=  $event.end;
+    const searchOption= $event.searchOption;
+    const searchText= $event.searchText;
+    const searchWard= $event.searchWard;
+    const searchPerson= $event.searchPerson;
 
     this.formSearch.update((result) => ({
       ...result,
-        start: $event.start,
-        end: $event.end,
-        searchOption:$event.searchOption,
-        searchText:$event.searchText
+        start: start,
+        end:  end,
+        searchOption: searchOption,
+        searchText: searchText,
+        searchWard: searchWard,
+        searchPerson: searchPerson,
     }));
 
-    this.fetchDataMonitor();
-
-    // if(_option == 'name' && _value != ''){
-    //   this.fetchDataSearchName(_value);
-    // }else if(_option == 'date'  && _value != ''){
-    //   this.fetchDataSearchDate(_value)
-    // }else if(_option == 'cid'  && _value != ''){
-    //   this.fetchDataSearchCid(_value)
-    // }
+    this.fetchDataMonitorNew();
   }
-
-
-
 
   ngOnDestroy(): void {
     if (this.subscriptionGetJob) {
@@ -210,16 +208,6 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     }
 
     clearInterval(this.intervalId);
-  }
-
-
-  clickedJob(row:any){
-    console.log('Clicked Job', row);
-  }
-
-  onButtonClick(row: any, event: Event) {
-    event.stopPropagation();
-    // console.log('Button clicked: ', row);
   }
 
   //ฟังก์ชั่น: ปีภาษาไทย

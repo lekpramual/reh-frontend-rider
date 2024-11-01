@@ -10,3 +10,7 @@ export interface WardCreate {
   ward_id:string;
   ward_name: string;
 }
+
+export type GetWardsResponse = {
+  result: WardList[];
+}

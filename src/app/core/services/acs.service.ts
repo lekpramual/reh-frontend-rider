@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { HttpHeaders, HttpClient, HttpContext } from "@angular/common/http";
 import { environment } from "@env/environment";
-import { User } from "@core/interface/user.model";
+import { GetUserListsResponse, User, UserList } from "@core/interface/user.model";
 import { firstValueFrom } from "rxjs";
+import { AcsGetJobList, AcsList, GetAcsListResponse } from "@core/interface/acs.interface";
+import { SkipLoading } from "@core/components/loading/skip-loading.component";
 
 @Injectable({
   providedIn: "root",
@@ -31,7 +33,10 @@ export class AcsService {
 
   getAcsByWId(Id: string) {
     const url = `${this.acsUrl}/${Id}/list`;
-    return this.http.get<any>(url, { headers: this.headers });
+    return this.http.get<any>(url, {
+      headers: this.headers,
+      context: new HttpContext().set(SkipLoading,true)
+    });
   }
 
   addAcsByWard(data: any) {
@@ -65,9 +70,26 @@ export class AcsService {
     return this.http.get<any>(url, { headers: this.headers });
   }
 
+  async getAcsByCenterGetJobNew(type_oi: string, rxdate:string):Promise<AcsGetJobList[]> {
+    const url = `${this.acsUrl}/center?type_oi=${type_oi}&rxdate=${rxdate}`;
+    const results$ = this.http.get<any>(url, { headers: this.headers });
+    const response = await firstValueFrom(results$);
+    return response.result;
+  }
+
   getAcsByCenterRiderJobs(type_oi: string, rxdate:string) {
     const url = `${this.acsUrl}/centerriderjob?type_oi=${type_oi}&rxdate=${rxdate}`;
-    return this.http.get<any>(url, { headers: this.headers });
+    return this.http.get<any>(url, { headers: this.headers,context: new HttpContext().set(SkipLoading,true) });
+  }
+
+  async getAcsByCenterRiderJobsNew(type_oi: string, rxdate:string):Promise<UserList[]> {
+    const url = `${this.acsUrl}/centerriderjob?type_oi=${type_oi}&rxdate=${rxdate}`;
+    const results$ = this.http.get<GetUserListsResponse>(url, {
+       headers: this.headers ,
+       context: new HttpContext().set(SkipLoading,true)
+    });
+    const response = await firstValueFrom(results$);
+    return response.result;
   }
 
   updateAcsByCenterRiderJobs(Id:string,data: any) {
@@ -82,6 +104,7 @@ export class AcsService {
    async updateAcsByCenterGetAndConfirm(Id:string,data: any) :Promise<any>{
     const courses$ = this.http.put<any>(`${this.acsUrl}/${Id}/centergetandconfirm`, data, {
       headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
     });
 
     return await firstValueFrom(courses$)
@@ -90,6 +113,13 @@ export class AcsService {
   getAcsByCenterMonitor(type_oi: string, rxdate:string, eddate:string,option:string,text:string) {
     const url = `${this.acsUrl}/centermonitor?type_oi=${type_oi}&rxdate=${rxdate}&eddate=${eddate}&option=${option}&text=${text}`;
     return this.http.get<any>(url, { headers: this.headers });
+  }
+
+  async getAcsByCenterMonitorNew(type_oi: string, rxdate:string, eddate:string,option:string,text:string,persion:string,ward:string):Promise<AcsList[]> {
+    const url = `${this.acsUrl}/centermonitor?type_oi=${type_oi}&rxdate=${rxdate}&eddate=${eddate}&option=${option}&text=${text}&person=${persion}&ward=${ward}`;
+    const results$ = this.http.get<GetAcsListResponse>(url, { headers: this.headers });
+    const response = await firstValueFrom(results$);
+    return await response.result;
   }
 
 }

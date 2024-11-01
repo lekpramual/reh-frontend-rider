@@ -10,7 +10,7 @@
    <!-- TODO List get test -->
   <div class="col-lg-4 col-md-12 mb-3">
     <app-accessible-list-getjob
-      [dataGetJob]="dataGetJob"
+      [dataGetJobNew]="dataGetJobNew()"
       (messageChange)="messageChange($event)"
     />
   </div>
@@ -19,7 +19,7 @@
 
   <div class="col-lg-8 col-md-12 mb-3">
     <app-accessible-list-monitor
-    [dataMonitor]="dataMonitor"
+    [dataMonitorNew]="dataMonitorNew()"
     [formSearchMonitor]="formSearch()"
 
     (formChangeSearch)="formChangeSearch($event)"

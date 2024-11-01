@@ -38,18 +38,49 @@
             </mat-select>
           </mat-form-field>
         </div>
+
         <div class="col-md-4 col-lg-4">
-          <mat-form-field class="reh-input-full-width">
-            <mat-label>ชื่อ-สุกล</mat-label>
-            <input
-              matInput
-              name="searchText"
-              formControlName="searchText"
-              placeholder="กรอก ชื่อ-สุกล"
-            />
-          </mat-form-field>
-          {{this.formSearch.get('searchOption')?.value}}
-          <!-- searchText -->
+          @if(this.formSearch.get('searchOption')?.value == 'od_rem'){
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>ชื่อ-สุกล</mat-label>
+              <input
+                matInput
+                name="searchText"
+                formControlName="searchText"
+                placeholder="กรอก ชื่อ-สุกล"
+              />
+            </mat-form-field>
+          }
+          @else if (this.formSearch.get('searchOption')?.value == 'wcode_staname') {
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>เลือก วอร์ด</mat-label>
+
+              <mat-select formControlName="searchWard">
+                <mat-option>
+                  <ngx-mat-select-search
+                    [formControl]="searchWardControl"
+                    placeholderLabel="ค้นหา วอร์ด"
+                    [preventHomeEndKeyPropagation]="true"
+                  >
+                    <span ngxMatSelectNoEntriesFound> ไม่พบข้อมูล </span>
+                  </ngx-mat-select-search>
+                </mat-option>
+                @for (option of filteredWardOptions | async; track option) {
+                <mat-option [value]="option.ward_id"> {{ option.ward_name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }@else{
+            <mat-form-field class="reh-input-full-width">
+              <mat-label>เลือก ประเภทนำส่ง</mat-label>
+              <mat-select formControlName="searchPerson">
+                @for (persion of personOprions(); track persion) {
+                  <mat-option [value]="persion.id">{{ persion.fullname }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+
         </div>
         <div class="col-md-3 col-lg-2">
           <!-- <button mat-stroked-button color="primary" >
@@ -72,12 +103,13 @@
     </div>
     <mat-divider>
     </mat-divider>
-    <!-- <pre>
-      {{ data | json}}
-    </pre> -->
+
     <div class="row">
       <div class="col-12">
         <section class="example-container" tabindex="0">
+
+          <loading/>
+
           <table mat-table class="monitor" [dataSource]="dataSource">
             <ng-container matColumnDef="status_work">
               <th mat-header-cell *matHeaderCellDef style="width: 96px; text-align: center;">
@@ -172,45 +204,6 @@
 
               </td>
             </ng-container>
-
-            <!-- <ng-container matColumnDef="quick">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 264px;">
-                <span class="mat-subtitle-2">ประเภท</span>
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <mat-chip
-                  style="width: 264px"
-                  [class]="{
-                    'reh-chip-green' : element.quick == 1,
-                    'reh-chip-yellow' : element.quick == 2,
-                    'reh-chip-orange' : element.quick == 3,
-                    'reh-chip-red' : element.quick == 4,
-                  }"
-                >
-                  <span class="label mat-subtitle-1">{{ element.quick_name }}
-                    [{{element.type_oi}}]</span>
-                </mat-chip>
-              </td>
-            </ng-container> -->
-
-
-
-            <!-- <ng-container matColumnDef="name_equip">
-              <th mat-header-cell *matHeaderCellDef style="width: 256px;">
-                <span class="mat-subtitle-2">ชื่อ-อุปกรณ์</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="lj-txt-dot">
-                <div class="row">
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">ชื่อ-สกุล: </span> <span class="mat-subtitle-1">{{element.od_rem }}</span>
-                  </div>
-                  <div class="col-12">
-                    <span class="mat-subtitle-2">อุปกรณ์: </span> <span classs="mat-subtitle-1">{{ element.equip_name }}</span>
-                  </div>
-                </div>
-              </td>
-            </ng-container> -->
-
             <ng-container matColumnDef="wcode_staname">
               <th mat-header-cell *matHeaderCellDef style="width: 200px;">
                 <span class="mat-subtitle-2">รับ-ส่ง</span>
@@ -262,8 +255,13 @@
 
               *matRowDef="let row; columns: displayedColumns"
             ></tr>
-          </table>
 
+            <tr class="mat-row" *matNoDataRow style="text-align: center;height: 50vh;">
+              <td class="mat-cell" colspan="6">
+                <nodata />
+              </td>
+            </tr>
+          </table>
           <mat-paginator class="mt-2" [pageSize]="6" [pageSizeOptions]="[6, 10]">
           </mat-paginator>
         </section>
