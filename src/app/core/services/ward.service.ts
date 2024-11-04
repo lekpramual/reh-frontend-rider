@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { HttpHeaders, HttpClient, HttpContext } from "@angular/common/http";
 import { environment } from "@env/environment";
 import { User } from "@core/interface/user.model";
 import { GetWardsResponse, WardCreate, WardList } from "@core/interface/ward.interface";
 import { firstValueFrom } from "rxjs";
+import { SkipLoading } from "@core/components/loading/skip-loading.component";
 
 @Injectable({
   providedIn: "root",
@@ -24,12 +25,18 @@ export class WardService {
 
   getWards() {
     const url = `${this.apiUrl}`;
-    return this.http.get<any>(url, { headers: this.headers });
+    return this.http.get<any>(url, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+     });
   }
 
   async getWardsNew() :Promise<WardList[]>{
     const url = `${this.apiUrl}`;
-    const wards$ = this.http.get<GetWardsResponse>(url, { headers: this.headers });
+    const wards$ = this.http.get<GetWardsResponse>(url, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+    });
     const response = await firstValueFrom(wards$);
     return response.result;
   }
