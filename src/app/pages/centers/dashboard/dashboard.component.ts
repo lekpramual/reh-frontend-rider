@@ -8,43 +8,66 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { DashboardService } from '@core/services/dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
+import { LoadingService } from '@core/components/loading/loading.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone:true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  imports:[HighchartsChartModule,MatCardModule ,  ReactiveFormsModule,
-    MatFormFieldModule,MatSelectModule,FormsModule, CommonModule]
+  imports:[
+    HighchartsChartModule,
+    MatCardModule ,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    CommonModule,
+
+    LoadingIndicatorComponent
+  ]
 })
 export default  class DashboardComponent  implements OnInit{
 
 
   chartData: any = [];
   chart: any = [];
-  loading: boolean = true;
+
 
   title: string = "";
   depart: string = "";
-  departId: string = "";
+  roleId: string = "";
+
 
   constructor(
     private _roleService: RoleService,
-    private _dashboardService:DashboardService
+    private _dashboardService:DashboardService,
+    private _snackBar: MatSnackBar,
+    public _loadingService: LoadingService
   ) {}
 
-   ngOnInit() {
+  async  ngOnInit() {
     // ฟังก์ชัน: ข้อมูลปีย้อนหลัง
     this.getYearsBack();
 
     let _depart = this._roleService.wardName();
-    let _departId = this._roleService.ward();
-    if(_depart){
+    let _roleId = this._roleService.role();
+    if(_depart && _roleId){
       this.depart = _depart;
-      this.departId = String(_departId);
+      this.roleId = _roleId == 5 ? 'opd' : 'ipd';
     }
 
+
     this.fetchData();
+
+    this.loadingTest()
+  }
+
+  async loadingTest(){
+    const result = await this._loadingService.loading();
+    console.log(result);
   }
 
   // ปีปัจจุบัน
@@ -116,36 +139,39 @@ export default  class DashboardComponent  implements OnInit{
   }
 
    // ฟังก์ชัน: ดึงข้อมูลจาก api โดยแยกสิทธิในการโหลดข้อมูล
-   fetchData() {
+  async  fetchData() {
     const data: any = {};
     data.year = this.selectedOption;
-    data.depart = this.departId;
-    this._dashboardService.getDashboardByYear(data).subscribe({
-      next:(data) => {
-        console.log(data.result);
-        console.log(data.result[0]['month01']);
-        if(data.ok != 'nok'){
-          let _data = [
-            parseInt(data.result[0]['month01']),
-            parseInt(data.result[0]['month02']),
-            parseInt(data.result[0]['month03']),
-            parseInt(data.result[0]['month04']),
-            parseInt(data.result[0]['month05']),
-            parseInt(data.result[0]['month06']),
-            parseInt(data.result[0]['month07']),
-            parseInt(data.result[0]['month08']),
-            parseInt(data.result[0]['month09']),
-            parseInt(data.result[0]['month10']),
-            parseInt(data.result[0]['month11']),
-            parseInt(data.result[0]['month12']),
-          ]
-          this.updateChart(_data);
-        }
-      },
-      error:(error) => {
-        console.error('Error fetching departments', error);
-      }
-    });
+    data.type_oi = this.roleId;
+
+    try {
+      const result = await this._dashboardService.getDashboardByYearCenter(data);
+
+        let _data = [
+          parseInt(result[0]['month01']),
+          parseInt(result[0]['month02']),
+          parseInt(result[0]['month03']),
+          parseInt(result[0]['month04']),
+          parseInt(result[0]['month05']),
+          parseInt(result[0]['month06']),
+          parseInt(result[0]['month07']),
+          parseInt(result[0]['month08']),
+          parseInt(result[0]['month09']),
+          parseInt(result[0]['month10']),
+          parseInt(result[0]['month11']),
+          parseInt(result[0]['month12']),
+        ]
+        this.updateChart(_data);
+
+    } catch (error) {
+      this._snackBar.open('โหลดข้อมูลติดตามผิดพลาด', '', {
+        duration:3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass:['error-snackbar']
+      });
+      console.error(error)
+    }
   }
 
   updateChart(data: number[]) {

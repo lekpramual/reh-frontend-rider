@@ -118,7 +118,7 @@ export class MenuService {
         {
           icon: "analytics",
           label: "รายงาน",
-          route: "reports",
+          route: "center/reports",
         },
         {
           icon: "domain_add",

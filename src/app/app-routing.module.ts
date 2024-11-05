@@ -79,6 +79,10 @@ const routes: Routes = [
         path: 'center/accessible',
         loadComponent : (() => import("../app/pages/centers/accessible/accessible.component")),
       },
+      {
+        path: 'center/reports',
+        loadComponent : (() => import("../app/pages/centers/reports/reports.component")),
+      },
 
     ],
   },

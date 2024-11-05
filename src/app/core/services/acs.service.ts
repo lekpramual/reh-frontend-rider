@@ -42,6 +42,7 @@ export class AcsService {
   addAcsByWard(data: any) {
     return this.http.post<any>(this.acsUrl, data, {
       headers: this.headers,
+      context: new HttpContext().set(SkipLoading,true)
     });
   }
 
@@ -52,6 +53,7 @@ export class AcsService {
     }
     return this.http.post<any>(url,data,{
         headers: this.headers,
+        context: new HttpContext().set(SkipLoading,true)
       });
   }
 
@@ -62,6 +64,7 @@ export class AcsService {
     }
     return this.http.post<any>(this.hisUrl, data, {
       headers: this.headers,
+      context: new HttpContext().set(SkipLoading,true)
     });
   }
 
@@ -97,6 +100,7 @@ export class AcsService {
 
     return this.http.put<any>(url, data, {
       headers: this.headers,
+      context: new HttpContext().set(SkipLoading,true)
     });
   }
 

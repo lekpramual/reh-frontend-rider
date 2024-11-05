@@ -162,6 +162,7 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
 
   messageChange($event:any){
     if($event == 'reload'){
+      console.log('reolad ...');
       this.fetchDataGetJobNew();
       this.fetchDataMonitorNew();
     }else if($event){
