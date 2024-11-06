@@ -68,6 +68,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipsList } from '@core/interface/equips.interface';
 import { QuicksService } from '@core/services/quicks.service';
 import { QuicksList } from '@core/interface/quicks.interface';
+import { WardList } from '@core/interface/ward.interface';
+import { WardService } from '@core/services/ward.service';
 
 var doc = new jsPDF({
   orientation: 'portrait',
@@ -124,22 +126,7 @@ export class ReportWardFormSearchComponent implements OnInit {
     ward_quick: '',
   });
 
-  wards: any[] = [
-    { name: 'หน่วยงาน 1', id: 1 },
-    { name: 'หน่วยงาน 2', id: 2 },
-    { name: 'หน่วยงาน 3', id: 3 },
-    { name: 'หน่วยงาน 4', id: 4 },
-    { name: 'หน่วยงาน 5', id: 5 },
-  ];
-
-
-  quicks: any[] = [
-    { name: 'ทั้งหมด', id: 0 },
-    { name: 'Start (ปกติ)', id: 1 },
-    { name: 'Start (ด่วน) เพื่อเตรียมผู้ป่วยทำหัตถการ', id: 2 },
-    { name: 'Start (ด่วน) เฉพาะผู้ป่วยที่มีอาการชั้นวิกฤติ', id: 3 }
-  ];
-
+  wardOptions = signal<WardList[]>([]);
   quickOptions = signal<QuicksList[]>([]);
 
 
@@ -159,7 +146,8 @@ export class ReportWardFormSearchComponent implements OnInit {
   constructor(
     public assets: AssetsService,
     private _snackBar: MatSnackBar,
-    private _quicksService : QuicksService
+    private _quicksService : QuicksService,
+    private _wardService : WardService,
   ) {
     // moment.locale('th');
 
@@ -189,23 +177,22 @@ export class ReportWardFormSearchComponent implements OnInit {
     // this.accessibleId = '';
     this.initForm();
 
-    this.filteredOptions = this.searchControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filter(value))
-    );
-
-    this.filteredOptionquicks = this.searchQuickControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterquicks(value))
-    );
-
-    this.loadQuicks();
+    this.loadWards();
   }
 
-  async loadQuicks(){
+
+
+  async loadWards(){
     try {
-      const results = await this._quicksService.getQuickNews();
-      this.quickOptions.set(results);
+      const results = await this._wardService.getWardsNew();
+
+      console.log('results >>>',results);
+      this.wardOptions.set(results);
+
+      this.filteredOptions = this.searchControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
     } catch (error) {
       this._snackBar.open('โหลดข้อมูรับงานผิดพลาด', '', {
         duration:3000,
@@ -763,8 +750,7 @@ export class ReportWardFormSearchComponent implements OnInit {
     this.formGroupData = new FormGroup({
       ward_start: new FormControl(this.currentDate, [Validators.required]),
       ward_end: new FormControl(this.currentDate, [Validators.required]),
-      ward_depart: new FormControl(0, [Validators.required]),
-      ward_quick: new FormControl('all', [Validators.required]),
+      ward_depart: new FormControl('all', [Validators.required])
     });
   }
 
@@ -786,14 +772,9 @@ export class ReportWardFormSearchComponent implements OnInit {
 
   private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
-    return this.wards.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
+    return this.wardOptions().filter((option) =>
+      option.ward_name.toLowerCase().includes(filterValue)
     );
   }
-  private _filterquicks(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    return this.quicks.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
-  }
+
 }

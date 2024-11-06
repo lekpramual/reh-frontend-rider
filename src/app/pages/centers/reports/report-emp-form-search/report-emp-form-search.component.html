@@ -63,11 +63,11 @@
             <div class="col-6">
               <mat-form-field class="reh-input-full-width mt-2">
                 <mat-label>เลือก ประเภทเจ้าหน้าที่</mat-label>
-                <mat-select formControlName="emp_role_id" >
+                <mat-select formControlName="emp_role_id"  (selectionChange)="getSelectedLabel($event)">
                   <mat-option >
                     <ngx-mat-select-search
                       [formControl]="searchControl"
-                      placeholderLabel="ค้นหา วอร์ด"
+                      placeholderLabel="ค้นหา เจ้าหน้าที่"
                       [preventHomeEndKeyPropagation]="true"
 
                     >
@@ -86,28 +86,7 @@
                 }
 
                 </mat-select>
-                <!-- <mat-select formControlName="emp_role_id" required >
-                  <mat-option
-                    value="all"
-                  >
-                    ทั้งหมด
-                  </mat-option>
-                  <mat-option
-                    *ngFor="let item of this.userOptions()"
-                    [value]="item.id"
-                  >
-                    {{ item.fullname }}
-                  </mat-option>
-                </mat-select>
 
-                <mat-error
-                  *ngIf="
-                    formGroupData.get('emp_role_id')?.invalid ||
-                    formGroupData.get('emp_role_id')?.touched
-                  "
-                >
-                  *โปรดเลือก ประเภทเจ้าหน้าที่</mat-error
-                > -->
               </mat-form-field>
             </div>
           </div>

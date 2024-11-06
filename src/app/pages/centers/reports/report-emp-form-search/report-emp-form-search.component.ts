@@ -37,7 +37,7 @@ import {
 } from '@angular/material/slide-toggle';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
-import { EmpFormSearch } from '../../../../core/interface/reports.interface';
+import { EmpFormSearch, ReportEmp } from '../../../../core/interface/reports.interface';
 import {
   MatDatepickerInputEvent,
   MatDatepickerIntl,
@@ -64,6 +64,7 @@ import { AssetsService } from '@core/services/rest.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@core/services/user.service';
 import { UserList, UserListOptions } from '@core/interface/user.interface';
+import { ReportService } from '@core/services/report.service';
 
 
 var doc = new jsPDF({
@@ -118,14 +119,18 @@ export class ReportEmpFormSearchComponent implements OnInit {
   wardName = input.required<any>();
   typeType = input.required<any>();
 
+  // dataArray = signal<ReportEmp[]>([]);
+  dataArray = signal<any>([]);
+
   formDataSignal: WritableSignal<EmpFormSearch> = signal({
     emp_start: '',
     emp_end: '',
     emp_role_id: '',
   });
 
-  // { id: 9999,code: "EMP-01917", fullname: "ทั้งหมด", status: "active", level_name: "จนท IPD", level_id: 2 }
+
   userOptions = signal<UserList[]>([]);
+  userLabel = signal<string>('');
 
   filteredUserOptions!: Observable<UserList[]>;
   searchUserControl: FormControl = new FormControl();
@@ -145,7 +150,8 @@ export class ReportEmpFormSearchComponent implements OnInit {
   constructor(
     public assets: AssetsService,
     private _snackBar: MatSnackBar,
-    private _userService: UserService
+    private _userService: UserService,
+    private _reportService:ReportService
   ) {
     // moment.locale('th');
 
@@ -202,16 +208,55 @@ export class ReportEmpFormSearchComponent implements OnInit {
     }
   }
 
+  async loadReport(type_oi:string,rxdate:string,eddate:string,perid:string){
+    try {
+      let pername = perid == 'all' ? 'ทั้งหมด' : this.userLabel();
 
+      console.log('pername', pername);
 
+      const result$ = await this._reportService.getDateByPer(type_oi,rxdate,eddate,perid);
+      console.log('result >>> ',result$);
 
+      // this.dataArray().set(this.convertTo2DArray(result$));
+      this.dataArray.set(this.convertTo2DArray(result$));
+
+      // showPDF
+      this.showPDF(type_oi, rxdate,eddate,pername);
+      console.log(this.dataArray());
+
+    } catch (error) {
+      this._snackBar.open('มีข้อผิดพลาดในการโหลดรายงาน', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-snackbar']
+      });
+      console.error(error);
+    }
+  }
+
+  convertTo2DArray(data: any[]): any[][] {
+    return data.map(obj => Object.values(obj));
+  }
+
+  getSelectedLabel(event: any) {
+    const selectedOption = this.userOptions().find(option => option.id === event.value);
+    this.userLabel.set(selectedOption ? selectedOption.fullname : 'all');
+  }
 
   async onSubmit() {
 
     if (this.formGroupData.valid) {
       // Handle form submission
       try {
-        console.log('value >>>',this.formGroupData.value)
+        console.log('value >>>',this.formGroupData.value);
+        let rxdate = moment(this.formGroupData.value.ward_start).add('year', (-543)).format("YYYY-MM-DD");
+        let eddate = moment(this.formGroupData.value.ward_end).add('year', (-543)).format("YYYY-MM-DD");
+        let perid = this.formGroupData.value.emp_role_id ;
+
+        let type_oi = this.typeType();
+
+        await this.loadReport(type_oi,rxdate,eddate,perid);
         // let emp_start = this.formGroupData.value.emp_start;
         // let emp_end = this.formGroupData.value.emp_end;
         // let emp_role_id = this.formGroupData.value.emp_role_id;
@@ -244,7 +289,12 @@ export class ReportEmpFormSearchComponent implements OnInit {
     }
   }
 
-  showPDF = async (emp_start: string, emp_end: string, emp_role: string) => {
+  onSelectionChange(event: any) {
+    console.log("Selected value:", event);
+    // Additional logic can be handled here if needed
+  }
+
+  showPDF = async (type_oi:string, rxdate: string, eddate: string, perid: string) => {
     try {
       // let dayMoment = moment(emp_start);
       // let year = dayMoment.add(543, 'year').format("YYYY");
@@ -253,12 +303,12 @@ export class ReportEmpFormSearchComponent implements OnInit {
       // let date_strr = month + " พ.ศ. " + year;
       let date_strr =
         'รายงานจำนวนเจ้าหน้าที่ขอใช้เปลตามช่วงเวลา ' +
-        moment(emp_start).format('ll') +
+        moment(rxdate).format('ll') +
         ' - ' +
-        moment(emp_end).format('ll');
+        moment(eddate).format('ll');
 
       this.initialPDF(date_strr);
-      let result = await this.generatePDF(emp_start, emp_end, emp_role);
+      let result = await this.generatePDF(rxdate, eddate, perid,type_oi);
       if (result) {
         this.outputPDF();
       }
@@ -293,9 +343,10 @@ export class ReportEmpFormSearchComponent implements OnInit {
   }
 
   generatePDF = async (
-    emp_start: string,
-    emp_end: string,
-    emp_role: string
+    rxdate: string,
+    eddate: string,
+    perid: string,
+    type_oi:string
   ) => {
 
     return new Promise(async (resolve, reject) => {
@@ -324,212 +375,30 @@ export class ReportEmpFormSearchComponent implements OnInit {
         y_number += 6;
         let date_header = '';
         date_header =
-          moment(emp_start).format('ll') + ' - ' + moment(emp_end).format('ll');
+          moment(rxdate).format('ll') + ' - ' + moment(eddate).format('ll');
         doc.setFontSize(16);
         doc.setFont('THSarabun', 'normal');
         doc.text('ประจำวันที่ ' + date_header, width / 2, y_number, {
           align: 'center',
         });
 
+
         y_number += 10;
         doc.setFontSize(14);
         doc.setFont('THSarabun', 'bold');
-        doc.text('เจ้าหน้าที่: '+emp_role, 14, y_number, {
+        doc.text('ประเภท: '+ type_oi, 14, y_number, {
           align: 'left',
         });
 
-        let dt: any[][] = [
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ]
-        ];
+
+        y_number += 6;
+        doc.setFontSize(14);
+        doc.setFont('THSarabun', 'bold');
+        doc.text('เจ้าหน้าที่: '+ perid, 14, y_number, {
+          align: 'left',
+        });
+
+        let dt: any[][] =  this.dataArray();
         // =============== Table ===============
 
         // Calculate the total
@@ -556,24 +425,24 @@ export class ReportEmpFormSearchComponent implements OnInit {
           startY: y_number,
           head: [
             [
-
-              {content:'ชื่อ-สกุล', styles:{halign:'left'}},
+              { content: 'ชื่อ-สกุล', styles: { halign: 'left' } },
               '8-9',
               '9-10',
               '10-11',
               '11-12',
               '12-13',
-               '13-14',
-               '14-15',
-               '15-16',
-               '17-18',
-               '18-19',
-               '19-20',
-               '20-21',
-               '21-22',
-               '22-23',
+              '13-14',
+              '14-15',
+              '15-16',
+              '17-18',
+              '18-19',
+              '19-20',
+              '20-21',
+              '21-22',
+              '22-23',
               '23-24',
-                'จำนวน',
+              '24-8',
+              'จำนวน',
             ],
           ],
           body: dt,
@@ -689,6 +558,12 @@ export class ReportEmpFormSearchComponent implements OnInit {
               textColor: [0, 0, 0],
             },
             16: {
+              halign: 'center',
+              cellWidth: 'auto',
+              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              textColor: [0, 0, 0],
+            },
+            17: {
               halign: 'center',
               cellWidth: 'auto',
               cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },

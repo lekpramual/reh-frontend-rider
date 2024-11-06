@@ -73,37 +73,8 @@ export class MenuService {
 
         },
       ])
-    }else if(levelData === 5){
-      // ศูนย์ OPD
-      this.menuItems.set([
-        {
-          icon: "dashboard",
-          label: "แดชบอร์ด",
-          route: "center/dashboard",
-        },
-        {
-          icon: "comment",
-          label: "ขอใช้เปล",
-          route: "center/accessible",
-        },
-        {
-          icon: "analytics",
-          label: "รายงาน",
-          route: "reports",
-        },
-        {
-          icon: "domain_add",
-          label: "วอร์ด",
-          route: "settings/wards"
-        },
-        {
-          icon: "people",
-          label: "เจ้าหน้าที่",
-          route: "settings/users",
-        }
-      ]);
-    }else if(levelData === 4){
-      // ศูนย์ IPD
+    }else if(levelData === 5 || levelData === 4){
+      // ศูนย์ center
       this.menuItems.set([
         {
           icon: "dashboard",
@@ -131,27 +102,8 @@ export class MenuService {
           route: "settings/users",
         }
       ]);
-    }else if(levelData === 3){
-      // เจ้าหน้าที่ OPD
-      this.menuItems.set([
-        {
-          icon: "dashboard",
-          label: "แดชบอร์ด",
-          route: "dashboard",
-        },
-        {
-          icon: "system_security_update",
-          label: "รับงาน",
-          route: "staff",
-        },
-        {
-          icon: "analytics",
-          label: "รายงาน",
-          route: "reports",
-        }
-      ]);
-    }else if(levelData === 2){
-      // เจ้าหน้าที่ IPD
+    }else if(levelData === 3 || levelData === 2){
+      // เจ้าหน้าที่ rider
       this.menuItems.set([
         {
           icon: "dashboard",
@@ -170,7 +122,7 @@ export class MenuService {
         }
       ]);
     }else{
-      // วอร์ด
+      // วอร์ด ward
       this.menuItems.set([
         {
           icon: "dashboard",

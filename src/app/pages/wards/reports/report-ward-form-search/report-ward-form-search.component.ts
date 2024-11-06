@@ -183,8 +183,7 @@ export class ReportWardFormSearchComponent implements OnInit {
 
     this._quicksService.getQuicks().subscribe({
       next: (data) => {
-        console.log(this.optionQuicks);
-        console.log(data.result);
+
         let _result = data.result;
         this.optionQuicks = [...this.optionQuicks, ..._result];
       },
@@ -205,8 +204,6 @@ export class ReportWardFormSearchComponent implements OnInit {
         let ward_end = moment(this.formGroupData.value.ward_end).add('year', (-543)).format("YYYY-MM-DD");
         let ward_quick = this.formGroupData.value.ward_quick;
         let ward_depart = this.wardId;
-        console.log(this.formGroupData.value);
-        console.log(ward_start, '-', ward_end, '-', ward_quick, '-', ward_depart);
 
         // Data to send to the API
         const bodyParams = {
@@ -343,7 +340,6 @@ export class ReportWardFormSearchComponent implements OnInit {
 
         let dt: any[][] = this.dataArray;
         // =============== Table ===============
-
 
         // Calculate the total
         const total8_9 = dt.reduce((acc, row) => acc + row[1], 0);
