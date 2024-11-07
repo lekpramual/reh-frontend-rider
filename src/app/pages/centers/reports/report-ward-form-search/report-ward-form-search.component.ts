@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   WritableSignal,
+  input,
   signal,
 } from '@angular/core';
 import {
@@ -70,6 +71,7 @@ import { QuicksService } from '@core/services/quicks.service';
 import { QuicksList } from '@core/interface/quicks.interface';
 import { WardList } from '@core/interface/ward.interface';
 import { WardService } from '@core/services/ward.service';
+import { ReportService } from '@core/services/report.service';
 
 var doc = new jsPDF({
   orientation: 'portrait',
@@ -119,6 +121,8 @@ moment.locale('th');
 })
 export class ReportWardFormSearchComponent implements OnInit {
 
+  typeType = input.required<any>();
+
   formDataSignal: WritableSignal<WardFormSearch> = signal({
     ward_start: '',
     ward_end: '',
@@ -128,6 +132,9 @@ export class ReportWardFormSearchComponent implements OnInit {
 
   wardOptions = signal<WardList[]>([]);
   quickOptions = signal<QuicksList[]>([]);
+
+  dataArray = signal<any>([]);
+  userLabel = signal<string>('');
 
 
   accessibleId: string = '';
@@ -148,6 +155,7 @@ export class ReportWardFormSearchComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private _quicksService : QuicksService,
     private _wardService : WardService,
+    private _reportService:ReportService
   ) {
     // moment.locale('th');
 
@@ -203,35 +211,79 @@ export class ReportWardFormSearchComponent implements OnInit {
     }
   }
 
-  async onSubmit() {
-    console.log(this.formGroupData.valid);
-    if (this.formGroupData.valid) {
-      // Handle form submission
-      try {
-        // const data: any = {};
-        // data.name = this.formGroupData.value.emp_name;
-        let ward_start = this.formGroupData.value.ward_start;
-        let ward_end = this.formGroupData.value.ward_end;
-        let ward_depart = this.formGroupData.value.ward_depart;
-        let ward_quick = this.formGroupData.value.ward_quick;
 
+  getSelectedLabel(event: any) {
+    const selectedOption = this.wardOptions().find(option => option.ward_id === event.value);
+    this.userLabel.set(selectedOption ? selectedOption.ward_name : 'all');
+  }
 
-        this.showPDF(ward_start, ward_end,ward_depart);
+  async loadReport(type_oi:string,rxdate:string,eddate:string,ward:string){
+    try {
+      let pername = ward == 'all' ? 'ทั้งหมด' : this.userLabel();
 
-      } catch (error: any) {
-        // Handle error during form submission
-        console.error(error);
-        this._snackBar.open('มีข้อผิดพลาด...', 'ลองอีกครั้ง', {
-          duration:3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass:['error-snackbar']
-        });
-      }
+      console.log('pername', pername);
+
+      const result$ = await this._reportService.getDateByWard(type_oi,rxdate,eddate,ward);
+      console.log('result >>> ',result$);
+
+      // this.dataArray().set(this.convertTo2DArray(result$));
+      this.dataArray.set(this.convertTo2DArray(result$));
+
+      // showPDF
+      this.showPDF(type_oi, rxdate,eddate,pername);
+      console.log(this.dataArray());
+
+    } catch (error) {
+      this._snackBar.open('มีข้อผิดพลาดในการโหลดรายงาน', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-snackbar']
+      });
+      console.error(error);
     }
   }
 
-  showPDF = async (ward_start: string, ward_end: string, emp_role: string) => {
+  convertTo2DArray(data: any[]): any[][] {
+    return data.map(obj => Object.values(obj));
+  }
+
+  async onSubmit() {
+    console.log(this.formGroupData.valid);
+    if (this.formGroupData.valid) {
+
+      console.log('form data >>>',this.formGroupData.value);
+      let rxdate = moment(this.formGroupData.value.ward_start).add('year', (-543)).format("YYYY-MM-DD");
+      let eddate = moment(this.formGroupData.value.ward_end).add('year', (-543)).format("YYYY-MM-DD");
+      let ward = this.formGroupData.value.ward_depart;
+
+      let type_oi = this.typeType();
+
+      await this.loadReport(type_oi,rxdate,eddate,ward);
+      // Handle form submission
+      // try {
+
+      //   let ward_start = this.formGroupData.value.ward_start;
+      //   let ward_end = this.formGroupData.value.ward_end;
+      //   let ward_depart = this.formGroupData.value.ward_depart;
+      //   let ward_quick = this.formGroupData.value.ward_quick;
+
+
+      //   this.showPDF(ward_start, ward_end,ward_depart);
+
+      // } catch (error: any) {
+      //   console.error(error);
+      //   this._snackBar.open('มีข้อผิดพลาด...', '', {
+      //     duration:3000,
+      //     horizontalPosition: 'center',
+      //     verticalPosition: 'bottom',
+      //     panelClass:['error-snackbar']
+      //   });
+      // }
+    }
+  }
+
+  showPDF = async (type_oi:string, rxdate: string, eddate: string, ward: string) => {
     try {
       // let dayMoment = moment(ward_start);
       // let year = dayMoment.add(543, 'year').format("YYYY");
@@ -240,12 +292,13 @@ export class ReportWardFormSearchComponent implements OnInit {
       // let date_strr = month + " พ.ศ. " + year;
       let date_strr =
         'รายงานจำนวนวอร์ดที่ขอใช้เปลแยกประเภท ' +
-        moment(ward_start).format('ll') +
+        moment(rxdate).format('ll') +
         ' - ' +
-        moment(ward_end).format('ll');
+        moment(eddate).format('ll');
 
       this.initialPDF(date_strr);
-      let result = await this.generatePDF(ward_start, ward_end, emp_role);
+
+      let result = await this.generatePDF(rxdate, eddate, ward,type_oi);
       if (result) {
         this.outputPDF();
       }
@@ -280,9 +333,10 @@ export class ReportWardFormSearchComponent implements OnInit {
   }
 
   generatePDF = async (
-    ward_start: string,
-    ward_end: string,
-    emp_role: string
+    rxdate: string,
+    eddate: string,
+    ward: string,
+    type_oi:string
   ) => {
 
     return new Promise(async (resolve, reject) => {
@@ -311,7 +365,7 @@ export class ReportWardFormSearchComponent implements OnInit {
         y_number += 6;
         let date_header = '';
         date_header =
-          moment(ward_start).format('ll') + ' - ' + moment(ward_end).format('ll');
+          moment(rxdate).format('ll') + ' - ' + moment(eddate).format('ll');
         doc.setFontSize(16);
         doc.setFont('THSarabun', 'normal');
         doc.text('ประจำวันที่ ' + date_header, width / 2, y_number, {
@@ -321,203 +375,25 @@ export class ReportWardFormSearchComponent implements OnInit {
         y_number += 10;
         doc.setFontSize(14);
         doc.setFont('THSarabun', 'bold');
-        doc.text('เจ้าหน้าที่: '+emp_role, 14, y_number, {
+        doc.text('ประเภท: '+ type_oi, 14, y_number, {
           align: 'left',
         });
 
-        let dt: any[][] = [
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ],
-          [
-            'นายคมสัน แก้วแสน',
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-          ]
-        ];
+
+        y_number += 6;
+        doc.setFontSize(14);
+        doc.setFont('THSarabun', 'bold');
+        doc.text('วอร์ด : '+ ward, 14, y_number, {
+          align: 'left',
+        });
+
+        let dt: any[][] = this.dataArray();
         // =============== Table ===============
+
+        // Insert row numbers
+        let data = this.dataArray().map((item:any, index:any) =>  [index + 1, ...item]);
+
+        console.log('data >>>',data);
 
         // Calculate the total
         const total8_9 = dt.reduce((acc, row) => acc + row[1], 0);
@@ -536,34 +412,37 @@ export class ReportWardFormSearchComponent implements OnInit {
         const total21_22 = dt.reduce((acc, row) => acc + row[14], 0);
         const total22_23 = dt.reduce((acc, row) => acc + row[15], 0);
         const total23_24 = dt.reduce((acc, row) => acc + row[16], 0);
-        const total_total = dt.reduce((acc, row) => acc + row[17], 0);
+        const total24_8 = dt.reduce((acc, row) => acc + row[17], 0);
+        const total_total = dt.reduce((acc, row) => acc + row[18], 0);
 
         y_number += 3;
         autoTable(doc, {
           startY: y_number,
           head: [
             [
-
+              {content:'#', styles:{halign:'center'}},
               {content:'ชื่อ-สกุล', styles:{halign:'left'}},
               '8-9',
               '9-10',
               '10-11',
               '11-12',
               '12-13',
-               '13-14',
-               '14-15',
-               '15-16',
-               '17-18',
-               '18-19',
-               '19-20',
-               '20-21',
-               '21-22',
-               '22-23',
+              '13-14',
+              '14-15',
+              '15-16',
+              '16-17',
+              '17-18',
+              '18-19',
+              '19-20',
+              '20-21',
+              '21-22',
+              '22-23',
               '23-24',
-                'จำนวน',
+              '24-8',
+              'จำนวน',
             ],
           ],
-          body: dt,
+          body: data,
           theme: 'grid',
           styles: {
             font: 'THSarabun',
@@ -580,13 +459,13 @@ export class ReportWardFormSearchComponent implements OnInit {
           },
           columnStyles: {
             0: {
-              halign: 'left',
+              halign: 'center',
               cellWidth: 'auto',
-              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              cellPadding: { top: 1, bottom: 2, left: 1, right: 1 },
               textColor: [0, 0, 0],
             },
             1: {
-              halign: 'center',
+              halign: 'left',
               cellWidth: 'auto',
               cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
               textColor: [0, 0, 0],
@@ -681,10 +560,28 @@ export class ReportWardFormSearchComponent implements OnInit {
               cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
               textColor: [0, 0, 0],
             },
+            17: {
+              halign: 'center',
+              cellWidth: 'auto',
+              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              textColor: [0, 0, 0],
+            },
+            18: {
+              halign: 'center',
+              cellWidth: 'auto',
+              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              textColor: [0, 0, 0],
+            },
+            19: {
+              halign: 'center',
+              cellWidth: 'auto',
+              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              textColor: [0, 0, 0],
+            },
           },
           foot: [
             [
-              {content:'รวมจำนวน', styles:{halign: 'right'}},
+              {content:'รวมจำนวน',colSpan: 2 , styles:{halign: 'right'}},
               total8_9.toFixed(0),
               total9_10.toFixed(0),
               total10_11.toFixed(0),
@@ -701,6 +598,7 @@ export class ReportWardFormSearchComponent implements OnInit {
               total21_22.toFixed(0),
               total22_23.toFixed(0),
               total23_24.toFixed(0),
+              total24_8.toFixed(0),
               total_total.toFixed(0),
             ],
           ],

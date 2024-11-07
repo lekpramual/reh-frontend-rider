@@ -250,8 +250,8 @@ export class ReportEmpFormSearchComponent implements OnInit {
       // Handle form submission
       try {
         console.log('value >>>',this.formGroupData.value);
-        let rxdate = moment(this.formGroupData.value.ward_start).add('year', (-543)).format("YYYY-MM-DD");
-        let eddate = moment(this.formGroupData.value.ward_end).add('year', (-543)).format("YYYY-MM-DD");
+        let rxdate = moment(this.formGroupData.value.emp_start).add('year', (-543)).format("YYYY-MM-DD");
+        let eddate = moment(this.formGroupData.value.emp_end).add('year', (-543)).format("YYYY-MM-DD");
         let perid = this.formGroupData.value.emp_role_id ;
 
         let type_oi = this.typeType();
@@ -399,6 +399,10 @@ export class ReportEmpFormSearchComponent implements OnInit {
         });
 
         let dt: any[][] =  this.dataArray();
+
+        // Insert row numbers
+        let data = this.dataArray().map((item:any, index:any) =>  [index + 1, ...item]);
+
         // =============== Table ===============
 
         // Calculate the total
@@ -425,6 +429,7 @@ export class ReportEmpFormSearchComponent implements OnInit {
           startY: y_number,
           head: [
             [
+              {content:'#', styles:{halign:'center'}},
               { content: 'ชื่อ-สกุล', styles: { halign: 'left' } },
               '8-9',
               '9-10',
@@ -445,7 +450,7 @@ export class ReportEmpFormSearchComponent implements OnInit {
               'จำนวน',
             ],
           ],
-          body: dt,
+          body: data,
           theme: 'grid',
           styles: {
             font: 'THSarabun',
@@ -462,13 +467,13 @@ export class ReportEmpFormSearchComponent implements OnInit {
           },
           columnStyles: {
             0: {
-              halign: 'left',
+              halign: 'center',
               cellWidth: 'auto',
-              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              cellPadding: { top: 1, bottom: 2, left: 1, right: 1 },
               textColor: [0, 0, 0],
             },
             1: {
-              halign: 'center',
+              halign: 'left',
               cellWidth: 'auto',
               cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
               textColor: [0, 0, 0],
@@ -569,10 +574,16 @@ export class ReportEmpFormSearchComponent implements OnInit {
               cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
               textColor: [0, 0, 0],
             },
+            18: {
+              halign: 'center',
+              cellWidth: 'auto',
+              cellPadding: { top: 1, bottom: 2, left: 3, right: 3 },
+              textColor: [0, 0, 0],
+            },
           },
           foot: [
             [
-              {content:'รวมจำนวน', styles:{halign: 'right'}},
+              {content:'รวมจำนวน',colSpan: 2 , styles:{halign: 'right'}},
               total8_9.toFixed(0),
               total9_10.toFixed(0),
               total10_11.toFixed(0),

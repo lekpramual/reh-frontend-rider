@@ -39,6 +39,16 @@ export class AcsService {
     });
   }
 
+  async getAcsByWIdNew(Id: string):Promise<AcsList[]> {
+    const url = `${this.acsUrl}/${Id}/list`;
+    const results$ = this.http.get<GetAcsListResponse>(url, {
+      headers: this.headers,
+      context: new HttpContext().set(SkipLoading,true)
+    });
+    const response = await firstValueFrom(results$);
+    return response.result;
+  }
+
   addAcsByWard(data: any) {
     return this.http.post<any>(this.acsUrl, data, {
       headers: this.headers,

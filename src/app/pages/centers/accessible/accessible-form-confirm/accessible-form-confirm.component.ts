@@ -44,14 +44,13 @@ import { Observable, map, startWith } from 'rxjs';
     MatCardModule,
     MatBadgeModule,
     MatTooltipModule,
-
-
   ]
 })
 export class AccessibleFormConfirmComponent implements OnInit{
 
   _Id = signal('');
   _data = signal<AcsList[]>([]);
+  acsData = signal<AcsList[]>([]);
   formAccessible!: FormGroup;
 
   filteredOptions!: Observable<any[]>;
@@ -70,19 +69,21 @@ export class AccessibleFormConfirmComponent implements OnInit{
     this._Id.set(this.data?.Id);
     this.initForm();
 
-    await this.getWard();
+
+    this.getWardNew();
   }
 
-  async getWard(){
-    await this._acsService.getAcsByWId(this._Id()).subscribe({
-      next:(data) => {
-        const response:AcsList[] = data.result;
-        this._data.set(response);
-      },
-      error:(error) => {
-        console.error('Error fetching departments', error);
-      }
-    });
+
+
+  async getWardNew(){
+    try {
+      const response = await this._acsService.getAcsByWIdNew(this._Id());
+      console.log('response >>>',response);
+      this.acsData.set(response);
+    } catch (error) {
+
+      console.error(error);
+    }
   }
 
   async onSubmit() {
@@ -131,13 +132,13 @@ export class AccessibleFormConfirmComponent implements OnInit{
 
   async onGetJob(event: Event){
     event.preventDefault();
-    console.log('Button clicked get job.');
+    // console.log('Button clicked get job.');
     await this.updateJob('get');
   }
 
   async onConfirmJob(event: Event){
     event.preventDefault();
-    console.log('Button clicked get confirm job .');
+    // console.log('Button clicked get confirm job .');
     await this.updateJob('confirm');
   }
 
@@ -145,8 +146,7 @@ export class AccessibleFormConfirmComponent implements OnInit{
 
   async updateJob(mode:string){
     try {
-
-      console.log('mode',mode)
+      // console.log('mode',mode)
       // await this.coursesService.deleteCourse(courseId);
       // const courses = this.#courses();
       // const newCourse = courses.filter(course => course.id !== courseId);
@@ -165,7 +165,7 @@ export class AccessibleFormConfirmComponent implements OnInit{
         }).afterDismissed().subscribe(async () => {
           // this.messageChange.emit('reset');
           // this.dialogRef.close("ok");
-          await this.getWard();
+          this.getWardNew();
         });
       }
 
