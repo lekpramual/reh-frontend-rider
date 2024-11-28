@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("/assets/images/bg_image.png") no-repeat center
+    center;
+  background-size: cover;
+}
+
+
+
+.divider-with-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.divider-with-text mat-divider {
+  flex-grow: 1;
+}
+
+.divider-text {
+  padding: 0 10px; /* Adjust padding as needed */
+  white-space: nowrap;
+  background-color: white; /* Optional: To match the background and "cut through" the divider */
+  z-index: 1; /* Ensure text appears above the dividers */
+}
+
+
+.unauthorized-card {
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+}
+
+

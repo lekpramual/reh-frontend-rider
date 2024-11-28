@@ -241,7 +241,7 @@ export class ReportEmpFormSearchComponent implements OnInit {
 
   getSelectedLabel(event: any) {
     const selectedOption = this.userOptions().find(option => option.id === event.value);
-    this.userLabel.set(selectedOption ? selectedOption.fullname : 'all');
+    this.userLabel.set(selectedOption ? `${selectedOption.title}${selectedOption.firstname} ${selectedOption.surname}` : 'all');
   }
 
   async onSubmit() {
@@ -672,8 +672,8 @@ export class ReportEmpFormSearchComponent implements OnInit {
   private _filterUsers(value: string): any[] {
     const filterValue = value.toLowerCase();
     return this.userOptions().filter((option) =>
-      option.fullname.toLowerCase().includes(filterValue)
+      option.firstname.toLowerCase().includes(filterValue) ||
+      option.surname.toLowerCase().includes(filterValue)
     );
   }
-
 }

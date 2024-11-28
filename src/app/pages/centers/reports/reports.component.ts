@@ -29,7 +29,7 @@ export default class ReportsComponent {
   roleService = inject(RoleService);
 
   constructor(){
-    this.wardName.set(this.roleService.wardName());
+    this.wardName.set('หน่วยงาน');
     this.roleType.set(this.roleService.role() == 5 ? 'opd' : 'ipd');
   }
 

@@ -16,7 +16,7 @@ export class DashboardService {
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
     Authorization:
-      "Bearer " + localStorage.getItem(environment.LOGIN_TOKENS) || "no-token",
+      "Bearer " + localStorage.getItem(environment.ACCESS_TOKENS) || "no-token",
   });
 
   getDashboardByYear(bodyParams:any) {
@@ -27,6 +27,15 @@ export class DashboardService {
 
   async getDashboardByYearCenter(bodyParams:any) {
     const results$ = this.http.post<any>(`${this.apiUrl}/center`,bodyParams,{
+        headers: this.headers,
+    });
+
+    const response = await firstValueFrom(results$);
+    return response.result;
+  }
+
+  async getDashboardByYearRider(bodyParams:any) {
+    const results$ = this.http.post<any>(`${this.apiUrl}/rider`,bodyParams,{
         headers: this.headers,
     });
 

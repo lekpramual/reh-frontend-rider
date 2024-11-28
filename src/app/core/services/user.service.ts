@@ -4,7 +4,7 @@ import { environment } from "@env/environment";
 
 import { firstValueFrom } from "rxjs";
 import { SkipLoading } from "@core/components/loading/skip-loading.component";
-import { GetUserListResponse,UserList } from "@core/interface/user.interface";
+import { createUser, GetUserListResponse,UserList } from "@core/interface/user.interface";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +19,7 @@ export class UserService {
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
     Authorization:
-      "Bearer " + localStorage.getItem(environment.LOGIN_TOKENS) || "no-token",
+      "Bearer " + localStorage.getItem(environment.ACCESS_TOKENS) || "no-token",
   });
 
 
@@ -32,4 +32,42 @@ export class UserService {
     const response = await firstValueFrom(wards$);
     return response.result;
   }
+
+   getUserById(userId:string){
+    const url = `${this.apiUrl}/${userId}/profile`;
+    const wards$ = this.http.get<any>(url, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+    });
+    // const response = await firstValueFrom(wards$);
+    return wards$;
+  }
+
+
+  async getUserByTypeLoad(type:string) :Promise<UserList[]>{
+    const url = `${this.apiUrl}/useractive?type=${type}`;
+    const wards$ = this.http.get<GetUserListResponse>(url, {
+      headers: this.headers
+    });
+    const response = await firstValueFrom(wards$);
+    return response.result;
+  }
+
+
+  async createUser(dataForm:Partial<createUser>): Promise<createUser>{
+    const result$ = this.http.post<createUser>(`${this.apiUrl}`,dataForm, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+    })
+    return await firstValueFrom(result$)
+  }
+
+   async updateUser(Id:string,dataForm:Partial<createUser>) :Promise<createUser>{
+    const result$ = this.http.put<createUser>(`${this.apiUrl}/${Id}/edit`, dataForm, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+    });
+
+    return await firstValueFrom(result$)
+   }
 }

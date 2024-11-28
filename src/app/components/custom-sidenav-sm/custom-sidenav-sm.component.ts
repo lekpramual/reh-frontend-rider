@@ -40,10 +40,10 @@ export class CustomSidenavSMComponent {
   }
 
   initProfile(data: any) {
-    this.defaultAccount.userName = data.userName;
-    this.defaultAccount.departName = data.departName;
+    this.defaultAccount.userName = 'เล็ก ลำปาว';
+    this.defaultAccount.departName = 'หน่วยงาน'
 
-    const levelApp = parseInt(data.levelApp);
+    const levelApp = parseInt('5');
     if(levelApp === 6){
       this.defaultAccount.levelApp = "ผู้ดูแลระบบ";
     }else if(levelApp === 5){

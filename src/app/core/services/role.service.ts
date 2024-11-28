@@ -13,7 +13,7 @@ export class RoleService {
 
   profile() {
     if (this.isLoggedIn) {
-      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      const token: any = localStorage.getItem(environment.ACCESS_TOKENS) || null;
       try {
         return jwt_decode(token);
       } catch (error) {
@@ -28,10 +28,10 @@ export class RoleService {
 
   role() {
     if (this.isLoggedIn) {
-      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      const token: any = localStorage.getItem(environment.ACCESS_TOKENS) || null;
       try {
         const decodeToken: any = jwt_decode(token);
-        return Number(decodeToken.levelApp);
+        return  Number('5') || '';
       } catch (error) {
         console.error("Error decoding JWT:", error);
         return null;
@@ -44,10 +44,10 @@ export class RoleService {
 
   ward() {
     if (this.isLoggedIn) {
-      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      const token: any = localStorage.getItem(environment.ACCESS_TOKENS) || null;
       try {
         const decodeToken: any = jwt_decode(token);
-        return Number(decodeToken.departId);
+        return Number('433');
       } catch (error) {
         console.error("Error decoding JWT:", error);
         return null;
@@ -60,10 +60,10 @@ export class RoleService {
 
   wardName() {
     if (this.isLoggedIn) {
-      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      const token: any = localStorage.getItem(environment.ACCESS_TOKENS) || null;
       try {
         const decodeToken: any = jwt_decode(token);
-        return decodeToken.departName;
+        return 'หน่วยงาน';
       } catch (error) {
         console.error("Error decoding JWT:", error);
         return null;
@@ -76,10 +76,10 @@ export class RoleService {
 
   userId() {
     if (this.isLoggedIn) {
-      const token: any = localStorage.getItem(environment.LOGIN_TOKENS) || null;
+      const token: any = localStorage.getItem(environment.ACCESS_TOKENS) || null;
       try {
         const decodeToken: any = jwt_decode(token);
-        return Number(decodeToken.userId);
+        return Number('1830');
       } catch (error) {
         console.error("Error decoding JWT:", error);
         return null;

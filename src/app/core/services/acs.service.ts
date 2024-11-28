@@ -22,7 +22,7 @@ export class AcsService {
   private headers = new HttpHeaders({
     "Content-Type": "application/json",
     Authorization:
-      "Bearer " + localStorage.getItem(environment.LOGIN_TOKENS) || "no-token",
+      "Bearer " + localStorage.getItem(environment.ACCESS_TOKENS) || "no-token",
   });
 
   // SECTION WARD
@@ -135,5 +135,25 @@ export class AcsService {
     const response = await firstValueFrom(results$);
     return await response.result;
   }
+
+  // Rider
+  async getAcsByRiderMonitorNew(rider:string, rxdate:string):Promise<AcsList[]> {
+    const url = `${this.acsUrl}/riderbydate?rider=${rider}&rxdate=${rxdate}`;
+    const results$ = this.http.get<GetAcsListResponse>(url, { headers: this.headers });
+    const response = await firstValueFrom(results$);
+    return await response.result;
+  }
+
+
+   // รับงานและยืนยันปิดงาน
+   async updateAcsByRiderGetJob(Id:string,data: any) :Promise<any>{
+    const courses$ = this.http.put<any>(`${this.acsUrl}/${Id}/scanrider`, data, {
+      headers: this.headers,
+      context:new HttpContext().set(SkipLoading,true)
+    });
+
+    return await firstValueFrom(courses$)
+  }
+
 
 }

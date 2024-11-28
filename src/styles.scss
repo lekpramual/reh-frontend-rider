@@ -282,3 +282,14 @@ mat-mdc-list-item:focus {
     // width: 100%;
 }
 
+
+.reh-table-sm .mat-mdc-row,
+.reh-table-sm .mat-mdc-header-row{
+  height: 40px!important;
+}
+
+.reh-table-sm .mat-mdc-cell,
+.reh-table-sm .mat-mdc-header-cell {
+  line-height: 40px!important; /* Ensure content is vertically centered */
+}
+

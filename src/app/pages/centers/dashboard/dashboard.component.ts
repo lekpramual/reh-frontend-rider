@@ -178,9 +178,11 @@ export default  class DashboardComponent  implements OnInit{
     this.chartOptions = {
       ...this.chartOptions,
       series: [{
+        name: 'จำนวนขอใช้เปล',
         type: 'line',
         data: data
-      }]
+      }],
+
     };
   }
 

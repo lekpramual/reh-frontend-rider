@@ -70,7 +70,7 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     searchText:'',
     searchWard:'',
     searchPerson:'',
-  })
+  });
 
   constructor(
     private _acsService: AcsService,

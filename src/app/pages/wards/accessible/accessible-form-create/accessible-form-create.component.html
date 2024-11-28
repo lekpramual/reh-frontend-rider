@@ -2,7 +2,7 @@
   <span class="mat-headline-5 btn-action-green mb-0">ขอใช้เปลใหม่ ({{this.type_io()}})</span>
 </div>
 <mat-divider></mat-divider>
-<form [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+<form [formGroup]="formAccessible" (ngSubmit)="onSubmit()" class="reh-form-sm">
   <mat-dialog-content style="max-height: 75vh;">
     <div class="lj-viewer-wrapper">
       <mat-tab-group dynamicHeight class="ct-tab-group" (selectedTabChange)="onTabClick($event)">

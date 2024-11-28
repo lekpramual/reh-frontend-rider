@@ -1,0 +1,50 @@
+<mat-card>
+  <div style="padding: 0px !important;">
+    <div class="row" style="padding: 10px;">
+      <div class="col-12 reh-txt-blue" align="center">
+        <span class="mat-headline-5 reh-txt-blue900">รับงาน เลขที่ {{jobId}} จุดสแกน {{wardId}} : {{wardName}}</span>
+      </div>
+
+    </div>
+    <mat-divider>
+    </mat-divider>∫
+    <div class="row">
+      <div class="col-12">
+        <section class="example-container" tabindex="0">
+          <!-- style="width: 400px; height: 300px;" -->
+            <!-- QR Code Scanner -->
+            <zxing-scanner
+            start="true"
+            (scanSuccess)="onCodeResult($event)"
+            (permissionResponse)="onHasPermission($event)"
+            (camerasFound)="onCamerasFound($event)"
+            [tryHarder]="true"
+            style="width: 400px; height: 300px;border: 4px solid #3498db;"
+          ></zxing-scanner>
+
+          <!-- Display the scanned result -->
+           <!-- @if(qrCodeResult){
+            <div class="mt-2">
+              <p class="reh-txt-blue mat-subtitle-1">Scanned QR Code Content: {{ qrCodeResult | json}}</p>
+            </div>
+           } -->
+
+
+           @if(!hasDevices){
+          <!-- Display message if no devices or permissions -->
+            <div class="mt-2">
+              <p class="reh-txt-red mat-subtitle-1">ไม่พบกล้องหรือไม่ได้รับอนุญาต.</p>
+            </div>
+          }
+        </section>
+      </div>
+    </div>
+  </div>
+</mat-card>
+
+
+
+
+
+
+

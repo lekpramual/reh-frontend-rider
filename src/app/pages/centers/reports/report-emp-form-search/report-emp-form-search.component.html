@@ -82,7 +82,7 @@
                   ทั้งหมด
                 </mat-option>
                 @for (option of filteredUserOptions | async; track option) {
-                  <mat-option  [value]="option.id" > {{ option.fullname }}</mat-option>
+                  <mat-option  [value]="option.id" > {{ option.title }}{{ option.firstname }} {{option.surname}}</mat-option>
                 }
 
                 </mat-select>

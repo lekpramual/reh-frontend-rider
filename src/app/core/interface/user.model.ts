@@ -13,3 +13,6 @@ export type GetUserListsResponse = {
   ok:string,
   result: UserList[];
 }
+
+
+

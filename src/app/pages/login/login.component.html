@@ -30,9 +30,12 @@
             formControlName="username"
           />
 
-          @if(formInitial.get('username')?.invalid ||
-          formInitial.get('username')?.touched){
-          <mat-error> *โปรดระบุ ชื่อผู้ใช้งาน</mat-error>
+          @if(formInitial.get('username')?.errors?.['required']){
+            <mat-error> *โปรดระบุ ชื่อผู้ใช้งาน</mat-error>
+          }
+
+          @if(formInitial.get('username')?.errors?.['minlength']){
+            <mat-error> รหัสผ่านต้องมีอย่างน้อย 3 ตัวอักษร </mat-error>
           }
 
           <mat-icon class="text-gray-500" matSuffix>account_box</mat-icon>
@@ -53,9 +56,12 @@
             required
           />
 
-          @if(formInitial.get('password')?.invalid ||
-          formInitial.get('password')?.touched){
-          <mat-error> *โปรดระบุ รหัสผ่าน</mat-error>
+          @if(formInitial.get('password')?.errors?.['required']){
+            <mat-error> โปรดระบุ รหัสผ่าน</mat-error>
+          }
+
+          @if(formInitial.get('password')?.errors?.['minlength']){
+            <mat-error> รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร </mat-error>
           }
 
           <button
@@ -88,7 +94,7 @@
   </div>
 
 
-  <div class="row">
+  <!-- <div class="row">
     <div class="divider-with-text">
       <mat-divider></mat-divider>
       <span class="divider-text mat-headline-6" style="margin-top: 8px;">หรือ</span>
@@ -107,7 +113,7 @@
         <span style="font-size: 20px;">Provider ID</span>
       </button>
     </div>
-  </div>
+  </div> -->
   <div class="row mt-1">
     <div class="col-6">
       <span class="mat-subtitle-1">Version 1.0.1 </span>

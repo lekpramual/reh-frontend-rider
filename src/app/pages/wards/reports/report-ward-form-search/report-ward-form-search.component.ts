@@ -207,8 +207,8 @@ export class ReportWardFormSearchComponent implements OnInit {
 
         // Data to send to the API
         const bodyParams = {
-          start:ward_start,
-          end:ward_end,
+          rxdate:ward_start,
+          eddate:ward_end,
           ward:ward_depart,
           quick:String(ward_quick)
         };

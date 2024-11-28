@@ -1,0 +1,137 @@
+.content {
+  padding: 24px;
+}
+
+.sidenav {
+  width: 240px;
+ /* Ensure the sidenav does not shrink */
+ flex-shrink: 0 !important;
+}
+
+.sidenav-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+
+// .reh-sidenav-content {
+
+//   display: flex;
+//   height: 100%;
+//   flex-direction: row;
+//   overflow: hidden !important;
+// }
+
+// .sidenav-content {
+//   padding: 0px 12px 0px 6px;
+//   height: calc(100% - 56px); /* Adjust based on header height */
+//   overflow: hidden;
+//   box-sizing: border-box; /* Ensure padding is included in the height calculation */
+//   scrollbar-width: thin;
+//   margin-top: 12px;
+// }
+
+// .sidenav-content:hover {
+//   overflow-y: auto;
+// }
+
+// /* WebKit browsers */
+// .sidenav-content::-webkit-scrollbar {
+//   width: 8px; /* Adjust the width of the scrollbar */
+// }
+
+// .sidenav-content::-webkit-scrollbar-track {
+//   background: #f1f1f1; /* Background color of the scrollbar track */
+// }
+
+// .sidenav-content::-webkit-scrollbar-thumb {
+//   background: #888; /* Color of the scrollbar thumb */
+//   border-radius: 8px  ; /* Round the corners of the scrollbar thumb */
+// }
+
+// .sidenav-content::-webkit-scrollbar-thumb:hover {
+//   background: #555; /* Color of the scrollbar thumb on hover */
+// }
+
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  box-shadow:0 1px 4px 1px rgb(0, 0, 0, 0.12);
+
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.mat-progress-bar {
+  z-index: 1000;
+
+}
+
+.mat-drawer-content {
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mat-mdc-list-item.active {
+  background-color: #e0e0e0 !important;
+  font-weight: bold!important;
+}
+
+
+// REH STYLE
+.reh-spacer {
+  flex: 1 1 auto;
+}
+
+.reh-content {
+  padding: 16px;
+  background-color: #fff;
+  // display: block;
+  // width: 100%;
+}
+
+.reh-profile-content {
+  border-bottom: 1px solid rgb(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  position: relative;
+  padding: 16px;
+  display: flexbox;
+  display: flex;
+  flex-direction: row;
+}
+.reh-profile-avatar {
+  height: 40px;
+  width: 40px;
+  margin-right: 16px;
+  border-radius: 50%;
+  background-color: transparent;
+  overflow: hidden;
+}
+.reh-profile-content-title {
+  min-width: 0;
+  display: flexbox;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 196px;
+}
+
+
+
+.footer-content {
+  border-top: solid 1px #c4c6d0;
+  bottom: 0;
+  display: flex;
+  // position: fixed;
+  margin-top: 8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,26 +21,11 @@ import moment from 'moment';
 import 'moment/locale/th';
 import { AcsService } from '@core/services/acs.service';
 import { RoleService } from '@core/services/role.service';
-import { firstValueFrom, Subject } from 'rxjs';
-
-export interface PeriodicElement {
-  name: string;
-  type:string;
-  type_id:number;
-  equipment: string;
-  in: string;
-  out: string;
-  date:string;
-  time:string;
-}
-
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   {name: 'น.ส.เกษร เหนือโท',type_id:1, type:'ปกติ [0-60]',equipment:'เปลนอน', in: 'ศัลยกรรม 3', out:'ส่งผู้ป่วยกลับบ้าน',date:'15/08/2567',time:'11:20'},
-//   {name: 'Mr.JOSEPH WILLIAM WILLIAM JR',type_id:2, type:'ด่วน [0-30]',equipment:'เปลนอน+ออกซิเจน', in: 'ศัลยกรรม 3', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 7',date:'15/08/2567',time:'11:21'},
-//   {name: 'น.ส.ธัญญานุช ด้วงโพนแร้ง',type_id:3, type:'ด่วนมาก [0-20]',equipment:'รถนั่ง', in: 'รังสีร่วมรักษา', out:'หอผู้ป่วยพิเศษมะเร็งชั้น 8',date:'15/08/2567',time:'11:16'},
-//   {name: 'นางสมร โภคามาตย์',type_id:4, type:'ด่วนพิเศษ [0-10]',equipment:'เปลนอน', in: 'เบญจสิริ 2', out:'เบญจสิริ 2',date:'15/08/2567',time:'11:15'},
-// ];
+import { firstValueFrom, interval, Subject, Subscription } from 'rxjs';
+import { AuthService } from '@core/services/auth.service';
+import { NoDataComponent } from '@core/components/nodata/nodata.component';
+import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
+import { LoadingService } from '@core/components/loading/loading.service';
 
 
 @Component({
@@ -61,7 +46,10 @@ export interface PeriodicElement {
     MatChipsModule,
     MatTooltipModule,
     MatPaginatorModule,
-    CommonModule
+    CommonModule,
+
+    NoDataComponent,
+    LoadingIndicatorComponent
   ],
 
 })
@@ -73,18 +61,23 @@ export default class AccessibleListGetJobComponent {
 
   searchValue = "";
   searchTerm = new Subject<string>();
-  wardId:any =  ""
-  data:any;
+  departId = signal<number | null>(null);
+
+
+  private subscription!: Subscription;
+
   // @Output() messageChange = new EventEmitter<string>();
 
   displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','type_oi','status_work','star'];
   // dataSource = new MatTableDataSource<TPatient>();
-  dataSource = new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<any>([]);
+
 
   constructor(
-    private dialog: MatDialog,
     private _acsService : AcsService,
-    private _roleService: RoleService
+    private dialog: MatDialog,
+    private authService: AuthService,
+    public _loadingService: LoadingService
   ) {
 
     moment.updateLocale('th', {
@@ -105,13 +98,19 @@ export default class AccessibleListGetJobComponent {
   }
 
   ngOnInit() : void{
-    const _wardId =  this._roleService.ward();
-    if(_wardId){
+    this.departId.set(this.authService.getDepartId());
 
-      this.getAcsByWards(_wardId);
-      this.wardId = _wardId;
+    this.getAcsByWards();
+    this.subscription = interval(60000).subscribe(() => {
+      this.getAcsByWards();
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe(); // Clean up subscription
     }
-
   }
 
   applyFilter(event: Event) {
@@ -128,12 +127,13 @@ export default class AccessibleListGetJobComponent {
 
   }
   //โหลดข้อมูลรายการยา
-  async getAcsByWards(wardId:number) {
+  async getAcsByWards() {
     try {
-      const response: any = await firstValueFrom(this._acsService.getAcsByWard(wardId));
-      // console.log(response.result);
-      // this.data = response.result;
+
+      const response: any = await firstValueFrom(this._acsService.getAcsByWard(this.departId()!));
       this.dataSource.data = response.result;
+      // this.data = response.result;
+      // this.dataSource.paginator = this.paginator;
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -168,7 +168,8 @@ export default class AccessibleListGetJobComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      result === "ok" && this.getAcsByWards(this.wardId);
+
+      result === "ok" && this.getAcsByWards();
     });
   }
 
@@ -185,12 +186,16 @@ export default class AccessibleListGetJobComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
-      result === "ok" && this.getAcsByWards(this.wardId);
+      console.log("The dialog was closed");
+      result === "ok" && this.getAcsByWards();
     });
   }
 
   ngAfterViewInit() {
+    // this.getAcsByWards();
+    // this.dataSource.data = this.data;
     this.dataSource.paginator = this.paginator;
+
   }
 
   //ฟังก์ชั่น: ปีภาษาไทย

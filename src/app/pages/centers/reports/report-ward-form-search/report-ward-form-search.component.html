@@ -73,7 +73,7 @@
                 <mat-label>เลือก วอร์ด</mat-label>
 
 
-                <mat-select formControlName="ward_depart" >
+                <mat-select formControlName="ward_depart"  (selectionChange)="getSelectedLabel($event)">
 
 
                   <mat-option >

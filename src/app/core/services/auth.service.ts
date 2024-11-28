@@ -3,34 +3,87 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { environment } from "@env/environment";
 import { User } from "@core/interface/user.model";
 import jwt_decode from 'jwt-decode';
+import { JwtEncodeService } from "./jwt-encode.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private jwtEncodeService: JwtEncodeService) {}
 
   private hostUrl = environment.node_api_url;
-  private loginUrl = `${this.hostUrl}/riders/login`;
+  private loginUrl = `${this.hostUrl}`;
+  private accessToken = environment.ACCESS_TOKENS;
 
   login(value: User) {
-    return this.http.post<any>(this.loginUrl, value);
+    return this.http.post<any>(`${this.loginUrl}/riders/login`, value);
   }
 
-  isTokenExpired(token: string): boolean {
-    if (!token) return true;  // If there's no token, consider it expired
+  logout(){
+    localStorage.removeItem(this.accessToken);
+  }
 
-    const decoded: any = jwt_decode(environment.LOGIN_TOKENS);
+  getUserRole(): string | null {
+    const token = localStorage.getItem(this.accessToken);
+    if (token) {
+      try {
 
-    // Current time in seconds
-    const currentTime = Math.floor(Date.now() / 1000);
+        const decodeJwtToken:any = this.jwtEncodeService.decode(token);
+        const decodeToken: any = jwt_decode(decodeJwtToken);
+        console.log(decodeToken);
 
-    // Check if the token is expired
-    if (decoded.exp < currentTime) {
-      return true;  // Token is expired
+        const role:string = decodeToken.role;
+        console.log('role ',role )
+        return  role;
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+        return null;
+      }
+      // return JSON.parse(user).role;
     }
+    return null;
+  }
 
-    return false;  // Token is still valid
+  getUserId(): string | null {
+    const token = localStorage.getItem(this.accessToken);
+    if (token) {
+      try {
+
+        const decodeJwtToken:any = this.jwtEncodeService.decode(token);
+        const decodeToken: any = jwt_decode(decodeJwtToken);
+        console.log(decodeToken);
+
+        const role:string = decodeToken.id;
+        console.log('role ',role )
+        return  role;
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+        return null;
+      }
+      // return JSON.parse(user).role;
+    }
+    return null;
+  }
+
+  getDepartId(): number | null {
+    const token = localStorage.getItem(this.accessToken);
+    if (token) {
+      try {
+
+        const decodeJwtToken:any = this.jwtEncodeService.decode(token);
+        const decodeToken: any = jwt_decode(decodeJwtToken);
+        console.log(decodeToken);
+
+        const role:number = decodeToken.depart;
+        console.log('role ',role )
+        return  role;
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+        return null;
+      }
+      // return JSON.parse(user).role;
+    }
+    return null;
   }
 }

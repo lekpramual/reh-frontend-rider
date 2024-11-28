@@ -30,11 +30,11 @@ export class AdminLayoutComponent implements OnInit {
   @ViewChild('toggleButton') toggleButton!: ElementRef<HTMLButtonElement>;
 
   defaultAccount = {
-    userId: "",
-    userName: "",
-    levelApp: "",
-    departId: "",
-    departName: "",
+    userId: "1234",
+    userName: "ประมวล",
+    levelApp: "5",
+    departId: "433",
+    departName: "หน่วยงาน",
   };
 
   subscription!: Subscription;
@@ -93,7 +93,7 @@ export class AdminLayoutComponent implements OnInit {
     });
 
     this.titleApp = this.configService.getTitleApp();
-    this.initProfile(this.role.profile());
+    this.initProfile(this.defaultAccount);
   }
 
   isActiveLink(link: string): boolean {

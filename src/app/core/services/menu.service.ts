@@ -16,17 +16,17 @@ export type MenuItem = {
 })
 export class MenuService {
 
-  levelApp =  ""
+  levelApp =  "5"
 
   menuItems = signal<MenuItem[]>([]);
 
   constructor(private role: RoleService){
-    this.initProfile(this.role.profile());
+
   }
 
   initProfile(data: any) {
     // console.log(data);
-    this.levelApp = data.levelApp;
+    // this.levelApp = data.levelApp;
   }
 
   public menuManager(){
@@ -94,12 +94,12 @@ export class MenuService {
         {
           icon: "domain_add",
           label: "วอร์ด",
-          route: "settings/wards"
+          route: "center/wards"
         },
         {
           icon: "people",
           label: "เจ้าหน้าที่",
-          route: "settings/users",
+          route: "center/users",
         }
       ]);
     }else if(levelData === 3 || levelData === 2){
@@ -108,17 +108,12 @@ export class MenuService {
         {
           icon: "dashboard",
           label: "แดชบอร์ด",
-          route: "dashboard",
+          route: "rider/dashboard",
         },
         {
           icon: "system_security_update",
           label: "รับงาน",
-          route: "staff",
-        },
-        {
-          icon: "analytics",
-          label: "รายงาน",
-          route: "reports",
+          route: "rider/jobs",
         }
       ]);
     }else{

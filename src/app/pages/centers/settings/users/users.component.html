@@ -1,0 +1,21 @@
+<div class="row g-3">
+  <div [class]="isOpened()?'col-lg-6 col-md-12':'col-lg-12 col-md-12' ">
+    <app-user-list
+    [dataUsers]="dataUsers()"
+    [sideopen]="isOpened()"
+    [typeType]="roleType()"
+    (messageChange)="onMessageChange($event)"
+    (formChange)="onFormData($event)"/>
+  </div>
+  @if(isOpened()){
+    <div class="col-lg-6 col-md-12 mb-md-4 mb-sm-4">
+      <app-user-form-create
+      [sideopen]="isOpened()"
+      [formdata]="formData()"
+      [typeType]="roleType()"
+      (messageChange)="onMessageChange($event)"
+      @sidenavAnimation  />
+    </div>
+  }
+
+</div>

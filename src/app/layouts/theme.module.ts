@@ -23,11 +23,17 @@ import { MatDrawerContainer, MatDrawerContent, MatSidenavModule } from "@angular
 import { CommonModule } from "@angular/common";
 import { AppRoutingModule } from "../app-routing.module";
 import { MaterialModule } from "../shared/modules/material/material.module";
+import { CenterLayoutComponent } from "./center-layout/center-layout.component";
+import { WardLayoutComponent } from "./ward-layout/ward-layout.component";
+import { RiderLayoutComponent } from "./rider-layout/rider-layout.component";
 
 @NgModule({
   declarations: [
     AdminLayoutComponent,
     AuthLayoutComponent,
+    CenterLayoutComponent,
+    WardLayoutComponent,
+    RiderLayoutComponent,
     CustomSidenavComponent,
     CustomSidenavSMComponent,
     MenuItemComponent,

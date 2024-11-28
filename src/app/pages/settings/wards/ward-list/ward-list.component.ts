@@ -796,7 +796,6 @@ export default class WardListComponent implements  AfterViewInit{
     //  this.sideCreate.set(true)
   }
   displayedColumns: string[] = [
-
     'ward_id',
     'ward_name',
     'ward_status_name',

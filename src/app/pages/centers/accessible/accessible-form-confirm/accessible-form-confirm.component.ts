@@ -126,8 +126,6 @@ export class AccessibleFormConfirmComponent implements OnInit{
 
   onNoClick(): void {
     this.dialogRef.close('ok');
-
-
   }
 
   async onGetJob(event: Event){

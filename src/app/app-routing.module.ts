@@ -4,18 +4,25 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { LoginComponent } from './pages/login/login.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthGuard } from '@core/guards/auth.guard';
+import UnauthorizedComponent from '@pages/unauthorized/unauthorized.component';
+import { CenterLayoutComponent } from '@layouts/center-layout/center-layout.component';
+import { WardLayoutComponent } from '@layouts/ward-layout/ward-layout.component';
+import { RoleGuard } from '@core/guards/role.guard';
+import { RiderLayoutComponent } from '@layouts/rider-layout/rider-layout.component';
 
 
 const routes: Routes = [
 
   /*********************
    *********************
-   * ADMIN ROUTERS
+   * CENTER ROUTERS
    ********************/
+
    {
-    path: "",
+    path: "admin",
     component: AdminLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard,RoleGuard],
+    data: { role: ['admin']},
     children: [
       {
         path: '',
@@ -24,65 +31,125 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent : (() => import("../app/pages/dashboard/dashboard.component")),
-      },
-      {
-        path: 'scanner/:id/:ward/:wardname',
-        loadComponent : (() => import("../app/pages/staff/staff-qrcode-scanner/staff-qrcode-scanner.component")),
-      },
-      {
-        path: 'content',
-        loadChildren: () => import('../app/pages/content/content.routes'),
-      },
-      {
-        path: 'settings',
-        loadChildren: () => import('../app/pages/settings/settings.routes'),
-      },
-      {
-        path: 'staff',
-        loadChildren: () => import('../app/pages/staff/staff.routes'),
-      },
-
-      {
-        path: 'reports',
-        loadComponent : (() => import("../app/pages/reports/reports.component")),
-      },
-      {
-        path: 'comments',
-        loadComponent : (() => import("../app/pages/comments/comments.component")),
-      },
-      {
-        path: 'accessible',
-        loadComponent : (() => import("../app/pages/accessible/accessible.component")),
-      },
-
-      // Ward
-      {
-        path: 'ward/accessible',
-        loadComponent : (() => import("../app/pages/wards/accessible/accessible.component")),
-      },
-      {
-        path: 'ward/reports',
-        loadComponent : (() => import("../app/pages/wards/reports/reports.component")),
-      },
-      {
-        path: 'ward/dashboard',
-        loadComponent : (() => import("../app/pages/wards/dashboard/dashboard.component")),
-      },
-
-      // CENTER
-      {
-        path: 'center/dashboard',
         loadComponent : (() => import("../app/pages/centers/dashboard/dashboard.component")),
       },
       {
-        path: 'center/accessible',
+        path: 'accessible',
         loadComponent : (() => import("../app/pages/centers/accessible/accessible.component")),
       },
       {
-        path: 'center/reports',
+        path: 'reports',
         loadComponent : (() => import("../app/pages/centers/reports/reports.component")),
       },
+      {
+        path: 'wards',
+        loadComponent : (() => import("../app/pages/centers/settings/wards/wards.component")),
+      },
+      {
+        path: 'users',
+        loadComponent : (() => import("../app/pages/centers/settings/users/users.component")),
+      }
+    ],
+   },
+  /*********************
+   *********************
+   * CENTER ROUTERS
+   ********************/
+
+   {
+    path: "center",
+    component: CenterLayoutComponent,
+    canActivate: [AuthGuard,RoleGuard],
+    data: { role: ['centeropd','centeripd']},
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+      },
+      // CENTER
+      {
+        path: 'dashboard',
+        loadComponent : (() => import("../app/pages/centers/dashboard/dashboard.component")),
+      },
+      {
+        path: 'accessible',
+        loadComponent : (() => import("../app/pages/centers/accessible/accessible.component")),
+      },
+      {
+        path: 'reports',
+        loadComponent : (() => import("../app/pages/centers/reports/reports.component")),
+      },
+      {
+        path: 'wards',
+        loadComponent : (() => import("../app/pages/centers/settings/wards/wards.component")),
+      },
+      {
+        path: 'users',
+        loadComponent : (() => import("../app/pages/centers/settings/users/users.component")),
+      }
+    ],
+   },
+
+  /*********************
+   *********************
+   * WARD ROUTERS
+   ********************/
+   {
+    path: "ward",
+    component: WardLayoutComponent,
+    canActivate: [AuthGuard,RoleGuard],
+    data: { role: ['ward'] },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+      },
+      {
+        path: 'dashboard',
+        loadComponent : (() => import("../app/pages/wards/dashboard/dashboard.component")),
+      },
+      {
+        path: 'accessible',
+        loadComponent : (() => import("../app/pages/wards/accessible/accessible.component")),
+      },
+      {
+        path: 'reports',
+        loadComponent : (() => import("../app/pages/wards/reports/reports.component")),
+      },
+
+    ],
+  },
+
+
+  /*********************
+   *********************
+   * WARD ROUTERS
+   ********************/
+   {
+    path: "rider",
+    component: RiderLayoutComponent,
+    canActivate: [AuthGuard,RoleGuard],
+    data: { role: ['rideropd','rideripd'] },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+      },
+      {
+        path: 'dashboard',
+        loadComponent : (() => import("../app/pages/riders/dashboard/dashboard.component")),
+      },
+      {
+        path: 'jobs',
+        loadComponent : (() => import("./pages/riders/jobs/jobs.component")),
+      },
+      {
+        path: 'scanner/:id/:ward/:wardname',
+        loadComponent : (() => import("./pages/riders/scanners/scanner.component")),
+      }
 
     ],
   },
@@ -99,6 +166,9 @@ const routes: Routes = [
       { path: "login", component: LoginComponent },
     ],
   },
+
+
+  { path: 'unauthorized', component: UnauthorizedComponent },
   { path: "**", redirectTo: "auth/login" },
 
 ];

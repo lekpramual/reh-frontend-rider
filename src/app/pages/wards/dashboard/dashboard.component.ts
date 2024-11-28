@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
 import {MatCardModule} from '@angular/material/card';
@@ -8,14 +8,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { DashboardService } from '@core/services/dashboard.service';
+import { AuthService } from '@core/services/auth.service';
+import { LoadingService } from '@core/components/loading/loading.service';
+import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone:true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  imports:[HighchartsChartModule,MatCardModule ,  ReactiveFormsModule,
-    MatFormFieldModule,MatSelectModule,FormsModule, CommonModule]
+  imports:[
+    HighchartsChartModule,
+    MatCardModule ,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    LoadingIndicatorComponent,
+    CommonModule]
 })
 export default  class DashboardComponent  implements OnInit{
 
@@ -26,25 +37,28 @@ export default  class DashboardComponent  implements OnInit{
 
   title: string = "";
   depart: string = "";
-  departId: string = "";
+  departId = signal<number | null>(null);
+  private subscription!: Subscription;
+
 
   constructor(
+    private authService: AuthService,
     private _roleService: RoleService,
-    private _dashboardService:DashboardService
+    private _dashboardService:DashboardService,
+    public _loadingService: LoadingService
   ) {}
 
    ngOnInit() {
     // ฟังก์ชัน: ข้อมูลปีย้อนหลัง
     this.getYearsBack();
+    this.departId.set(this.authService.getDepartId()!);
 
-    let _depart = this._roleService.wardName();
-    let _departId = this._roleService.ward();
-    if(_depart){
-      this.depart = _depart;
-      this.departId = String(_departId);
-    }
 
     this.fetchData();
+
+    this.subscription = interval(60000).subscribe(() => {
+      this.fetchData();
+    });
   }
 
   // ปีปัจจุบัน
@@ -119,7 +133,7 @@ export default  class DashboardComponent  implements OnInit{
    fetchData() {
     const data: any = {};
     data.year = this.selectedOption;
-    data.depart = this.departId;
+    data.depart = this.departId();
     this._dashboardService.getDashboardByYear(data).subscribe({
       next:(data) => {
         console.log(data.result);
@@ -156,6 +170,13 @@ export default  class DashboardComponent  implements OnInit{
         data: data
       }]
     };
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe(); // Clean up subscription
+    }
+
   }
 
 

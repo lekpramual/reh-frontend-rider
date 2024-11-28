@@ -13,6 +13,8 @@ export const environment = {
   adminRole: 5,
   userRole: 0,
   LOGIN_STATUS:'LOGIN_STATUS',
-  LOGIN_TOKENS:'LOGIN_TOKENS',
+  ACCESS_TOKENS:'accessToken',
+  REFRESH_TOKENS:'refreshToken',
+
   accessKeySecret:"96Udcddbo9y[gfHdovos]y["
 };

@@ -33,9 +33,10 @@ import { MY_FORMATS } from './core/custom-date-format';
 
 import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from '../app/core/interceptors/auth.interceptor'; // Adjust the path as necessary
+import { HTTP_INTERCEPTORS } from '@angular/common/http';// Adjust the path as necessary
 import { loadingIntercaptor } from '@core/interceptors/loading.interceptor';
+import { AuthInterceptor } from '@core/interceptors/auth.interceptor';
+// import { TokenInterceptor } from '@core/interceptors/auth.interceptor bk';
 
 export function initializeApp(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();

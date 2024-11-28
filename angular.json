@@ -4,6 +4,7 @@
   "newProjectRoot": "projects",
   "projects": {
     "reh-mat-templete": {
+
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

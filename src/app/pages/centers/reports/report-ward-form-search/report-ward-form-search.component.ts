@@ -69,7 +69,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipsList } from '@core/interface/equips.interface';
 import { QuicksService } from '@core/services/quicks.service';
 import { QuicksList } from '@core/interface/quicks.interface';
-import { WardList } from '@core/interface/ward.interface';
+import { WardList, WardListNew } from '@core/interface/ward.interface';
 import { WardService } from '@core/services/ward.service';
 import { ReportService } from '@core/services/report.service';
 
@@ -130,11 +130,11 @@ export class ReportWardFormSearchComponent implements OnInit {
     ward_quick: '',
   });
 
-  wardOptions = signal<WardList[]>([]);
+  wardOptions = signal<WardListNew[]>([]);
   quickOptions = signal<QuicksList[]>([]);
 
   dataArray = signal<any>([]);
-  userLabel = signal<string>('');
+  wardLabel = signal<string>('');
 
 
   accessibleId: string = '';
@@ -193,8 +193,7 @@ export class ReportWardFormSearchComponent implements OnInit {
   async loadWards(){
     try {
       const results = await this._wardService.getWardsNew();
-
-      console.log('results >>>',results);
+      // console.log('results >>>',results);
       this.wardOptions.set(results);
 
       this.filteredOptions = this.searchControl.valueChanges.pipe(
@@ -214,12 +213,13 @@ export class ReportWardFormSearchComponent implements OnInit {
 
   getSelectedLabel(event: any) {
     const selectedOption = this.wardOptions().find(option => option.ward_id === event.value);
-    this.userLabel.set(selectedOption ? selectedOption.ward_name : 'all');
+    // console.log('selectedOption ',selectedOption)
+    this.wardLabel.set(selectedOption ? selectedOption.ward_name : 'all');
   }
 
   async loadReport(type_oi:string,rxdate:string,eddate:string,ward:string){
     try {
-      let pername = ward == 'all' ? 'ทั้งหมด' : this.userLabel();
+      let pername = ward == 'all' ? 'ทั้งหมด' : this.wardLabel();
 
       console.log('pername', pername);
 
