@@ -1,0 +1,79 @@
+@import '../../../../../theme.scss';
+
+.example-container {
+  height: calc(100vh - 290px);
+  overflow: auto;
+}
+
+table.monitor {
+  width: 1000px;
+}
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+td.mat-column-type {
+  width: 36px;
+  padding-right: 8px;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+  // cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+  // cursor: pointer;
+}
+
+.btn-action {
+  color:var(--primary-color) !important;
+}
+
+.btn-action-blue {
+  color:var(--primary-color) !important;
+}
+.btn-action-green {
+  color:var(--green-color) !important;
+}
+
+.bg-txt-blue {
+  background-color: var(--blue-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+.bg-txt-green {
+  background-color: var(--green-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+.bg-txt-yellow {
+  background-color: var(--yellow-color) !important;
+  text-align: center;
+}
+
+.bg-txt-orange {
+  background-color: var(--orange-color) !important;
+  text-align: center;
+
+}
+.bg-txt-red {
+  background-color: var(--red-color) !important;
+  text-align: center;
+}
+.btn-action-red {
+  color:var(--red-color) !important;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blinking-text {
+  animation: blink 1s infinite;
+}

@@ -1,0 +1,30 @@
+
+<div class="row">
+  <div class="col-12">
+    <span class="mat-headline-5 reh-txt-blue900">ขอใช้เปล : {{this.wardName()}} ประจำวันที่ : {{formatDateThai(this.currentDateTime())}}</span>
+  </div>
+</div>
+
+<div class="row">
+  <!-- รับ-จ่ายงาน -->
+  <!-- <div class="col-lg-4 col-md-12 mb-3">
+    <app-accessible-list-getjob
+      [dataGetJobNew]="dataGetJobNew()"
+      (messageChange)="messageChange($event)"
+    />
+  </div> -->
+
+  <!-- ติดตาม-สถานะ-->
+
+  <div class="col-lg-12 col-md-12 mb-3">
+    <app-accessible-list-monitor
+    [dataMonitorNew]="dataMonitorNew()"
+    [formSearchMonitor]="formSearch()"
+
+    (formChangeSearch)="formChangeSearch($event)"
+    (messageChange)="messageChange($event)"
+    />
+  </div>
+</div>
+
+

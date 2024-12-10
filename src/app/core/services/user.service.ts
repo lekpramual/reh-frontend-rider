@@ -33,7 +33,7 @@ export class UserService {
     return response.result;
   }
 
-   getUserById(userId:string){
+   getUserById(userId:number){
     const url = `${this.apiUrl}/${userId}/profile`;
     const wards$ = this.http.get<any>(url, {
       headers: this.headers,

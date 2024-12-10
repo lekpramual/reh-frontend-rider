@@ -1,48 +1,24 @@
 <!-- Header -->
-<mat-toolbar class="mat-elevation-z3" color="primary">
-  <a
-    mat-icon-button
-    #toggleButton
-    (click)="isMenuOpened.set(!isMenuOpened())"
-    [matTooltip]="!isMenuOpened() ? 'ขยายเมนู' : 'ยุบเมนู'"
-    matTooltipPosition="below"
-  >
+<mat-toolbar class="reh-theme-info mat-elevation-z3">
+  <a mat-icon-button #toggleButton (click)="isMenuOpened.set(!isMenuOpened())"
+    [matTooltip]="!isMenuOpened() ? 'ขยายเมนู' : 'ยุบเมนู'" matTooltipPosition="below">
     <mat-icon>menu</mat-icon>
   </a>
 
-  <span style="margin-left: 12px" class="title_logo">{{titleApp}} ADMIN</span>
+  <span style="margin-left: 12px" class="title_logo">{{titleApp}} [{{isUserProfile().role}}]</span>
   <span class="reh-spacer"></span>
 
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="avatarMenu"
-    matTooltip="บัญชี"
-    matTooltipPosition="below"
-  >
+  <button mat-icon-button [matMenuTriggerFor]="avatarMenu" matTooltip="บัญชี" matTooltipPosition="below">
     <img src="/assets/images/account.png" alt="Avatar" class="avatar" />
   </button>
 </mat-toolbar>
 
-@if(loading){
-  <mat-progress-bar
-    mode="indeterminate"
-    color="accent"
-    style="position: sticky; bottom: 0; left: 0; width: 100%;">
-  </mat-progress-bar>
-}
-
-
 <mat-menu #avatarMenu="matMenu">
-
   <div class="reh-profile-content">
-    <img
-      src="/assets/images/account.png"
-      alt="Avatar"
-      class="avatar reh-profile-avatar"
-    />
+    <img src="/assets/images/account.png" alt="Avatar" class="avatar reh-profile-avatar" />
     <div class="reh-profile-content-title">
-      <label class="mat-subtitle-2">{{ defaultAccount.userName }}</label>
-      <label class="mat-subtitle-1 mb-0">{{ defaultAccount.levelApp }} </label>
+      <label class="mat-subtitle-2">{{isUserProfile().fullname}} [{{isUserProfile().role}}]</label>
+      <label class="mat-subtitle-1 mb-0">{{isUserProfile().depart_name}}</label>
     </div>
   </div>
   <mat-divider></mat-divider>
@@ -61,49 +37,77 @@
 </mat-menu>
 <!-- ./Header -->
 
-<!-- SideBar SM -->
-@if(this.isBackDrop()){
-<mat-drawer-container [hasBackdrop]="true" autosize>
-  <mat-drawer
-    mode="over"
-    [opened]="isMenuOpened()"
-    (opened)="onDrawerOpened()"
-    (closed)="onDrawerClosed()"
-    autoFocus="false"
-  >
-    <custom-sidenav-sm [collapsed]="isMenuOpened()" />
-  </mat-drawer>
-  <mat-drawer-content class="reh-content" >
-
-      <div class="container-fluid" style="padding-right: 0px !important; padding-left: 0px !important;">
-        <router-outlet></router-outlet>
-      </div>
-
-
-      <!-- <div class="footer-content bg-light text-muted fw-bold">
-        © 2024 ศูนย์คอมพิวเตอร์​ รพ.ร้อยเอ็ด (v.1.0)
-      </div> -->
-
-
-  </mat-drawer-content>
-</mat-drawer-container>
-}@else{
 <!-- SideBar LG -->
 <mat-sidenav-container [hasBackdrop]="isBackDrop()" autosize>
-  <mat-sidenav
-    mode="side"
-    opened
-    (opened)="onDrawerOpened()"
-    (closed)="onDrawerClosed()"
-    [style.width]="sidenavWidth()"
-  >
-    <app-custom-sidenav [collapsed]="isMenuOpened()" />
-  </mat-sidenav>
-  <mat-sidenav-content  class="reh-content"  [style.margin-left]="sidenavWidth()">
+  <mat-sidenav mode="side" opened (opened)="onDrawerOpened()" (closed)="onDrawerClosed()"
+    [style.width]="sidenavWidth()">
 
-      <div class="container-fluid " style="padding-right: 0px !important; padding-left: 0px !important;">
-        <router-outlet></router-outlet>
+    <div class="sidenav-header">
+
+      @if(isMenuOpened()){
+      <img [width]="32" [height]="32" src="/assets/images/account.png" />
+      }@else {
+      <img [width]="64" [height]="64" src="/assets/images/account.png" />
+      <div class="header-text">
+        <h2>{{isUserProfile().fullname}} </h2>
+        <p>[{{isUserProfile().role}}]</p>
+        <p>{{isUserProfile().depart_name}}</p>
       </div>
+      }
+    </div>
+    <mat-nav-list role="list" class="sidenav-content">
+      @for (item of menuItems; track $index) {
+      <a
+        mat-list-item
+        class="menu-item"
+        [routerLink]="item.route"
+        routerLinkActive
+        routerLinkActive="selected-menu-item"
+        #rla="routerLinkActive"
+        [activated]="rla.isActive"
+        [matTooltip]="isMenuOpened() ? item.label :''  "
+        matTooltipPosition="right">
+
+        <mat-icon style="margin-left: 8px;"
+          [fontSet]="rla.isActive ?'material-icons-outlined': 'material-icons'"
+          matListItemIcon>{{item.icon}}</mat-icon>
+
+        @if(!collapsed()){
+        <span matListItemTitle *ngIf="!collapsed()">{{item.label}}</span>
+        }
+      </a>
+      }
+
+      <a
+      mat-list-item
+      class="menu-item"
+      routerLink="jobs"
+      [matTooltip]="isMenuOpened() ? 'ออกจากระบบ' :'' "
+      matTooltipPosition="below"
+      (click)="logout()"
+      >
+      <mat-icon
+        style="margin-left: 8px;"
+
+        matListItemIcon
+        >logout</mat-icon
+      >
+
+      @if(!collapsed()){
+        <span matListItemTitle *ngIf="!collapsed()">ออกจากระบบ</span>
+      }
+
+    </a>
+
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+  <mat-sidenav-content class="reh-content" [style.margin-left]="sidenavWidth()">
+
+    <div class="container-fluid " style="padding-right: 0px !important; padding-left: 0px !important;">
+      <router-outlet (activate)="onActivate($event)"></router-outlet>
+    </div>
 
     <!-- <div class="footer-content bg-light text-muted fw-bold">
       © 2024 ศูนย์คอมพิวเตอร์​ รพ.ร้อยเอ็ด (v.1.0)
@@ -111,5 +115,4 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
-}
-<!-- SideBar -->
+<!-- ./SideBar -->

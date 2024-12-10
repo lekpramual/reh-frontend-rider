@@ -11,14 +11,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/modules/material/material.module';
-import { CustomSidenavComponent } from '../../components/custom-sidenav/custom-sidenav.component';
 
-import { CustomSidenavSMComponent } from '../../components/custom-sidenav-sm/custom-sidenav-sm.component';
-import { MenuItemComponent } from '../../components/menu-item/menu-item.component';
-import { MenuItemSMComponent } from '../../components/menu-item-sm/menu-item-sm.component';
 
 import { environment } from "@env/environment";
 import { RoleService } from "@core/services/role.service";
+import { AuthService } from '@core/services/auth.service';
+import { UserService } from '@core/services/user.service';
+import { MenuService } from '@shared/services/menu.service';
+
 
 @Component({
   selector: "app-admin-layout",
@@ -26,27 +26,38 @@ import { RoleService } from "@core/services/role.service";
   styleUrls: ["./admin-layout.component.scss"],
 })
 export class AdminLayoutComponent implements OnInit {
+
+
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('toggleButton') toggleButton!: ElementRef<HTMLButtonElement>;
 
-  defaultAccount = {
-    userId: "1234",
-    userName: "ประมวล",
-    levelApp: "5",
-    departId: "433",
-    departName: "หน่วยงาน",
-  };
-
   subscription!: Subscription;
 
+  menuItems: any[] = [];
+  userRole = signal<string>('');
 
   titleApp = '';
   showFiller = false;
 
   loading = false;
 
+  isMenuActive = signal("dashboard");
   isMenuOpened = signal(true);
   isBackDrop = signal(false);
+
+  isUserProfile = signal({
+      id: "",
+      code: "",
+      fullname: "",
+      tel: "",
+      depart_id: "",
+      depart_name: "",
+      status: "",
+      level_id: "",
+      role: "",
+      username: ""
+  });
+
   isSidenavOpen = true;
 
   isSmallScreen: boolean = false;
@@ -57,26 +68,46 @@ export class AdminLayoutComponent implements OnInit {
   currentRoute!: string;
 
   collapsed = signal(false);
-  sidenavWidth = computed(() => (this.isMenuOpened() ? "250px" : "65px"));
-  // sidenavWidth = computed(() => (this.isBackDrop() ? !this.isMenuOpened()  ? "250px" :"250px" : this.isMenuOpened() ? "65px" : "250px"));
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute,private breakpointObserver: BreakpointObserver,private configService: ConfigService,private role: RoleService,) {}
+  userId = signal<number | null>(null);
+
+  // sidenavWidth = computed(() => (this.isMenuOpened() ? "250px" : "65px"));
+  sidenavWidth = computed(() => (this.isBackDrop() ? !this.isMenuOpened()  ? "250px" :"250px" : this.isMenuOpened() ? "65px" : "250px"));
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver,
+    private configService: ConfigService,
+    private role: RoleService,
+    private authService: AuthService,
+    private userService : UserService,
+    private menuService: MenuService
+  ) {}
 
   ngOnInit() {
-    this.breakpointObserver
-      .observe([
-        Breakpoints.Large,
-        Breakpoints.Medium,
-        Breakpoints.Small,
-        Breakpoints.XSmall,
-      ])
-      .subscribe((result) => {
-        // result.matches && !this.collapsed() ?   this.sidenavWidth = "65px" : this.sidenavWidth = '23px';
 
-        this.isMenuOpened.set(!result.matches);
-        this.isBackDrop.set(result.matches ? true : false);
 
-      });
+    const _userId = this.authService.getUserId();
+    if(_userId){
+      this.userId.set(_userId);
+    }
+
+    const _userRole = this.authService.getUserRole();
+    if(_userRole){
+      console.log('_userRole>>>',_userRole);
+      this.userRole.set(_userRole);
+    }
+    // this.breakpointObserver
+    //   .observe([
+    //     Breakpoints.Large,
+    //     Breakpoints.Medium,
+    //   ])
+    //   .subscribe((result) => {
+    //     this.isMenuOpened.set(!result.matches);
+    //     this.isBackDrop.set(result.matches ? true : false);
+
+    //   });
 
     this.router.events.subscribe(event => {
       // Logic to check the current route
@@ -93,14 +124,52 @@ export class AdminLayoutComponent implements OnInit {
     });
 
     this.titleApp = this.configService.getTitleApp();
-    this.initProfile(this.defaultAccount);
+
+
+    this.fetchDataProfile();
+
+    // โหลดเมนู
+    this.loadMenu();
   }
 
-  isActiveLink(link: string): boolean {
-    return this.currentRoute === link;
+  async loadMenu() {
+    this.menuItems = this.menuService.getFilteredMenu(this.userRole());
+  }
+
+  async fetchDataProfile(){
+    this.userService.getUserById(this.userId()!).subscribe({
+      next:(response:any)=>{
+        const profile:any = response.result;
+
+        if(profile.length == 1){
+          const [results] = profile;
+         this.isUserProfile.update((result) => ({
+              ...result,
+              id: results.id,
+              code: results.code,
+              fullname: results.fullname,
+              tel: results.tel,
+              depart_id: results.depart_id,
+              depart_name: results.depart_name,
+              status: results.status,
+              level_id: results.level_id,
+              role:results.role,
+              username: results.username
+           }))
+        }
+      },
+      error:(err)=> {
+        console.error('load profile user error :',err)
+      },
+    })
   }
 
 
+  onActivate(component: any) {
+    if ('sharedData' in component) {
+      component.sharedData = this.isUserProfile();
+    }
+  }
 
   resetDrawer() {
     if (this.sidenav) {
@@ -119,7 +188,6 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   onDrawerClosed() {
-
     // Add your custom logic here
     this.isMenuOpened.set(false);
 
@@ -127,30 +195,9 @@ export class AdminLayoutComponent implements OnInit {
 
   logout() {
     // Clear the authentication token and other sensitive data from session storage
-    localStorage.clear();
+   this.authService.logout();
     // Optionally, redirect the user to the login page
     this.router.navigate(['/login']);
-  }
-
-  initProfile(data: any) {
-    this.defaultAccount.userName = data.userName;
-    this.defaultAccount.departName = data.departName;
-
-    const levelApp = parseInt(data.levelApp);
-    if(levelApp === 6){
-      this.defaultAccount.levelApp = "ผู้ดูแลระบบ";
-    }else if(levelApp === 5){
-      this.defaultAccount.levelApp = "ศูนย์ OPD";
-    }else if(levelApp === 4){
-      this.defaultAccount.levelApp = "ศูนย์ IPD";
-    }else if(levelApp === 3){
-      this.defaultAccount.levelApp = "เจ้าหน้าที่ OPD";
-    }else if(levelApp === 2){
-      this.defaultAccount.levelApp = "เจ้าหน้าที่ IPD";
-    }else{
-      this.defaultAccount.levelApp = "วอร์ด";
-    }
-
   }
 
 }

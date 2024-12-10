@@ -92,7 +92,7 @@ export default class RiderJobComponent implements OnInit {
   currentDate: string ='';
 
   data = signal<any>([]);
-  riderId = signal<string | null>(null);
+  userId = signal<number | null>(null);
   currentDateTime = signal(new Date());
 
   private intervalId: any;
@@ -131,9 +131,9 @@ export default class RiderJobComponent implements OnInit {
 
 
 
-    const _riderId = this.authServic.getUserId();
-    if(_riderId != null){
-      this.riderId.set(_riderId);
+    const _userId = this.authServic.getUserId();
+    if(_userId != null){
+      this.userId.set(_userId);
     }
 
 
@@ -165,10 +165,10 @@ export default class RiderJobComponent implements OnInit {
     clearInterval(this.intervalId);
   }
 
-  clickedJob(row:any){
+  clickedJob(row:any, jobtype:string){
     console.log('Clicked Job', row);
     if(row.id != 'null'){
-      this.router.navigate(['rider/scanner', row.id,row.wcode_sto,row.wcode_stoname]);
+      this.router.navigate(['rider/scanner', row.id,jobtype,row.wcode_sto,row.wcode_stoname]);
     }
   }
 
@@ -181,7 +181,7 @@ export default class RiderJobComponent implements OnInit {
   async getRiderByDate(){
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
     try {
-      const resultRider = await this._acsService.getAcsByRiderMonitorNew(this.riderId()!,this.currentDate);
+      const resultRider = await this._acsService.getAcsByRiderMonitorNew(this.userId()!,this.currentDate);
       console.log('resultRider >>> ',resultRider)
       // this.data.set(resultRider);
       this.dataSource.data = resultRider;

@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserList } from '@core/interface/user.model';
 import { AcsService } from '@core/services/acs.service';
+import { AuthService } from '@core/services/auth.service';
 import { AssetsService } from '@core/services/rest.service';
 import { RoleService } from '@core/services/role.service';
 import moment from 'moment';
@@ -57,11 +58,13 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   currentDate: string ='';
   _data:any;
   _dataRiderJob:any;
-  _userId:string = "";
+  // _userId:string = "";
   accessibleId: string = "";
   formAccessible!: FormGroup;
 
-  roleType = signal<number | any>(null);
+
+  userId = signal<number | null>(null);
+  roleId = signal<string | null>(null);
   personOprions = signal<UserList[] | []>([]);
 
   filteredOptions!: Observable<any[]>;
@@ -75,7 +78,8 @@ export class AccessibleFormAssignmentComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _acsService: AcsService,
     private _roleService:RoleService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _authService : AuthService
   ) {
 
     moment.updateLocale('th', {
@@ -112,14 +116,14 @@ export class AccessibleFormAssignmentComponent implements OnInit{
       });
     }
 
-    const _levelApp =  this._roleService.role();
-    if(_levelApp){
-      this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
+    const _roleId =  this._authService.getUserRole();
+    if(_roleId){
+      this.roleId.set(_roleId == 'centeropd' ? 'opd' : 'ipd')
     }
 
-    const userId = this._roleService.userId();
-    if(userId){
-      this._userId = `${userId}`
+    const _userId = this._authService.getUserId();
+    if(_userId){
+      this.userId.set(_userId);
     }
 
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
@@ -140,14 +144,7 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   async getRiderByRole(){
     this.currentDate = moment().add('years',-543).format('YYYY-MM-DD');
     try {
-      const results = await this._roleService.role();
-      if(results == 5){
-        this.roleType.set('opd');
-      }else{
-        this.roleType.set('ipd');
-      }
-
-      const resultRider = await this._acsService.getAcsByCenterRiderJobsNew(this.roleType(),this.currentDate)
+      const resultRider = await this._acsService.getAcsByCenterRiderJobsNew(this.roleId()!,this.currentDate)
       console.log('resultRider >>> ',resultRider)
       this.personOprions.set(resultRider);
 
@@ -212,12 +209,11 @@ export class AccessibleFormAssignmentComponent implements OnInit{
   }
 
   sendJobRider(userId:string){
-    console.log(userId);
 
     try {
       const data: any = {};
       data.wk_perid = String(userId);
-      data.admin_wk_perid = this._userId
+      data.admin_wk_perid = this.userId();
 
       this._acsService.updateAcsByCenterRiderJobs(this._Id,data).subscribe({
         next:(data)=> {

@@ -7,17 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MaterialModule } from './shared/modules/material/material.module';
 
 import { RouterModule } from '@angular/router';
-import { CustomSidenavComponent } from './components/custom-sidenav/custom-sidenav.component';
-// import { DashboardComponent } from './pages/dashboard/dashboard.component';
-// import { ContentComponent } from './pages/content/content.component';
-// import { AnalyticsComponent } from './pages/analytics/analytics.component';
-// import { CommentsComponent } from './pages/comments/comments.component';
-import { MenuItemComponent } from './components/menu-item/menu-item.component';
-// import { VideosComponent } from './pages/content/videos/videos.component';
-// import { PlaylistsComponent } from './pages/content/playlists/playlists.component';
-// import { PostsComponent } from './pages/content/posts/posts.component';
-import { CustomSidenavSMComponent } from './components/custom-sidenav-sm/custom-sidenav-sm.component';
-import { MenuItemSMComponent } from './components/menu-item-sm/menu-item-sm.component';
+
 import { ConfigService } from './shared/services/config.service';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';

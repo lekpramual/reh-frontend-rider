@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'theme.scss';
 
+@import '../src/assets/css/style-paginator.scss';
+@import '../src/assets/css/style-snackbar.scss';
+
 html, body { height: 100%; }
 body {
   margin: 0;
@@ -225,38 +228,8 @@ mat-mdc-list-item:focus {
   margin-right: 8px;
 }
 
-/* Custom Snackbar styles */
-.success-snackbar {
-  color: white;
-  --mdc-snackbar-container-color: var(--green-color);
-  // --mat-mdc-snack-bar-button-color: var(--white-color);
-  --mat-snack-bar-button-color: var(--white-color);
-}
-
-.blue-snackbar {
-  color: white;
-  --mdc-snackbar-container-color: var(--blue-color);
-  // --mat-mdc-snack-bar-button-color: var(--white-color);
-  --mat-snack-bar-button-color: var(--white-color);
-}
-
-// .mat-mdc-snack-bar-container
-// .mat-mdc-button.mat-mdc-snack-bar-action
 
 
-.error-snackbar {
-  max-width: max-content !important;
-  color: var(--white-color);
-  --mdc-snackbar-container-color: var(--red-color);
-  border-color: #f5c6cb;
-  --mat-snack-bar-button-color: var(--white-color);
-}
-
-.error-snackbar button{
-  color: var(--white-color);
-  background-color: var(--blue-color);
-  border-radius: 10px;
-}
 
 .lj-viewer-wrapper {
   border-radius: 12px;

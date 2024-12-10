@@ -137,7 +137,7 @@ export class AcsService {
   }
 
   // Rider
-  async getAcsByRiderMonitorNew(rider:string, rxdate:string):Promise<AcsList[]> {
+  async getAcsByRiderMonitorNew(rider:number, rxdate:string):Promise<AcsList[]> {
     const url = `${this.acsUrl}/riderbydate?rider=${rider}&rxdate=${rxdate}`;
     const results$ = this.http.get<GetAcsListResponse>(url, { headers: this.headers });
     const response = await firstValueFrom(results$);

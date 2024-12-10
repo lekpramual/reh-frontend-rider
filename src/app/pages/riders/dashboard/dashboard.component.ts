@@ -43,8 +43,8 @@ export default  class DashboardComponent  implements OnInit{
   title: string = "";
   depart: string = "";
   // departId: string = "";
-  departId = signal<string | null>(null);
-  riderId = signal<string | null>(null);
+  departId = signal<number | null>(null);
+  userId = signal<number | null>(null);
   isActive: boolean = false;
 
   private subscription!: Subscription;
@@ -61,7 +61,7 @@ export default  class DashboardComponent  implements OnInit{
     this.getYearsBack();
 
 
-    this.riderId.set(this.authService.getUserId());
+    this.userId.set(this.authService.getUserId());
 
     this.fetchData();
 
@@ -144,7 +144,7 @@ export default  class DashboardComponent  implements OnInit{
    async fetchData() {
     const data: any = {};
     data.year = this.selectedOption;
-    data.rider = this.riderId();
+    data.rider = this.userId();
 
     try {
       const result = await this._dashboardService.getDashboardByYearRider(data);

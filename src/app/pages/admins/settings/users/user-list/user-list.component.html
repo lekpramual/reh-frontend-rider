@@ -1,0 +1,136 @@
+<mat-card>
+  <div style="padding: 0px !important">
+    <div class="row align-items-center px-2" style="height: 56px">
+      <div class="col-6">
+        <span class="mat-headline-5 reh-txt-blue900">ตั้งค่า - เจ้าหน้าที่</span>
+      </div>
+      <div class="col-6" align="end">
+        <button mat-fab extended="" class="reh-btn-green" (click)="onMessageChange()">
+          <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+          <span class="mat-subtitle-2">เจ้าหน้าที่ใหม่</span></button>
+
+      </div>
+    </div>
+    <mat-divider> </mat-divider>
+    <div class="row px-2 pt-3">
+      <div class="col-12">
+        <!-- class="reh-form-sm" -->
+        <div class="reh-form-sm">
+          <mat-form-field class="reh-input-full-width">
+            <mat-label>ค้นหา เจ้าหน้าที่</mat-label>
+            <input matInput type="text" (keyup)="applyFilter($event)" [(ngModel)]="searchValue" placeholder="ค้นหา เจ้าหน้าที่" [ngModelOptions]="{ standalone: true }" #input>
+
+            <button
+            *ngIf="searchValue"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clearSearch()"
+            style="margin-right: 8px;"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <section class="example-container" tabindex="0">
+
+          @if(_loadingService.loading()){
+            <div style="width: 100%; height: 400px; display: block">
+              <loading/>
+            </div>
+
+          }
+
+          @if(!_loadingService.loading()){
+            <table mat-table class="accept" [dataSource]="dataSource" class="reh-table-sm">
+              <ng-container matColumnDef="user_id">
+                <th mat-header-cell *matHeaderCellDef> ลำดับ. </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  {{ (paginator.pageIndex * paginator.pageSize) + i + 1 }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>
+                  <strong>รหัส จนท</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.code }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fullname">
+                <th mat-header-cell *matHeaderCellDef>
+                  <strong>ชื่อ-สุกล</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.titlle }}{{element.firstname}} {{element.surname}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tel">
+                <th mat-header-cell *matHeaderCellDef>
+                  <strong>เบอร์</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.tel }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                  <strong>ประเภท</strong>
+                </th>
+                <td mat-cell *matCellDef="let element" class="bg-txt-blue"  style="width: 96px">
+                  <span class="label">{{ element.level_name }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="status" >
+                <th mat-header-cell *matHeaderCellDef style="width: 64px; text-align: center;"> สถานะ </th>
+                <td mat-cell *matCellDef="let element"
+                [class]="{
+                  'bg-txt-green' : element.status == 'active',
+                  'bg-txt-red' : element.status == 'inactive',
+
+                }"
+                > {{element.status}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions" style="text-align: center;">#</th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="row">
+                    <div class="col-12" align="center">
+                      <button mat-mini-fab   matTooltip="แก้ไข" class="reh-btn-green"  (click)="clickedJob(element)">
+                        <mat-icon fontSet="material-icons-outlined" >edit</mat-icon>
+                      </button>
+                    </div>
+
+                  </div>
+                </td>
+              </ng-container>
+
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumns; sticky: true"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></tr>
+
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow style="text-align: center;height: 64px;">
+                <td class="mat-cell" colspan="6">ไม่พบข้อมูลที่คุณ ค้นหา "{{input.value}}"</td>
+              </tr>
+            </table>
+          }
+          <mat-paginator [pageSizeOptions]="[10, 20]"  aria-label="Select page of users" style="margin-top:6px"></mat-paginator>
+        </section>
+      </div>
+    </div>
+  </div>
+</mat-card>

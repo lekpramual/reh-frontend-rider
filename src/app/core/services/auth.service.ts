@@ -32,9 +32,8 @@ export class AuthService {
         const decodeJwtToken:any = this.jwtEncodeService.decode(token);
         const decodeToken: any = jwt_decode(decodeJwtToken);
         console.log(decodeToken);
-
         const role:string = decodeToken.role;
-        console.log('role ',role )
+
         return  role;
       } catch (error) {
         console.error("Error decoding JWT:", error);
@@ -45,7 +44,7 @@ export class AuthService {
     return null;
   }
 
-  getUserId(): string | null {
+  getUserId(): number | null {
     const token = localStorage.getItem(this.accessToken);
     if (token) {
       try {
@@ -54,7 +53,7 @@ export class AuthService {
         const decodeToken: any = jwt_decode(decodeJwtToken);
         console.log(decodeToken);
 
-        const role:string = decodeToken.id;
+        const role = decodeToken.id;
         console.log('role ',role )
         return  role;
       } catch (error) {
@@ -75,8 +74,7 @@ export class AuthService {
         const decodeToken: any = jwt_decode(decodeJwtToken);
         console.log(decodeToken);
 
-        const role:number = decodeToken.depart;
-        console.log('role ',role )
+        const role = decodeToken.depart;
         return  role;
       } catch (error) {
         console.error("Error decoding JWT:", error);

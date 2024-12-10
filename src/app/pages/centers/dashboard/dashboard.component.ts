@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
 import {MatCardModule} from '@angular/material/card';
@@ -11,6 +11,7 @@ import { DashboardService } from '@core/services/dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 import { LoadingService } from '@core/components/loading/loading.service';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,26 +38,25 @@ export default  class DashboardComponent  implements OnInit{
 
 
   title: string = "";
-  depart: string = "";
-  roleId: string = "";
+  roleId = signal<string | null>(null);
 
 
   constructor(
     private _roleService: RoleService,
     private _dashboardService:DashboardService,
     private _snackBar: MatSnackBar,
-    public _loadingService: LoadingService
+    public _loadingService: LoadingService,
+    private _authService : AuthService
   ) {}
 
   async  ngOnInit() {
     // ฟังก์ชัน: ข้อมูลปีย้อนหลัง
     this.getYearsBack();
 
-    let _depart = this._roleService.wardName();
-    let _roleId = this._roleService.role();
-    if(_depart && _roleId){
-      this.depart = _depart;
-      this.roleId = _roleId == 5 ? 'opd' : 'ipd';
+    let _roleId = this._authService.getUserRole();
+
+    if(_roleId){
+      this.roleId.set(_roleId == 'centeropd' ? 'opd' : 'ipd')
     }
 
 
@@ -142,7 +142,7 @@ export default  class DashboardComponent  implements OnInit{
   async  fetchData() {
     const data: any = {};
     data.year = this.selectedOption;
-    data.type_oi = this.roleId;
+    data.type_oi = this.roleId();
 
     try {
       const result = await this._dashboardService.getDashboardByYearCenter(data);

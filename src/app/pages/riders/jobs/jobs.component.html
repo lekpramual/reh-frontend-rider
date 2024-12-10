@@ -2,7 +2,7 @@
   <div style="padding: 0px !important;">
     <div class="row" style="padding: 10px;">
       <div class="col-12">
-        <span class="mat-headline-5 reh-txt-blue900">รับงานขอใช้เปล จนท รหัส {{this.riderId()}} ประจำวันที่ : {{formatDateThai(this.currentDateTime())}}</span>
+        <span class="mat-headline-5 reh-txt-blue900">รับงานขอใช้เปล จนท รหัส {{this.userId()}} ประจำวันที่ : {{formatDateThai(this.currentDateTime())}}</span>
 
       </div>
 
@@ -208,20 +208,22 @@
               <td mat-cell *matCellDef="let element" >
                 <div class="row">
                   <div class="col-12">
-                    @if(element.ed_date != '-'){
-                      <!-- <button mat-mini-fab   matTooltip="ดูข้อมูล" class='reh-btn-blue' (click)="openDialogConfirm(element.id)">
-                        <mat-icon fontSet="material-icons-outlined" >visibility</mat-icon>
-                      </button> -->
+                    @if(element.ed_date != '-' || element.status_work == '1'){
                       <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green disabled">
                         <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
                       </button>
-                    }@else {
-                      <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green" (click)="clickedJob(element)">
+                    }@else if(element.sd_date == '-'){
+                      <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green" (click)="clickedJob(element,'getjob')">
                         <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
                       </button>
-                      <!-- <button mat-mini-fab   matTooltip="ปิดงาน" class='reh-btn-green' (click)="openDialogConfirm(element.id)" >
-                        <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
-                      </button> -->
+                    }@else if(element.ed_date == '-'){
+                      <button mat-mini-fab   matTooltip="คลิกปิดงาน" class="reh-btn-green" (click)="clickedJob(element,'closejob')">
+                        <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+                      </button>
+                    }@else {
+                      <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green disabled">
+                        <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+                      </button>
                     }
 
                   </div>

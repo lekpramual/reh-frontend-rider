@@ -19,6 +19,7 @@ import { QuicksList } from '@core/interface/quicks.interface';
 import { WardCreate } from '@core/interface/ward.interface';
 import { WorkList } from '@core/interface/work.interface';
 import { AcsService } from '@core/services/acs.service';
+import { AuthService } from '@core/services/auth.service';
 import { EquipsService } from '@core/services/equips.service';
 import { OpdTypeService } from '@core/services/opdtype.service';
 import { QuicksService } from '@core/services/quicks.service';
@@ -57,8 +58,10 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   @Output() messageChange = new EventEmitter<string>();
 
-  wardId:number =  0;
-  userId:number = 0;
+  wardId = signal<number | null>(null) ;
+  userId = signal<number | null>(null) ;
+
+
   accessibleId: string = "";
   type_io = signal('ipd');
   formAccessible!: FormGroup;
@@ -84,20 +87,21 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     private _roleService: RoleService,
     private _acsService: AcsService,
     private _workService: WorkService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
 
-    const _wardId =  this._roleService.ward();
+    const _wardId =  this._authService.getDepartId();
     if(_wardId){
-      this.wardId = _wardId;
+      this.wardId.set(_wardId);
     }
 
-    const _userId =  this._roleService.userId();
+    const _userId =  this._authService.getUserId();
     if(_userId){
-      this.userId = _userId;
+      this.userId.set(_userId);
     }
 
     this.initForm();
@@ -182,8 +186,8 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
           data.wcode_sta = this.formAccessible.value.wcode_sta;
           data.wcode_sto = this.formAccessible.value.wcode_sto;
           data.wcode_sto = this.formAccessible.value.wcode_sto;
-          data.user_ward = this.wardId;
-          data.user_save = this.userId;
+          data.user_ward = this.wardId();
+          data.user_save = this.userId();
           // console.log('data ', data)
 
         }else{
@@ -196,8 +200,8 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
           data.wcode_sta = this.formAccessible.value.wcode_sta;
           data.wcode_sto = this.formAccessible.value.wcode_sto;
           data.wcode_sto = this.formAccessible.value.wcode_sto;
-          data.user_ward = this.wardId;
-          data.user_save = this.userId;
+          data.user_ward = this.wardId();
+          data.user_save = this.userId();
           // console.log('data ', data)
         }
 
@@ -346,7 +350,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
    // Prevent the modal from closing when Enter key is pressed
    onKeyDown(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      console.log('Enter key pressed');
+      // console.log('Enter key pressed');
       event.preventDefault(); // Prevent form submission and modal closing on Enter
       // Handle your Enter key logic here
       const hn = this.formAccessible.value.hn;

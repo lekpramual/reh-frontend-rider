@@ -37,8 +37,8 @@ $my-palette: (
     900: white,
   ),
 );
-$primary: mat.define-palette($my-palette, 900);
-// $primary: mat.define-palette(mat.$blue-palette, 900);
+$primary: mat.define-palette(mat.$blue-palette, 500, 300, 700);
+$info: mat.define-palette(mat.$blue-palette, 500, 300, 700);
 $accent: mat.define-palette(mat.$gray-palette, 500);
 $warn: mat.define-palette(mat.$red-palette);
 
@@ -54,6 +54,11 @@ $warn: mat.define-palette(mat.$red-palette);
 @font-face{
   font-family:'FC_Iconic_Regular' ;
   src: url('./assets/fonts/FC_Iconic/FC_Iconic_Regular.ttf') format('truetype');
+}
+
+@font-face{
+  font-family:'Sadayu_Bold' ;
+  src: url('./assets/fonts/JS_Sadayu/JS_Sadayu_Bold.ttf') format('truetype');
 }
 
 $heading-font-family: 'FC_Iconic_Bold';
@@ -83,6 +88,7 @@ $my-theme: mat.define-light-theme(
       primary: $primary,
       accent: $accent,
       warn: $warn,
+      info:$info,
     ),
     typography: $reh-typography-config,
 
@@ -93,6 +99,7 @@ $my-theme: mat.define-light-theme(
       ),
   )
 );
+
 
 @include mat.typography-hierarchy($reh-typography-config);
 @include mat.all-component-themes($my-theme);
@@ -121,6 +128,17 @@ $input-typography-sarabun: mat.define-typography-config(
   // @include mat.button-typography($button-typography-sarabun);
   // @include mat.radio-typography($button-typography-sarabun);
   // @include mat.form-field-typography($input-typography-sarabun);
+}
+
+.reh-theme-info {
+
+  background-color: mat.get-color-from-palette($info, 500) !important;
+  color: mat.get-contrast-color-from-palette($info, 500) !important;
+
+  .mat-progress-spinner {
+    color: mat.get-color-from-palette(mat.$blue-palette, 500) !important;
+    stroke: mat.get-color-from-palette(mat.$blue-palette, 600) !important; // Custom color
+  }
 }
 // Mat Style
 mat-toolbar {
@@ -241,4 +259,7 @@ mat-sidenav-content {
 .mat-mdc-mini-fab  {
   border-radius: 12px !important;
 }
+
+
+
 

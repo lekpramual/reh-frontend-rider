@@ -1,0 +1,24 @@
+/* Custom Snackbar styles */
+.success-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--green-color);
+  --mat-snack-bar-button-color: var(--white-color);
+}
+
+.blue-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--blue-color);
+  --mat-snack-bar-button-color: var(--white-color);
+}
+.error-snackbar {
+  max-width: max-content !important;
+  color: var(--white-color);
+  --mdc-snackbar-container-color: var(--red-color);
+  border-color: #f5c6cb;
+  --mat-snack-bar-button-color: var(--white-color);
+}
+.error-snackbar button{
+  color: var(--white-color);
+  background-color: var(--blue-color);
+  border-radius: 10px;
+}

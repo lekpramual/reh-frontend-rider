@@ -113,24 +113,26 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="status_work">
-          <th mat-header-cell *matHeaderCellDef style="width: 158px; text-align: center;">
+          <th mat-header-cell *matHeaderCellDef style="width: 158px;">
             <span class="mat-subtitle-2">สถานะ</span>
           </th>
           <td mat-cell *matCellDef="let element" class="lj-txt-dot">
             @if(element.status_work == 1){
-                <mat-chip
-                style="width: 124px"
-                class="reh-chip-red"
-              >
-                <span class="label mat-subtitle-1">ยกเลิก</span>
-              </mat-chip>
+              <div class="row">
+                <div class="col-12">
+                  <span class="mat-subtitle-2 reh-txt-red">ยกเลิก</span>
+                </div>
+                <div class="col-12">
+                  <span class="mat-subtitle-2">สาเหตุ: </span> <span classs="mat-subtitle-1">{{ element.comment }}</span>
+                </div>
+              </div>
             }@else {
-              <mat-chip
-                style="width: 124px"
-                class="reh-chip-green"
-              >
-                <span class="label mat-subtitle-1">ปกติ</span>
-              </mat-chip>
+
+              <div class="row">
+                <div class="col-12">
+                  <span class="mat-subtitle-2 reh-txt-green">ปกติ</span>
+                </div>
+              </div>
             }
 
 

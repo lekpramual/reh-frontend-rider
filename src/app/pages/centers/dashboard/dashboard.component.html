@@ -1,23 +1,19 @@
 <div class="row">
-    <div class="col-6">
-      <span class="mat-headline-5 reh-txt-blue900">รายงานจำนวนการขอใช้เปลออนไลน์ หน่วยงาน : {{depart}}</span>
+  <div  align="center" class="col-12 reh-form-sm">
 
-    </div>
-    <div class="col-6" align="right" class="reh-form-sm">
-      <mat-form-field class="w-64">
-        <mat-label>เลือกปี : </mat-label>
-        <mat-select
-          [(value)]="selectedOption"
-          (selectionChange)="onOptionSelectionChange()"
-        >
-          @for (option of optionsYears; track option) {
-            <mat-option [value]="option.value"> {{ option.label }}</mat-option>
-          }
-
-
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <span class="mat-headline-5 reh-txt-blue900">รายงานจำนวนการขอใช้เปลออนไลน์ ประจำปี : </span>
+    <mat-form-field class="w-64">
+      <mat-label>เลือกปี : </mat-label>
+      <mat-select
+        [(value)]="selectedOption"
+        (selectionChange)="onOptionSelectionChange()"
+      >
+        @for (option of optionsYears; track option) {
+          <mat-option [value]="option.value"> {{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>
 
 @if(_loadingService.loading()){

@@ -48,6 +48,7 @@ import { AcsService } from '@core/services/acs.service';
 export default class RiderScannerComponent implements OnInit{
 
   jobId:string = '';
+  jobType:string = '';
   wardId:string = '';
   wardName:string = '';
   qrCodeResult: any = {}; // Variable to store the scanned result
@@ -65,6 +66,7 @@ export default class RiderScannerComponent implements OnInit{
   async ngOnInit() {
     this.jobId = this.route.snapshot.params["id"];
     this.wardId = this.route.snapshot.params["ward"];
+    this.jobType = this.route.snapshot.params["jobtype"];
     this.wardName = this.route.snapshot.params["wardname"];
   }
 
@@ -79,6 +81,7 @@ export default class RiderScannerComponent implements OnInit{
     if(ward_id == this.wardId){
       let data:any = {};
       data.ward = this.wardId;
+      data.type = this.jobType;
       // console.log('Scanned Success:', ward_id,this.wardId);
       await this._acsService.updateAcsByRiderGetJob(this.jobId,data)
       this._snackBar.open(`ปิดงาน สำเร็จ ${ward_name}`, '', {

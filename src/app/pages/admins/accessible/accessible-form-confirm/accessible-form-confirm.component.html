@@ -1,0 +1,175 @@
+<div
+  mat-dialog-title
+  style="display: flex; align-items: center;height: 48px;justify-content: center;"
+>
+  <span class="mat-headline-5 btn-action-green mb-0">ปิดงาน เลขที่ : {{this._Id()}}</span>
+
+</div>
+<mat-divider></mat-divider>
+<form class="reh-form-sm" [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    @for (item of acsData(); track $index) {
+      <div class="lj-viewer-wrapper">
+        <div class="row">
+          <div class="col-12">
+              <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+              <mat-divider></mat-divider>
+          </div>
+        </div>
+          <div class="row">
+            <div class="col-6">
+              <span class="mat-subtitle-2">ชื่อ: </span
+              ><span class="mat-subtitle-1">{{item.od_rem}}</span>
+            </div>
+            <div class="col-6">
+              <span class="mat-subtitle-2">วันที่เวลา: </span
+              ><span class="mat-subtitle-1">{{formatDateThai(item.go_date)}} {{item.go_time}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <span class="mat-subtitle-2">ประเภท: </span>
+              @if(item.quick == 1){
+                <span class="reh-txt-green mat-subtitle-1">{{item.quick_name}}</span>
+              }@else if(item.quick == 2){
+                <span class="reh-txt-yellow mat-subtitle-1">{{item.quick_name}}</span>
+              }@else if(item.quick == 3){
+                <span class="reh-txt-red mat-subtitle-1">{{item.quick_name}}</span>
+              }@else {
+                <span class="reh-txt-blue mat-subtitle-1">{{item.quick_name}}</span>
+              }
+
+            </div>
+            <div class="col-6">
+              <span class="mat-subtitle-2">อุปกรณ์: </span
+              ><span class="mat-subtitle-1">{{item.equip_name}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="mat-subtitle-2">จุดรับ: </span
+              ><span class="mat-subtitle-1">{{item.wcode_staname}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="mat-subtitle-2">จุดส่ง: </span
+              ><span class="mat-subtitle-1">{{item.wcode_stoname}}</span>
+            </div>
+          </div>
+      </div>
+
+      <div class="lj-viewer-wrapper">
+        <div class="row mt-2 mb-3">
+          <div class="col-12">
+              <span class="mat-headline-6 reh-txt-blue900"
+                >รายละเอียด จนท.เปล</span
+              >
+              <mat-divider></mat-divider>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <span class="mat-subtitle-2">รหัสเจ้าหน้าที่: </span><span class="mat-subtitle-1">{{item.wk_perid}}</span>
+          </div>
+          <div class="col-6 text-end">
+            <span class="mat-subtitle-2">ชื่อ: </span><span class="mat-subtitle-1">{{item.wk_pername}}</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <span class="mat-subtitle-2">ขอใช้เปล [วอร์ด]</span>
+          </div>
+
+          <div class="col-6">
+            <span class="mat-subtitle-1">
+              @if(item.go_date != '-'){
+                {{formatDateThai(item.go_date)}} {{item.go_time}}
+              }@else {
+                {{item.go_date}}
+              }
+
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <span class="mat-subtitle-2">จ่ายงาน [ศูนย์]</span>
+          </div>
+
+          <div class="col-6">
+            @if(item.rd_date != '-'){
+              <span class="mat-subtitle-1">{{formatDateThai(item.rd_date)}} {{item.rd_time}}</span>
+            }@else {
+              {{item.rd_date}}
+            }
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <span class="mat-subtitle-2">รับงาน [จนท]</span>
+          </div>
+
+          <div class="col-6">
+            @if(item.sd_date != '-'){
+              <span class="mat-subtitle-1">{{formatDateThai(item.sd_date)}} {{item.sd_time}}</span>
+            }@else {
+              <button mat-fab extended class="reh-btn-blue mb-2" style="width: 156px;" (click)="onGetJob($event)">
+                <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+                <span class="mat-subtitle-2">คลิกรับงาน</span></button>
+            }
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <span class="mat-subtitle-2">ปิดงาน [จนท]</span>
+          </div>
+
+          <div class="col-6">
+
+            @if(item.ed_date != '-'){
+              <span class="mat-subtitle-1">{{formatDateThai(item.ed_date)}} {{item.ed_time}}</span>
+            }@else if(item.ed_date == '-' && item.sd_date != '-'){
+              <button mat-fab extended class="reh-btn-green" style="width: 156px;"  (click)="onConfirmJob($event)">
+                <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
+                <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
+            }@else{
+              <button mat-fab extended class="reh-btn-green disabled" style="width: 156px;" disabled (click)="onConfirmJob($event)">
+                <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
+                <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
+            }
+
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6" align="end">
+            <span class="mat-subtitle-2">รวมระยะเวลา</span>
+          </div>
+
+          <div class="col-6">
+            <span class="mat-subtitle-2">
+              เวลา
+              @if(item.go_date != '-' && item.ed_date != '-'){
+
+                {{calculateTimeDifferenceInMinutes(item.go_date,item.go_time,item.ed_time)}}
+              }@else {
+                -
+              }
+              นาที</span>
+          </div>
+        </div>
+      </div>
+    }
+
+  </mat-dialog-content>
+  <mat-divider></mat-divider>
+  <mat-dialog-actions align="center">
+    <button mat-fab extended class="reh-btn-red" (click)="onNoClick()">
+      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      <span class="mat-subtitle-2">ปิดหน้าจอ</span>
+    </button>
+  </mat-dialog-actions>
+</form>

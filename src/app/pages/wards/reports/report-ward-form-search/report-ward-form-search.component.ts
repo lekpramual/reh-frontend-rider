@@ -69,6 +69,7 @@ import { QuicksService } from '@core/services/quicks.service';
 import { QuicksList } from '@core/interface/quicks.interface';
 import { RoleService } from '@core/services/role.service';
 import { ReportService } from '@core/services/report.service';
+import { AuthService } from '@core/services/auth.service';
 
 var doc = new jsPDF({
   orientation: 'portrait',
@@ -120,7 +121,8 @@ moment.locale('th');
 export class ReportWardFormSearchComponent implements OnInit {
 
   dataArray:any[][] = [];
-  wardId: any = ""
+
+  wardId = signal<number | null>(null);
   wardName: any = ""
   accessibleId: string = '';
   currentDate = new Date();
@@ -139,7 +141,14 @@ export class ReportWardFormSearchComponent implements OnInit {
   maxDate!: Date;
   minDate!: Date;
 
-  constructor(public assets: AssetsService, private _snackBar: MatSnackBar, private _roleService: RoleService, private _quicksService: QuicksService,private _reportService:ReportService) {
+  constructor(
+    public assets: AssetsService,
+    private _snackBar: MatSnackBar,
+    private _roleService: RoleService,
+    private _quicksService: QuicksService,
+    private _reportService:ReportService,
+    private _authService : AuthService
+  ) {
     // moment.locale('th');
 
     // Override the Thai locale to display Buddhist Era year (Thai year)
@@ -169,10 +178,9 @@ export class ReportWardFormSearchComponent implements OnInit {
     this.initForm();
 
 
-    const _wardId = this._roleService.ward();
+    const _wardId = this._authService.getDepartId();
     if (_wardId) {
-      console.log(_wardId);
-      this.wardId = _wardId;
+      this.wardId.set(_wardId);
     }
 
     const _wardName = this._roleService.wardName();
@@ -203,7 +211,7 @@ export class ReportWardFormSearchComponent implements OnInit {
         let ward_start = moment(this.formGroupData.value.ward_start).add('year', (-543)).format("YYYY-MM-DD");
         let ward_end = moment(this.formGroupData.value.ward_end).add('year', (-543)).format("YYYY-MM-DD");
         let ward_quick = this.formGroupData.value.ward_quick;
-        let ward_depart = this.wardId;
+        let ward_depart = this.wardId()!;
 
         // Data to send to the API
         const bodyParams = {
@@ -243,7 +251,7 @@ export class ReportWardFormSearchComponent implements OnInit {
     return data.map(obj => Object.values(obj));
   }
 
-  showPDF = async (ward_start: string, ward_end: string, emp_role: string,ward_quick:string) => {
+  showPDF = async (ward_start: string, ward_end: string, emp_role: number,ward_quick:string) => {
     try {
       // let dayMoment = moment(ward_start);
       // let year = dayMoment.add(543, 'year').format("YYYY");
@@ -294,7 +302,7 @@ export class ReportWardFormSearchComponent implements OnInit {
   generatePDF = async (
     ward_start: string,
     ward_end: string,
-    emp_role: string
+    emp_role: number
   ) => {
 
     return new Promise(async (resolve, reject) => {
@@ -334,6 +342,13 @@ export class ReportWardFormSearchComponent implements OnInit {
         doc.setFontSize(14);
         doc.setFont('THSarabun', 'bold');
         doc.text('วอร์ด: ' + this.wardName, 14, y_number, {
+          align: 'left',
+        });
+
+        y_number += 6;
+        doc.setFontSize(12);
+        doc.setFont('THSarabun', 'normal');
+        doc.text('* หมายเหตุ แสดงเฉพาะข้อมูลที่มีการปิดงานเท่านั้น', 14, y_number, {
           align: 'left',
         });
 

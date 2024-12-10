@@ -1,0 +1,56 @@
+@import '../../../../../../theme.scss';
+
+.example-container {
+  height: calc(100vh - 236px);
+  overflow: auto;
+}
+
+table.accept {
+  width: 720px;
+}
+
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+td.mat-column-type {
+  width: 36px;
+  padding-right: 8px;
+}
+
+
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+  cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+  cursor: pointer;
+}
+
+.bg-txt-green {
+  background-color: var(--green-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+
+.bg-txt-red {
+  background-color: var(--red-color) !important;
+  text-align: center;
+  color:#fff !important;
+}
+
+.bg-txt-blue {
+  background-color: var(--blue-color) !important;
+  color:#fff !important;
+  text-align: center;
+}
+
+
+
+
+

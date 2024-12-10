@@ -19,6 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { interval, Subscription } from 'rxjs';
 import { AcsGetJobList, AcsList } from '@core/interface/acs.interface';
+import { AuthService } from '@core/services/auth.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   dataGetJobNew = signal<AcsGetJobList[] | undefined>([]);
   dataMonitorNew = signal<AcsList[] | []>([]);
 
-  levelApp = signal('');
+
+  roleId = signal<string | null>(null);
   wardName = signal('');
   currentDateTime = signal(new Date());
 
@@ -75,7 +77,8 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
   constructor(
     private _acsService: AcsService,
     private _roleService: RoleService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _authService : AuthService
   ){}
   ngOnInit(): void {
     moment.updateLocale('th', {
@@ -94,10 +97,9 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
         ),
     });
 
-    const _levelApp =  this._roleService.role();
-    if(_levelApp){
-      // this.levelApp = _levelApp == 5 ? 'opd' : 'ipd';
-      this.levelApp.set(_levelApp == 5 ? 'opd' : 'ipd')
+    const _roleId =  this._authService.getUserRole();
+    if(_roleId){
+      this.roleId.set(_roleId == 'centeropd' ? 'opd' : 'ipd')
     }
 
     const _wardName = this._roleService.wardName();
@@ -122,7 +124,7 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
 
   async fetchDataGetJobNew() {
     try {
-      const results = await this._acsService.getAcsByCenterGetJobNew(this.levelApp(),this.currentDate())
+      const results = await this._acsService.getAcsByCenterGetJobNew(this.roleId()!,this.currentDate())
       this.dataGetJobNew.set(results);
 
     } catch (error) {
@@ -146,7 +148,7 @@ export default class AccessibleComponent implements OnInit,OnDestroy{
     const _ward =  this.formSearch().searchWard;
 
     try {
-      const results = await this._acsService.getAcsByCenterMonitorNew(this.levelApp(),_start,_end, _option,_text,_persion,_ward)
+      const results = await this._acsService.getAcsByCenterMonitorNew(this.roleId()!,_start,_end, _option,_text,_persion,_ward)
       this.dataMonitorNew.set(results);
 
     } catch (error) {

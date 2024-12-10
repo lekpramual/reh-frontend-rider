@@ -5,19 +5,14 @@ import { LoginComponent } from './pages/login/login.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 import UnauthorizedComponent from '@pages/unauthorized/unauthorized.component';
-import { CenterLayoutComponent } from '@layouts/center-layout/center-layout.component';
-import { WardLayoutComponent } from '@layouts/ward-layout/ward-layout.component';
 import { RoleGuard } from '@core/guards/role.guard';
-import { RiderLayoutComponent } from '@layouts/rider-layout/rider-layout.component';
-
 
 const routes: Routes = [
 
   /*********************
    *********************
-   * CENTER ROUTERS
+   * ADMIN ROUTERS
    ********************/
-
    {
     path: "admin",
     component: AdminLayoutComponent,
@@ -31,23 +26,23 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent : (() => import("../app/pages/centers/dashboard/dashboard.component")),
+        loadComponent : (() => import("../app/pages/admins/dashboard/dashboard.component")),
       },
       {
         path: 'accessible',
-        loadComponent : (() => import("../app/pages/centers/accessible/accessible.component")),
+        loadComponent : (() => import("../app/pages/admins/accessible/accessible.component")),
       },
       {
         path: 'reports',
-        loadComponent : (() => import("../app/pages/centers/reports/reports.component")),
+        loadComponent : (() => import("../app/pages/admins/reports/reports.component")),
       },
       {
         path: 'wards',
-        loadComponent : (() => import("../app/pages/centers/settings/wards/wards.component")),
+        loadComponent : (() => import("../app/pages/admins/settings/wards/wards.component")),
       },
       {
         path: 'users',
-        loadComponent : (() => import("../app/pages/centers/settings/users/users.component")),
+        loadComponent : (() => import("../app/pages/admins/settings/users/users.component")),
       }
     ],
    },
@@ -58,7 +53,7 @@ const routes: Routes = [
 
    {
     path: "center",
-    component: CenterLayoutComponent,
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard,RoleGuard],
     data: { role: ['centeropd','centeripd']},
     children: [
@@ -97,7 +92,7 @@ const routes: Routes = [
    ********************/
    {
     path: "ward",
-    component: WardLayoutComponent,
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard,RoleGuard],
     data: { role: ['ward'] },
     children: [
@@ -115,6 +110,10 @@ const routes: Routes = [
         loadComponent : (() => import("../app/pages/wards/accessible/accessible.component")),
       },
       {
+        path: 'wards',
+        loadComponent : (() => import("../app/pages/wards/settings/wards/wards.component")),
+      },
+      {
         path: 'reports',
         loadComponent : (() => import("../app/pages/wards/reports/reports.component")),
       },
@@ -125,11 +124,11 @@ const routes: Routes = [
 
   /*********************
    *********************
-   * WARD ROUTERS
+   * RIDER ROUTERS
    ********************/
    {
     path: "rider",
-    component: RiderLayoutComponent,
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard,RoleGuard],
     data: { role: ['rideropd','rideripd'] },
     children: [
@@ -147,7 +146,7 @@ const routes: Routes = [
         loadComponent : (() => import("./pages/riders/jobs/jobs.component")),
       },
       {
-        path: 'scanner/:id/:ward/:wardname',
+        path: 'scanner/:id/:jobtype/:ward/:wardname',
         loadComponent : (() => import("./pages/riders/scanners/scanner.component")),
       }
 
