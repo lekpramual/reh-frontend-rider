@@ -129,7 +129,7 @@ export class ReportWardFormSearchComponent implements OnInit {
   formGroupData!: FormGroup;
 
   optionQuicks: QuicksList[] = [
-    { quick_id: '0', quick_name: 'ทั้งหมด' }
+    { quick_id: '0', quick_name: 'ทั้งหมด',quick_color:'',quick_time:'',quick_allow:'' }
   ];
 
   filteredOptions!: Observable<any[]>;
@@ -213,6 +213,9 @@ export class ReportWardFormSearchComponent implements OnInit {
         let ward_quick = this.formGroupData.value.ward_quick;
         let ward_depart = this.wardId()!;
 
+
+        console.log('ward_quick ',ward_quick);
+
         // Data to send to the API
         const bodyParams = {
           rxdate:ward_start,
@@ -220,6 +223,7 @@ export class ReportWardFormSearchComponent implements OnInit {
           ward:ward_depart,
           quick:String(ward_quick)
         };
+
         this._reportService.getDateByQuick(bodyParams).subscribe({
           next:(data) => {
             let _data = data.result;
@@ -251,8 +255,17 @@ export class ReportWardFormSearchComponent implements OnInit {
     return data.map(obj => Object.values(obj));
   }
 
+  getSelectedLabel(event: any) {
+    // const selectedOption = this.wardOptions().find(option => option.ward_id === event.value);
+    // console.log('selectedOption ',selectedOption)
+    // this.wardLabel.set(selectedOption ? selectedOption.ward_name : 'all');
+  }
+
   showPDF = async (ward_start: string, ward_end: string, emp_role: number,ward_quick:string) => {
     try {
+
+      const selectedOption = this.optionQuicks.find(option => option.quick_id === ward_quick);
+      const quickName = selectedOption ? selectedOption.quick_name : 'ทั้งหมด'
       // let dayMoment = moment(ward_start);
       // let year = dayMoment.add(543, 'year').format("YYYY");
       // let month = dayMoment.format("MMMM");
@@ -265,7 +278,7 @@ export class ReportWardFormSearchComponent implements OnInit {
         moment(ward_end).format('ll');
 
       this.initialPDF(date_strr);
-      let result = await this.generatePDF(ward_start, ward_end, emp_role);
+      let result = await this.generatePDF(ward_start, ward_end, emp_role,quickName);
       if (result) {
         this.outputPDF();
       }
@@ -302,7 +315,8 @@ export class ReportWardFormSearchComponent implements OnInit {
   generatePDF = async (
     ward_start: string,
     ward_end: string,
-    emp_role: number
+    emp_role: number,
+    quickName:string
   ) => {
 
     return new Promise(async (resolve, reject) => {
@@ -341,7 +355,7 @@ export class ReportWardFormSearchComponent implements OnInit {
         y_number += 10;
         doc.setFontSize(14);
         doc.setFont('THSarabun', 'bold');
-        doc.text('วอร์ด: ' + this.wardName, 14, y_number, {
+        doc.text('ประเภท : ' + quickName, 14, y_number, {
           align: 'left',
         });
 
@@ -380,7 +394,6 @@ export class ReportWardFormSearchComponent implements OnInit {
           startY: y_number,
           head: [
             [
-
               { content: 'ชื่อ-สกุล', styles: { halign: 'left' } },
               '8-9',
               '9-10',

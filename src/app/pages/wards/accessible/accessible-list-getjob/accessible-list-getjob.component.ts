@@ -68,7 +68,7 @@ export default class AccessibleListGetJobComponent {
 
   // @Output() messageChange = new EventEmitter<string>();
 
-  displayedColumns = [ 'go_date','go_time', 'quick', 'od_rem', 'equip', 'wcode_staname','type_oi','status_work','star'];
+  displayedColumns = [ 'go_date','go_time', 'equip','type_oi', 'quick', 'od_rem', 'wcode_staname','status_work','star'];
   // dataSource = new MatTableDataSource<TPatient>();
   dataSource = new MatTableDataSource<any>([]);
 

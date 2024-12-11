@@ -6,11 +6,9 @@
   <mat-dialog-content style="max-height: 75vh;">
     <div class="lj-viewer-wrapper">
       <mat-tab-group dynamicHeight class="ct-tab-group" (selectedTabChange)="onTabClick($event)">
-        <mat-tab >
+        <mat-tab  >
           <ng-template mat-tab-label>
-            <span class="mat-headline-6 reh-txt-blue900"
-              >ประเภทผู้ป่วย IPD</span
-            >
+            <mat-icon class="reh-txt-blue900" style="margin-right: 8px;">wheelchair_pickup</mat-icon> <b class="mat-headline-6 mb-0 reh-txt-blue900">ประเภทผู้ป่วย IPD</b>
           </ng-template>
 
           <div class="p-2">
@@ -64,11 +62,9 @@
             </div>
           </div>
         </mat-tab>
-        <mat-tab >
+        <mat-tab>
           <ng-template mat-tab-label>
-            <span class="mat-headline-6 reh-txt-blue900"
-              >ประเภทผู้ป่วย OPD</span
-            >
+             <mat-icon class="reh-txt-blue900" style="margin-right: 8px;">wheelchair_pickup</mat-icon> <b class="mat-headline-6 mb-0 reh-txt-blue900">ประเภทผู้ป่วย OPD</b>
           </ng-template>
           <div class="p-2">
             <div class="row">
@@ -97,38 +93,75 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <div class="lj-viewer-wrapper">
-      <div class="row">
-        <div class="col-12">
-          <span class="mat-headline-6 reh-txt-blue900">ประเภทความเร่งด่วน</span>
-          <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-8">
+        <div class="lj-viewer-wrapper" style="min-height: 210px;">
+          <div class="row">
+            <div class="col-12">
+              <span class="mat-headline-6 reh-txt-blue900">ประเภทความเร่งด่วน </span>
+
+              <mat-divider></mat-divider>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <mat-radio-group formControlName="quicks" color="primary" class="cto-radio-group">
+                @for (option of optionQuickOI; track option) {
+                  <mat-radio-button [value]="option.quick_id" class="cto-radio-button">
+                    <mat-chip
+                    style="width: 364px;"
+                    [ngStyle]="{ 'background': option.quick_color }"
+                      >
+                      <span class="label mat-subtitle-2"  >{{ option.quick_name }}</span>
+                    </mat-chip>
+                  </mat-radio-button>
+                }
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="row" align="center">
+            <div class="col-12">
+              @if(formAccessible.get('quicks')?.invalid && submitted()){
+                <mat-error>*โปรดเลือก ความเร่งด่วน</mat-error>
+              }
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <mat-radio-group formControlName="quicks" color="primary" class="cto-radio-group">
-            @for (option of optionQuicks; track option) {
-              <mat-radio-button [value]="option.quick_id" class="cto-radio-button">
-                <div class="reh-txt-blue">
-                  <strong>{{ option.quick_name }}</strong>
-                </div>
-              </mat-radio-button>
-            }
-          </mat-radio-group>
+      <div class="col-4">
+        <div class="lj-viewer-wrapper" [ngStyle]="type_io() == 'opd' ?  {'min-height': '245px' } :  {'min-height': '210px'}">
+          <div class="row">
+            <div class="col-12">
+              <span class="mat-headline-6 reh-txt-blue900">ประเภทเวร</span>
+              <mat-divider></mat-divider>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+                <mat-radio-group formControlName="work" color="primary" class="cto-radio-group">
+                  <mat-radio-button
+                    *ngFor="let option of optionWork"
+                    [value]="option.time_workid"
+                    class="cto-radio-button"
+                  >
+                    <strong>{{ option.time_workname }}</strong>
+                  </mat-radio-button>
+                </mat-radio-group>
 
-        </div>
-      </div>
-      <div class="row" align="center">
-        <div class="col-12">
+            </div>
+          </div>
+          <div class="row" align="center">
+            <div class="col-12">
+              @if(formAccessible.get('work')?.invalid && submitted()){
+                <mat-error>*โปรดเลือก ประเภทเวร</mat-error>
+              }
 
-
-          @if(formAccessible.get('quicks')?.invalid){
-            <mat-error>*โปรดเลือก ความเร่งด่วน</mat-error>
-          }
-
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
 
     <div class="lj-viewer-wrapper">
       <div class="row">
@@ -234,35 +267,8 @@
         </div>
       </div>
     </div>
-    <div class="lj-viewer-wrapper">
-      <div class="row">
-        <div class="col-12">
-          <span class="mat-headline-6 reh-txt-blue900">ประเภทเวร</span>
-          <mat-divider></mat-divider>
-        </div>
-      </div>
-      <div class="row" align="center">
-        <div class="col-12 text-center">
-            <mat-radio-group formControlName="work" color="primary">
-              <mat-radio-button
-                *ngFor="let option of optionWork"
-                [value]="option.time_workid"
-              >
-                <strong>{{ option.time_workname }}</strong>
-              </mat-radio-button>
-            </mat-radio-group>
 
-        </div>
-      </div>
-      <div class="row" align="center">
-        <div class="col-12">
-          @if(formAccessible.get('work')?.invalid){
-            <mat-error>*โปรดเลือก ประเภทเวร</mat-error>
-          }
 
-        </div>
-      </div>
-    </div>
   </mat-dialog-content>
   <mat-divider></mat-divider>
   <mat-dialog-actions class="row">

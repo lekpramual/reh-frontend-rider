@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +36,7 @@ import { Observable, ReplaySubject, Subject, firstValueFrom, lastValueFrom, map,
   standalone: true,
   templateUrl: './accessible-form-create.component.html',
   styleUrl: './accessible-form-create.component.scss',
-  imports:[
+  imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -51,16 +52,18 @@ import { Observable, ReplaySubject, Subject, firstValueFrom, lastValueFrom, map,
     MatIconModule,
     MatCardModule,
     AsyncPipe,
-    MatTabsModule
+    MatTabsModule,
+    MatChipsModule,
+
   ]
 })
-export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDestroy {
+export class AccessibleFormCreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() messageChange = new EventEmitter<string>();
 
-  wardId = signal<number | null>(null) ;
-  userId = signal<number | null>(null) ;
-
+  wardId = signal<number | null>(null);
+  userId = signal<number | null>(null);
+  submitted = signal<boolean>(false);
 
   accessibleId: string = "";
   type_io = signal('ipd');
@@ -70,18 +73,19 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   searchControl: FormControl = new FormControl();
 
 
-  optionWards:WardCreate[] = [];
-  optionQuicks:QuicksList[] = [];
-  optionEquips:EquipsList[] = [];
-  optionOpdType:OpdTypeList[] = [];
-  optionWork:WorkList[] = [];
+  optionWards: WardCreate[] = [];
+  optionQuicks: QuicksList[] = [];
+  optionQuickOI: QuicksList[] = [];
+  optionEquips: EquipsList[] = [];
+  optionOpdType: OpdTypeList[] = [];
+  optionWork: WorkList[] = [];
 
 
   constructor(
     public dialogRef: MatDialogRef<AccessibleFormCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _wardService: WardService,
-    private _quicksService:QuicksService,
+    private _quicksService: QuicksService,
     private _equipsService: EquipsService,
     private _opdTypeService: OpdTypeService,
     private _roleService: RoleService,
@@ -89,18 +93,18 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     private _workService: WorkService,
     private _snackBar: MatSnackBar,
     private _authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
 
-    const _wardId =  this._authService.getDepartId();
-    if(_wardId){
+    const _wardId = this._authService.getDepartId();
+    if (_wardId) {
       this.wardId.set(_wardId);
     }
 
-    const _userId =  this._authService.getUserId();
-    if(_userId){
+    const _userId = this._authService.getUserId();
+    if (_userId) {
       this.userId.set(_userId);
     }
 
@@ -108,51 +112,61 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
 
     this._wardService.getWards().subscribe({
-        next:(data) => {
-          this.optionWards = data.result;
-          // Set up the filtered options logic
-          this.filteredOptionsDepart = this.searchControl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filterDepart(value))
-          );
-        },
-        error:(error) => {
-          console.error('Error fetching departments', error);
-        }
-      });
+      next: (data) => {
+        this.optionWards = data.result;
+        // Set up the filtered options logic
+        this.filteredOptionsDepart = this.searchControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterDepart(value))
+        );
+      },
+      error: (error) => {
+        console.error('Error fetching departments', error);
+      }
+    });
 
     this._quicksService.getQuicks().subscribe({
-      next:(data) => {
-        this.optionQuicks = data.result;
+      next: (data) => {
+        console.log('quicks >>>', data.result);
+        const resultQuicks = data.result;
+
+
+        this.optionQuicks = resultQuicks;
+
+        // const menuItems = resultQuicks.filter((item:any) => ["all","opd"].includes(item.quick_allow));
+
+        // console.log(`menuItems >>> ${this.type_io()}`,menuItems);
+        this.optionQuickOI = this.getFilteredMenu();
+        // this.getFilteredMenu();
       },
-      error:(error) => {
+      error: (error) => {
         console.error('Error fetching departments', error);
       }
     });
 
     this._equipsService.getEquips().subscribe({
-      next:(data) => {
+      next: (data) => {
         this.optionEquips = data.result;
       },
-      error:(error) => {
+      error: (error) => {
         console.error('Error fetching departments', error);
       }
     });
 
     this._opdTypeService.getOpdType().subscribe({
-      next:(data) => {
-        this.optionOpdType= data.result;
+      next: (data) => {
+        this.optionOpdType = data.result;
       },
-      error:(error) => {
+      error: (error) => {
         console.error('Error fetching departments', error);
       }
     });
 
     this._workService.getWorks().subscribe({
-      next:(data) => {
-        this.optionWork= data.result;
+      next: (data) => {
+        this.optionWork = data.result;
       },
-      error:(error) => {
+      error: (error) => {
         console.error('Error fetching departments', error);
       }
     });
@@ -169,14 +183,14 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
 
   async onSubmit() {
-    if (this.formAccessible.valid) {
+    this.submitted.set(true);
 
-      console.log(this.formAccessible.valid);
+    if (this.formAccessible.valid) {
       // Handle form submission
       try {
         const data: any = {};
 
-        if(this.type_io() == 'opd'){
+        if (this.type_io() == 'opd') {
           data.type_oi = this.type_io()
           data.hn = this.formAccessible.value.opdtype;
           data.od_rem = this.getSelectedOptionLabel();
@@ -190,7 +204,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
           data.user_save = this.userId();
           // console.log('data ', data)
 
-        }else{
+        } else {
           data.type_oi = this.type_io()
           data.hn = this.formAccessible.value.hn;
           data.od_rem = this.formAccessible.value.od_rem;
@@ -206,30 +220,31 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
         }
 
         this._acsService.addAcsByWard(data).subscribe({
-          next:(data)=> {
+          next: (data) => {
             const result = data.ok;
-            if(result === 'ok'){
+            if (result === 'ok') {
               this._snackBar.open(`บันทึกข้อมูลเรียบร้อย`, '', {
-                duration:1500,
+                duration: 1500,
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
-                panelClass:['success-snackbar']
+                panelClass: ['success-snackbar']
               }).afterDismissed().subscribe(() => {
                 // this.messageChange.emit('reset');
                 this.dialogRef.close("ok");
               });
             }
           },
-          error:(error) => {
+          error: (error) => {
             console.error('Error fetching departments', error);
             this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
-              duration:3000,
+              duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
-              panelClass:['error-snackbar']
+              panelClass: ['error-snackbar']
             }).afterDismissed().subscribe(() => {
               // this.onMessageChange('close');
               // this.initForm();
+              this.submitted.set(false)
             });
           }
         });
@@ -237,18 +252,21 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
         // Handle error during form submission
         console.error(error);
         this._snackBar.open('บันทึกข้อมูลผิดพลาด', '', {
-          duration:3000,
+          duration: 3000,
           horizontalPosition: 'center',
           verticalPosition: 'bottom',
-          panelClass:['error-snackbar']
+          panelClass: ['error-snackbar']
         }).afterDismissed().subscribe(() => {
           // this.onMessageChange('close');
           // this.initForm();
+          this.submitted.set(false)
         });
       }
-    } else {
+    }
+     else {
       // Handle form validation errors
       console.log("form validation error..");
+      // this.submitted.set(false);
     }
   }
 
@@ -258,11 +276,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       hn: new FormControl(null, [Validators.required]),
       od_rem: new FormControl(null, [Validators.required]),
       opdtype: new FormControl(null),
-      quicks: new FormControl(null,[Validators.required]),
-      equips: new FormControl(null,[Validators.required]),
-      work: new FormControl(null,[Validators.required]),
-      wcode_sta: new FormControl(null,[Validators.required]),
-      wcode_sto: new FormControl(null,[Validators.required])
+      quicks: new FormControl(null, [Validators.required]),
+      equips: new FormControl(null, [Validators.required]),
+      work: new FormControl(null, [Validators.required]),
+      wcode_sta: new FormControl(null, [Validators.required]),
+      wcode_sto: new FormControl(null, [Validators.required])
     });
 
     // this.formAccessible.get('od_rem')?.disable();
@@ -275,9 +293,18 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     this.dialogRef.close();
   }
 
-  onSetTypeIO(type:string) {
-    console.log(type);
+
+  // กำหนดประเภทขอใช้บริการ
+  onSetTypeIO(type: string) {
     this.type_io.set(type)
+    // เปลี่ยนประเภทความเร่งด่วน
+    this.optionQuickOI = this.getFilteredMenu();
+  }
+
+  // ฟังก์ชันใช้ในการ ฟิวเตอร์ ข้อมูลเฉพาะ all และ ประเภทที่เลือก
+  getFilteredMenu() {
+    const menuItems = this.optionQuicks.filter((item: any) => ["all", this.type_io()].includes(item.quick_allow));
+    return menuItems;
   }
 
   onTabClick(event: MatTabChangeEvent) {
@@ -287,7 +314,8 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     // Handle tab click logic here
     if (event.index === 0) {
       // console.log('First tab clicked');
-      this.type_io.set('ipd');
+
+      this.onSetTypeIO('ipd');
 
       this.formAccessible.controls["hn"].setValidators([Validators.required]);
 
@@ -296,9 +324,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
       ]);
 
       this.formAccessible.controls["opdtype"].clearValidators();
+
     } else if (event.index === 1) {
       // console.log('Second tab clicked');
-      this.type_io.set('opd');
+
+      this.onSetTypeIO('opd');
 
       this.formAccessible.controls["opdtype"].setValidators([
         Validators.required,
@@ -336,7 +366,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
       console.error("Error fetching data:", error);
     } finally {
-     console.log('loaddata success..')
+      console.log('loaddata success..')
     }
   }
 
@@ -347,19 +377,19 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   }
 
 
-   // Prevent the modal from closing when Enter key is pressed
-   onKeyDown(event: KeyboardEvent) {
+  // Prevent the modal from closing when Enter key is pressed
+  onKeyDown(event: KeyboardEvent) {
     if (event.key === "Enter") {
       // console.log('Enter key pressed');
       event.preventDefault(); // Prevent form submission and modal closing on Enter
       // Handle your Enter key logic here
       const hn = this.formAccessible.value.hn;
-      if(hn != ''){
-        console.log('>>>',hn);
+      if (hn != '') {
+        console.log('>>>', hn);
         this._acsService.getPatientByHn(hn).subscribe({
-          next:(data) => {
+          next: (data) => {
             const _data = data.results;
-            if(_data.length > 0){
+            if (_data.length > 0) {
               console.log(data.results);
               const _hn = data.results[0].hn;
               const _full_name = data.results[0].full_name;
@@ -367,14 +397,14 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
               this.formAccessible.controls["hn"].setValue(_hn);
               this.formAccessible.controls["od_rem"].setValue(_full_name);
 
-              console.log(_hn,_full_name);
+              console.log(_hn, _full_name);
             }
 
             this.formAccessible.controls["hn"].updateValueAndValidity();
             this.formAccessible.controls["od_rem"].updateValueAndValidity();
 
           },
-          error:(error) => {
+          error: (error) => {
             console.error('Error fetching departments', error);
           }
         });

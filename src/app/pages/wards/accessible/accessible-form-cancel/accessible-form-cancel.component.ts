@@ -20,6 +20,7 @@ import { Observable, map, startWith } from 'rxjs';
 import moment from 'moment';
 import 'moment/locale/th';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-accessible-form-cancel',
@@ -44,7 +45,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatCardModule,
     MatBadgeModule,
     MatTooltipModule,
-
+    MatChipsModule
 
   ]
 })

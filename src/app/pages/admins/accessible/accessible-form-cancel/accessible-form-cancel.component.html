@@ -24,16 +24,7 @@
       <div class="row">
         <div class="col-6">
           <span class="mat-subtitle-2">ประเภท: </span>
-          @if(_data?.quick == 1){
-            <span class="reh-txt-green mat-subtitle-1">{{_data?.quick_name}}</span>
-          }@else if(_data?.quick == 2){
-            <span class="reh-txt-yellow mat-subtitle-1">{{_data?.quick_name}}</span>
-          }@else if(_data?.quick == 3){
-            <span class="reh-txt-red mat-subtitle-1">{{_data?.quick_name}}</span>
-          }@else {
-            <span class="reh-txt-blue mat-subtitle-1">{{_data?.quick_name}}</span>
-          }
-
+          <span class="mat-subtitle-1" [ngStyle]="_data?.quick_color">{{_data?.quick_name}}</span>
         </div>
         <div class="col-6">
           <span class="mat-subtitle-2">อุปกรณ์: </span
