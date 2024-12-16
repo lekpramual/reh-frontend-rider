@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -51,7 +52,8 @@ import { Observable, ReplaySubject, Subject, firstValueFrom, lastValueFrom, map,
     MatIconModule,
     MatCardModule,
     AsyncPipe,
-    MatTabsModule
+    MatTabsModule,
+    MatChipsModule
   ]
 })
 export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDestroy {
@@ -61,9 +63,11 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   wardId:number =  0;
   userId:number = 0;
   roleId = signal<string | null>(null);
+  submitted = signal<boolean>(false);
   accessibleId: string = "";
   type_io = signal('ipd');
   formAccessible!: FormGroup;
+
 
   filteredOptionsDepart!: Observable<WardCreate[]>;
   searchControl: FormControl = new FormControl();
@@ -71,6 +75,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
 
   optionWards:WardCreate[] = [];
   optionQuicks:QuicksList[] = [];
+  optionQuickOI: QuicksList[] = [];
   optionEquips:EquipsList[] = [];
   optionOpdType:OpdTypeList[] = [];
   optionWork:WorkList[] = [];
@@ -127,6 +132,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
     this._quicksService.getQuicks().subscribe({
       next:(data) => {
         this.optionQuicks = data.result;
+        this.optionQuickOI = this.getFilteredMenu();
       },
       error:(error) => {
         console.error('Error fetching departments', error);
@@ -173,7 +179,15 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
   }
 
 
+  // ฟังก์ชันใช้ในการ ฟิวเตอร์ ข้อมูลเฉพาะ all และ ประเภทที่เลือก
+  getFilteredMenu() {
+    const menuItems = this.optionQuicks.filter((item: any) => ["all", this.type_io()].includes(item.quick_allow));
+    return menuItems;
+  }
+
   async onSubmit() {
+    this.submitted.set(true);
+
     if (this.formAccessible.valid) {
 
       console.log(this.formAccessible.valid);
@@ -235,6 +249,7 @@ export class AccessibleFormCreateComponent implements OnInit,AfterViewInit, OnDe
             }).afterDismissed().subscribe(() => {
               // this.onMessageChange('close');
               // this.initForm();
+              this.submitted.set(false);
             });
           }
         });

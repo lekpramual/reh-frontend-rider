@@ -2,14 +2,12 @@
   <div style="padding: 0px !important">
     <div class="row align-items-center px-2" style="height: 56px">
       <div class="col-6">
-        <span class="mat-headline-5 reh-txt-blue900">ตั้งค่า - วอร์ด</span>
+        <span class="mat-headline-5 reh-txt-blue900">
+
+          <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">share_location</mat-icon>
+          ตั้งค่า - วอร์ด</span>
       </div>
-      <!-- <div class="col-6" align="end">
-          <button mat-fab extended class="reh-btn-green" (click)="onMessageChange()">
-            <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-            <span class="mat-subtitle-2">วอร์ดใหม่</span>
-          </button>
-      </div> -->
+
     </div>
     <mat-divider> </mat-divider>
     <div class="row px-2 pt-3">
@@ -61,13 +59,23 @@
 
               <ng-container matColumnDef="ward_status" >
                 <th mat-header-cell *matHeaderCellDef style="width: 64px; text-align: center;"> สถานะ </th>
-                <td mat-cell *matCellDef="let element"
-                [class]="{
-                  'bg-txt-green' : element.ward_status == 'active',
-                  'bg-txt-red' : element.ward_status == 'inactive',
-
-                }"
-                > {{element.ward_status}} </td>
+                <td mat-cell *matCellDef="let element">
+                @if(element.ward_status == 'inactive'){
+                  <mat-chip
+                  style="width: 96px"
+                  class="reh-chip-red"
+                >
+                  <span class="label mat-subtitle-1">ยกเลิก</span>
+                </mat-chip>
+              }@else {
+                <mat-chip
+                  style="width: 96px"
+                  class="reh-chip-green"
+                >
+                  <span class="label mat-subtitle-1">ปกติ</span>
+                </mat-chip>
+              }
+              </td>
               </ng-container>
 
               <ng-container matColumnDef="ward_created_at">

@@ -193,6 +193,11 @@ export class AdminLayoutComponent implements OnInit {
 
   }
 
+  openDocPdf(url: string): void {
+    console.log('url >>>',url);
+    window.open(`/app-rider/assets/doc/docward.pdf`, '_blank','noopener noreferrer');
+  }
+
   logout() {
     // Clear the authentication token and other sensitive data from session storage
    this.authService.logout();

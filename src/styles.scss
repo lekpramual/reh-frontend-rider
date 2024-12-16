@@ -187,8 +187,17 @@ mat-mdc-list-item:focus {
 
 }
 
+.reh-txt-orange {
+  color: var(--w-color)!important;
+
+}
+
 .reh-txt-red {
   color: var(--red-color) !important;
+}
+
+.reh-txt-white {
+  color: var(--white-color) !important;
 }
 
 
@@ -235,6 +244,14 @@ mat-mdc-list-item:focus {
   border-radius: 12px;
   margin: 8px 0;
   border: 1px solid #c4c6d0;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.lj-viewer-wrapper-error{
+  border-radius: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--red-color);
   padding-left: 8px !important;
   padding-right: 8px !important;
 }

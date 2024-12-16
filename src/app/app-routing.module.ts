@@ -117,6 +117,10 @@ const routes: Routes = [
         path: 'reports',
         loadComponent : (() => import("../app/pages/wards/reports/reports.component")),
       },
+      {
+        path: 'manual',
+        loadComponent : (() => import("../app/pages/wards/manual/manual.component")),
+      },
 
     ],
   },
@@ -148,8 +152,11 @@ const routes: Routes = [
       {
         path: 'scanner/:id/:jobtype/:ward/:wardname',
         loadComponent : (() => import("./pages/riders/scanners/scanner.component")),
-      }
-
+      },
+      {
+        path: 'manual',
+        loadComponent : (() => import("./pages/riders/manual/manual.component")),
+      },
     ],
   },
 

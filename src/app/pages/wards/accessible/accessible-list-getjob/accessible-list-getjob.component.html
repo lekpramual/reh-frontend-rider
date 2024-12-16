@@ -2,7 +2,10 @@
   <div style="padding: 0px !important">
     <div class="row align-items-center px-2" style="height: 56px">
       <div class="col-6">
-        <span class="mat-headline-5 reh-txt-blue900">รายการขอใช้เปล</span>
+        <span class="mat-headline-5 reh-txt-blue900">
+          <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">fact_check</mat-icon>
+
+          รายการขอใช้เปล</span>
       </div>
       <div class="col-6" align="end">
         <button mat-fab extended class="reh-btn-green" (click)="openDialog()">
@@ -76,12 +79,20 @@
                   <span class="label mat-subtitle-1">{{ element.quick_name }}</span>
                 </mat-chip>
               </td> -->
-              <td mat-cell *matCellDef="let element">
+              <td mat-cell *matCellDef="let element" >
                 <mat-chip
-                style="width: 364px;"
+                style="width: 256px;height: 48px;"
                 [ngStyle]="{ 'background': element.quick_color }"
                   >
-                  <span class="label mat-subtitle-2"  >{{ element.quick_name }}</span>
+
+                  <div class="row " align="center">
+                    <div class="col-12">
+                      <span class="label mat-subtitle-2">{{ element.quick_name }}</span>
+                    </div>
+                    <div class="col-12" style="margin-top: -10px;">
+                      <span class="label mat-subtitle-1"  >{{ element.quick_details }}</span>
+                    </div>
+                  </div>
                 </mat-chip>
               </td>
             </ng-container>

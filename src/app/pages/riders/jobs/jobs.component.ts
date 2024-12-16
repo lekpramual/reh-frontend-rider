@@ -86,7 +86,7 @@ export default class RiderJobComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
-  displayedColumns = ['status_work','go_datetime','go_time', 'quick','wcode_staname','star'];
+  displayedColumns = ['status_work', 'quick','go_datetime','go_time','wcode_staname','star'];
   dataSource = new MatTableDataSource<any>();
 
   currentDate: string ='';

@@ -101,7 +101,7 @@ export const MENU_ITEMS = [
   },
   {
     label: 'คู่มือ',
-    route: '/ward/doc',
+    route: '/ward/manual',
     icon:'book_2',
     role: ['ward']
   },
@@ -124,7 +124,7 @@ export const MENU_ITEMS = [
   },
   {
     label: 'คู่มือ',
-    route: '/rider/doc',
+    route: '/rider/manual',
     icon:'book_2',
     role: ['rideropd','rideripd']
   },

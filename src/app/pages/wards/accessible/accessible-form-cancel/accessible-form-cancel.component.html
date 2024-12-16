@@ -1,5 +1,7 @@
 <div mat-dialog-title style="display: flex; align-items: center;justify-content: center; height: 48px">
-  <span class="mat-headline-5 btn-action-red mb-0">ยกเลิก เลขที่ : {{_Id}}</span>
+  <span class="mat-headline-5 btn-action-red mb-0">
+    <mat-icon class="reh-txt-red" style="margin-top: 8px;">close</mat-icon>
+    ยกเลิก เลขที่ : {{_Id}}</span>
 </div>
 <mat-divider></mat-divider>
 <form [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
@@ -7,7 +9,9 @@
     <div class="lj-viewer-wrapper pb-2">
       <div class="row">
         <div class="col-12">
-          <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+          <span class="mat-headline-6 reh-txt-blue900">
+            <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">wheelchair_pickup</mat-icon>
+            รายละเอียดขอใช้เปล</span>
           <mat-divider></mat-divider>
         </div>
       </div>
@@ -18,7 +22,7 @@
         </div>
         <div class="col-6">
           <span class="mat-subtitle-2">วันที่เวลา: </span
-          ><span class="mat-subtitle-1">{{formatDateThai(_data?.go_date)}} {{_data?.go_time}}</span>
+          ><span class="mat-subtitle-1">{{formatDateThai(_data?.go_date)}} {{_data?.go_time}} น.</span>
         </div>
       </div>
       <div class="row">
@@ -59,7 +63,9 @@
     <div class="lj-viewer-wrapper">
       <div class="row">
         <div class="col-12">
-          <span class="mat-headline-6 reh-txt-blue900">สาเหตุการยกเลิก</span>
+          <span class="mat-headline-6 reh-txt-blue900">
+            <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">chat_info</mat-icon>
+            สาเหตุการยกเลิก</span>
           <mat-divider></mat-divider>
         </div>
       </div>

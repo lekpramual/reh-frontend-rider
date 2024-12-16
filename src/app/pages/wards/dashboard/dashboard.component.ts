@@ -12,6 +12,7 @@ import { AuthService } from '@core/services/auth.service';
 import { LoadingService } from '@core/components/loading/loading.service';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 import { interval, Subscription } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ import { interval, Subscription } from 'rxjs';
     MatSelectModule,
     FormsModule,
     LoadingIndicatorComponent,
+    MatIcon,
     CommonModule]
 })
 export default  class DashboardComponent  implements OnInit{

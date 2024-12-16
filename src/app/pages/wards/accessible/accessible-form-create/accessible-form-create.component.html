@@ -1,5 +1,8 @@
 <div mat-dialog-title style="display: flex; align-items: center;justify-content: center; height: 48px">
-  <span class="mat-headline-5 btn-action-green mb-0">ขอใช้เปลใหม่ ({{this.type_io()}})</span>
+  <span class="mat-headline-5 btn-action-green mb-0">
+    <mat-icon class="reh-txt-green" style="margin-top: 8px;">post_add</mat-icon>
+    ขอใช้เปลใหม่ ({{this.type_io()}})
+  </span>
 </div>
 <mat-divider></mat-divider>
 <form [formGroup]="formAccessible" (ngSubmit)="onSubmit()" class="reh-form-sm">
@@ -95,10 +98,15 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div class="lj-viewer-wrapper" style="min-height: 210px;">
+        <div
+        [ngClass]="formAccessible.get('quicks')?.invalid && submitted() ? 'lj-viewer-wrapper-error': 'lj-viewer-wrapper' "
+        style="min-height: 210px;">
           <div class="row">
             <div class="col-12">
-              <span class="mat-headline-6 reh-txt-blue900">ประเภทความเร่งด่วน </span>
+              <span class="mat-headline-6 reh-txt-blue900">
+                <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">rocket_launch</mat-icon>
+                ประเภทความเร่งด่วน
+              </span>
 
               <mat-divider></mat-divider>
             </div>
@@ -119,20 +127,24 @@
               </mat-radio-group>
             </div>
           </div>
-          <div class="row" align="center">
+          <!-- <div class="row" align="center">
             <div class="col-12">
               @if(formAccessible.get('quicks')?.invalid && submitted()){
                 <mat-error>*โปรดเลือก ความเร่งด่วน</mat-error>
               }
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="col-4">
-        <div class="lj-viewer-wrapper" [ngStyle]="type_io() == 'opd' ?  {'min-height': '245px' } :  {'min-height': '210px'}">
+        <div
+        [ngClass]="formAccessible.get('work')?.invalid && submitted() ? 'lj-viewer-wrapper-error': 'lj-viewer-wrapper' "
+        [ngStyle]="type_io() == 'opd' ?  {'min-height': '250px' } :  {'min-height': '210px'}">
           <div class="row">
             <div class="col-12">
-              <span class="mat-headline-6 reh-txt-blue900">ประเภทเวร</span>
+              <span class="mat-headline-6 reh-txt-blue900">
+                <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">schedule</mat-icon>
+                ประเภทเวร</span>
               <mat-divider></mat-divider>
             </div>
           </div>
@@ -150,14 +162,14 @@
 
             </div>
           </div>
-          <div class="row" align="center">
+          <!-- <div class="row" align="center">
             <div class="col-12">
               @if(formAccessible.get('work')?.invalid && submitted()){
                 <mat-error>*โปรดเลือก ประเภทเวร</mat-error>
               }
 
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -166,7 +178,10 @@
     <div class="lj-viewer-wrapper">
       <div class="row">
         <div class="col-12">
-          <span class="mat-headline-6 reh-txt-blue900">ประเภทอุปกรณ์</span>
+          <span class="mat-headline-6 reh-txt-blue900">
+            <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">accessible</mat-icon>
+            ประเภทอุปกรณ์
+          </span>
           <mat-divider></mat-divider>
         </div>
       </div>
@@ -199,7 +214,9 @@
       <div class="row">
         <div class="col-12">
           <span class="mat-headline-6 reh-txt-blue900"
-            >จุด รับ-ส่ง ผู้ป่วย</span
+            >
+            <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">location_on</mat-icon>
+            จุด รับ-ส่ง ผู้ป่วย</span
           >
           <mat-divider></mat-divider>
         </div>

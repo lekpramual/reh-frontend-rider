@@ -57,34 +57,37 @@
     </div>
     <mat-nav-list role="list" class="sidenav-content">
       @for (item of menuItems; track $index) {
+        <a
+          mat-list-item
+          class="menu-item"
+          [routerLink]="item.route"
+          routerLinkActive
+          routerLinkActive="selected-menu-item"
+          #rla="routerLinkActive"
+          [activated]="rla.isActive"
+          [matTooltip]="isMenuOpened() ? item.label :''  "
+          matTooltipPosition="right"
+          >
+
+          <mat-icon style="margin-left: 8px;"
+            [fontSet]="rla.isActive ?'material-icons-outlined': 'material-icons'"
+            matListItemIcon>{{item.icon}}</mat-icon>
+
+          @if(!collapsed()){
+          <span matListItemTitle *ngIf="!collapsed()">{{item.label}}</span>
+          }
+        </a>
+      }
+
+
+
       <a
         mat-list-item
         class="menu-item"
-        [routerLink]="item.route"
-        routerLinkActive
-        routerLinkActive="selected-menu-item"
-        #rla="routerLinkActive"
-        [activated]="rla.isActive"
-        [matTooltip]="isMenuOpened() ? item.label :''  "
-        matTooltipPosition="right">
-
-        <mat-icon style="margin-left: 8px;"
-          [fontSet]="rla.isActive ?'material-icons-outlined': 'material-icons'"
-          matListItemIcon>{{item.icon}}</mat-icon>
-
-        @if(!collapsed()){
-        <span matListItemTitle *ngIf="!collapsed()">{{item.label}}</span>
-        }
-      </a>
-      }
-
-      <a
-      mat-list-item
-      class="menu-item"
-      routerLink="jobs"
-      [matTooltip]="isMenuOpened() ? 'ออกจากระบบ' :'' "
-      matTooltipPosition="below"
-      (click)="logout()"
+        routerLink="jobs"
+        [matTooltip]="isMenuOpened() ? 'ออกจากระบบ' :'' "
+        matTooltipPosition="below"
+        (click)="logout()"
       >
       <mat-icon
         style="margin-left: 8px;"
@@ -108,10 +111,6 @@
     <div class="container-fluid " style="padding-right: 0px !important; padding-left: 0px !important;">
       <router-outlet (activate)="onActivate($event)"></router-outlet>
     </div>
-
-    <!-- <div class="footer-content bg-light text-muted fw-bold">
-      © 2024 ศูนย์คอมพิวเตอร์​ รพ.ร้อยเอ็ด (v.1.0)
-    </div> -->
   </mat-sidenav-content>
 
 </mat-sidenav-container>
