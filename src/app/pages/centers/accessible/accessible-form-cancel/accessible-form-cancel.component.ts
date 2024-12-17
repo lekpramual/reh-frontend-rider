@@ -20,6 +20,8 @@ import { Observable, map, startWith } from 'rxjs';
 import moment from 'moment';
 import 'moment/locale/th';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { QuickChipComponent } from '@shared/components/quick-chip/quick-chip.component';
+import { AccessibleListDetailsComponent } from '@shared/components/accessible-list-details/accessible-list-details.component';
 
 @Component({
   selector: 'app-accessible-form-cancel',
@@ -44,7 +46,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatCardModule,
     MatBadgeModule,
     MatTooltipModule,
+    QuickChipComponent,
 
+    AccessibleListDetailsComponent
 
   ]
 })

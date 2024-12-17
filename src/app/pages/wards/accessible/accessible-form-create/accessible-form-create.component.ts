@@ -63,6 +63,7 @@ export class AccessibleFormCreateComponent implements OnInit, AfterViewInit, OnD
 
   wardId = signal<number | null>(null);
   userId = signal<number | null>(null);
+  timeWork = signal<number | null>(null);
   submitted = signal<boolean>(false);
 
   accessibleId: string = "";
@@ -93,7 +94,9 @@ export class AccessibleFormCreateComponent implements OnInit, AfterViewInit, OnD
     private _workService: WorkService,
     private _snackBar: MatSnackBar,
     private _authService: AuthService,
-  ) { }
+  ) {
+    this.timeWork.set(this.checkTimeWork())
+  }
 
   ngOnInit(): void {
     this.accessibleId = this.data?.accessible_id;
@@ -278,7 +281,7 @@ export class AccessibleFormCreateComponent implements OnInit, AfterViewInit, OnD
       opdtype: new FormControl(null),
       quicks: new FormControl(null, [Validators.required]),
       equips: new FormControl(null, [Validators.required]),
-      work: new FormControl(null, [Validators.required]),
+      work: new FormControl(this.timeWork(), [Validators.required]),
       wcode_sta: new FormControl(null, [Validators.required]),
       wcode_sto: new FormControl(null, [Validators.required])
     });
@@ -409,6 +412,30 @@ export class AccessibleFormCreateComponent implements OnInit, AfterViewInit, OnD
           }
         });
       }
+    }
+  }
+
+  // ฟังก์ชั่น ตรวจสอบประเภทเวร
+  checkTimeWork(): number {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    // Convert hours and minutes into a decimal time for easy comparison
+    const currentTime = hours + minutes / 60;
+
+    if (currentTime >= 8 && currentTime < 16) {
+      // return 'It is morning (8:00 - 16:00).';
+      console.log('It is morning (8:00 - 16:00).');
+      return 1;
+    } else if (currentTime >= 16 && currentTime < 24) {
+      console.log('It is afternoon (16:00 - 24:00).');
+      // return 'It is afternoon (16:00 - 24:00).';
+      return 2;
+    } else {
+      // return 'It is late-night (24:00 - 8:00).';
+      console.log('It is late-night (24:00 - 8:00).');
+      return 3;
     }
   }
 

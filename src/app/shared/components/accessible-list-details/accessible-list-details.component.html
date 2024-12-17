@@ -1,0 +1,55 @@
+<div class="lj-viewer-wrapper pb-2">
+  <div class="row">
+    <div class="col-12">
+      <span class="mat-headline-6 reh-txt-blue900">
+        <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">wheelchair_pickup</mat-icon>
+        รายละเอียดขอใช้เปล</span>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <span class="mat-subtitle-2">ชื่อ: </span
+      ><span class="mat-subtitle-1">{{_data()?.od_rem}}</span>
+    </div>
+    <div class="col-6">
+      <span class="mat-subtitle-2">วันที่เวลา: </span
+      ><span class="mat-subtitle-1">{{formatDateThai(_data()?.go_date)}} {{_data()?.go_time}} น.</span>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-2">
+      <span class="mat-subtitle-2">ประเภท: </span>
+    </div>
+    <div class="col-10">
+      <app-quick-chip
+      [dataQuick]="{
+        quick:_data()?.quick,
+        quick_color:_data()?.quick_color,
+        quick_name:_data()?.quick_name,
+        quick_details:_data()?.quick_details,
+      }"
+      />
+
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="mat-subtitle-2">อุปกรณ์: </span
+      ><span class="mat-subtitle-1">{{_data()?.equip_name}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="mat-subtitle-2">จุดรับ: </span
+      ><span class="mat-subtitle-1">{{_data()?.wcode_staname}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="mat-subtitle-2">จุดส่ง: </span
+      ><span class="mat-subtitle-1">{{_data()?.wcode_stoname}}</span>
+    </div>
+  </div>
+</div>

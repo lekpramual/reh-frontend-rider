@@ -1,0 +1,60 @@
+<mat-chip
+  style="width: 96px;height: 48px;"
+  [ngClass]="{
+    'bg-txt-blue' : data()?.proceed == 'getjob',
+    'bg-txt-green' : data()?.proceed == 'closejob',
+    'bg-txt-orange' : data()?.proceed == 'receivejob',
+    'bg-txt-yellow' : data()?.proceed == 'newjob',
+    'bg-txt-red' : data()?.proceed == 'canceljob'
+  }
+  "
+>
+    @if(data()?.proceed == 'newjob'){
+      <div class="row " align="center">
+        <div class="col-12">
+          <span class="label mat-subtitle-2 blinking-text">
+            ขอใช้เปล
+          </span>
+        </div>
+      </div>
+    }
+    @else if(data()?.proceed == 'getjob'){
+      <div class="row " align="center">
+        <div class="col-12">
+          <span class="label mat-subtitle-2 reh-txt-white  blinking-text">
+            รับงาน
+          </span>
+        </div>
+      </div>
+    }@else if (data()?.proceed == 'receivejob') {
+      <div class="row " align="center">
+        <div class="col-12">
+          <span class="label mat-subtitle-2 blinking-text">
+            รับผู้ป่วย
+          </span>
+        </div>
+      </div>
+    }@else if (data()?.proceed == 'closejob') {
+      <div class="row " align="center">
+      <div class="col-12">
+        <span class="label mat-subtitle-2 reh-txt-white">
+          ปิดงาน
+        </span>
+      </div>
+      <div class="col-12" style="margin-top: -10px;">
+        <span class="label mat-subtitle-1"  >
+          [{{calculateTimeDifferenceInMinutes(data()?.go_date,data()?.go_time,data()?.ed_time)}} น.]
+        </span>
+      </div>
+      </div>
+    }@else {
+      <div class="row " align="center">
+        <div class="col-12">
+          <span class="label mat-subtitle-2 reh-txt-white">
+            ยกเลิก
+          </span>
+        </div>
+      </div>
+    }
+
+  </mat-chip>

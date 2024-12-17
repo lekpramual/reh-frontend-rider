@@ -46,20 +46,17 @@
             </ng-container>
 
             <ng-container matColumnDef="quick">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 72px;">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center" style="width: 56px;">
                 <span class="mat-subtitle-2">ประเภท</span>
               </th>
-              <td mat-cell *matCellDef="let element" style="width: 72px"
-                [class]="{
-                  'bg-txt-green' : element.quick == 1,
-                  'bg-txt-yellow' : element.quick == 2,
-                  'bg-txt-orange' : element.quick == 3,
-                  'bg-txt-red' : element.quick == 4,
-                }">
+              <td mat-cell *matCellDef="let element" style="width: 56px">
+                <app-quick-chip [dataQuick]="{
+                  quick:element.quick,
+                  quick_color:element.quick_color,
+                  quick_name:element.quick_name,
+                  quick_details:element.quick_details,
+                }" />
 
-                @if(element.quick_name !== ''){
-                  <span class="label mat-subtitle-1">{{ element.quick_name.slice(0,12) }}</span>
-                }
               </td>
             </ng-container>
             <ng-container matColumnDef="wcode_staname">

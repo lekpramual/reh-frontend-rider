@@ -2,12 +2,12 @@
   <div style="padding: 0px !important;">
     <div class="row" style="padding: 10px;">
       <div class="col-12">
-        <span class="mat-headline-5 reh-txt-blue900">รับงานขอใช้เปล จนท รหัส {{this.userId()}} ประจำวันที่ : {{formatDateThai(this.currentDateTime())}}</span>
+        <span class="mat-headline-5 reh-txt-blue900">
+          <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">fact_check</mat-icon>
+
+          รับงานขอใช้เปล จนท รหัส {{this.userId()}} ประจำวันที่ : {{formatDateThai(this.currentDateTime())}}</span>
 
       </div>
-
-
-
     </div>
     <mat-divider>
     </mat-divider>
@@ -92,20 +92,17 @@
 
           <table mat-table class="monitor" [dataSource]="dataSource">
             <ng-container matColumnDef="status_work">
-              <th mat-header-cell *matHeaderCellDef style="width: 96px; text-align: center;">
+              <th mat-header-cell *matHeaderCellDef style="width: 96px;">
                 <span class="mat-subtitle-2">สถานะ</span>
               </th>
               <td mat-cell *matCellDef="let element">
-
-                <!-- [class]="{
-                  'bg-txt-green' : element.ed_date != '-' && element.sd_date != '-' && element.go_date != '-' && element.rd_date != '-' && element.status_work == '0',
-                  'bg-txt-orange' : element.ed_date == '-' && element.sd_date != '-' && element.go_date != '-' && element.rd_date != '-' && element.status_work == '0',
-                  'bg-txt-blue' : element.ed_date == '-' && element.sd_date == '-' && element.rd_date != '-' && element.go_date != '-' && element.status_work == '0',
-                  'bg-txt-red' : element.status_work == '1',
-
-                }" -->
-
-                @if(element.ed_date != '-' && element.sd_date != '-' && element.go_date != '-' && element.rd_date != '-' && element.status_work == '0'){
+                <app-proceed-chip [dataProcess]="{
+                  proceed:element.proceed,
+                  go_date:element.go_date,
+                  go_time:element.go_time,
+                  ed_time:element.ed_time
+                }" />
+                <!-- @if(element.ed_date != '-' && element.sd_date != '-' && element.go_date != '-' && element.rd_date != '-' && element.status_work == '0'){
 
                   <mat-chip
                   style="min-width: 96px;height: 48px;text-align: center;"
@@ -134,7 +131,7 @@
                   </div>
                 </mat-chip>
                 }@else if ( element.ed_date == '-' && element.sd_date == '-' && element.rd_date != '-' && element.go_date != '-' && element.status_work == '0') {
-                  <!-- <span class="label mat-subtitle-2 blinking-text" >รับงาน</span> -->
+
                   <mat-chip
                   style="min-width: 96px;height: 48px;text-align: center;"
                   class="bg-txt-blue"
@@ -157,7 +154,7 @@
                     </div>
                   </div>
                 </mat-chip>
-                }
+                } -->
               </td>
             </ng-container>
 
@@ -204,24 +201,16 @@
             </ng-container>
 
             <ng-container matColumnDef="quick">
-              <th mat-header-cell *matHeaderCellDef style="text-align: center;width: 128px;">
+              <th mat-header-cell *matHeaderCellDef style="width: 128px;">
                 <span class="mat-subtitle-2">ความเร่งด่วน</span>
               </th>
               <td mat-cell *matCellDef="let element" >
-                <mat-chip
-                style="min-width: 56px;height: 48px;"
-                [ngStyle]="{ 'background': element.quick_color }"
-                  >
-
-                  <div class="row " align="center">
-                    <div class="col-12">
-                      <span class="label mat-subtitle-2">{{ element.quick_name }}</span>
-                    </div>
-                    <div class="col-12" style="margin-top: -10px;">
-                      <span class="label mat-subtitle-1"  >{{ element.quick_details }}</span>
-                    </div>
-                  </div>
-                </mat-chip>
+                <app-quick-chip [dataQuick]="{
+                  quick:element.quick,
+                  quick_color:element.quick_color,
+                  quick_name:element.quick_name,
+                  quick_details:element.quick_details,
+                }" />
               </td>
             </ng-container>
             <ng-container matColumnDef="wcode_staname">
@@ -248,17 +237,21 @@
               <td mat-cell *matCellDef="let element" >
                 <div class="row">
                   <div class="col-12">
-                    @if(element.ed_date != '-' || element.status_work == '1'){
+                    @if(element.proceed == 'getjob' && element.status_work == '1'){
                       <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green disabled">
                         <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
                       </button>
-                    }@else if(element.sd_date == '-'){
+                    }@else if(element.proceed == 'getjob'){
                       <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green" (click)="clickedJob(element,'getjob')">
                         <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
                       </button>
-                    }@else if(element.ed_date == '-'){
+                    }@else if(element.proceed == 'receivejob'){
                       <button mat-mini-fab   matTooltip="คลิกปิดงาน" class="reh-btn-green" (click)="clickedJob(element,'closejob')">
                         <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
+                      </button>
+                    }@else if(element.proceed == 'closejob'){
+                      <button mat-mini-fab   matTooltip="ดูข้อมูล" class="reh-btn-blue" (click)="openDialogView(element.id)">
+                        <mat-icon fontSet="material-icons-outlined" >visibility</mat-icon>
                       </button>
                     }@else {
                       <button mat-mini-fab   matTooltip="คลิกรับงาน" class="reh-btn-green disabled">

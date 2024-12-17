@@ -2,17 +2,20 @@
   mat-dialog-title
   style="display: flex; align-items: center;height: 48px;justify-content: center;"
 >
-  <span class="mat-headline-5 btn-action-green mb-0">ปิดงาน เลขที่ : {{this._Id()}}</span>
+  <span class="mat-headline-5 btn-action-green mb-0">
+    <mat-icon class="reh-txt-green" style="margin-top: 8px;">list_alt_check</mat-icon>
+    ปิดงาน เลขที่ : {{this._Id()}}</span>
 
 </div>
 <mat-divider></mat-divider>
-<form class="reh-form-sm" [formGroup]="formAccessible" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     @for (item of acsData(); track $index) {
       <div class="lj-viewer-wrapper">
         <div class="row">
           <div class="col-12">
-              <span class="mat-headline-6 reh-txt-blue900">รายละเอียดขอใช้เปล</span>
+              <span class="mat-headline-6 reh-txt-blue900">
+                <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">wheelchair_pickup</mat-icon>
+                รายละเอียดขอใช้เปล</span>
               <mat-divider></mat-divider>
           </div>
         </div>
@@ -67,7 +70,9 @@
         <div class="row mt-2 mb-3">
           <div class="col-12">
               <span class="mat-headline-6 reh-txt-blue900"
-                >รายละเอียด จนท.เปล</span
+                >
+                <mat-icon class="reh-txt-blue900" style="margin-top: 8px;">person_check</mat-icon>
+                รายละเอียด จนท.เปล</span
               >
               <mat-divider></mat-divider>
           </div>
@@ -116,14 +121,7 @@
           </div>
 
           <div class="col-6">
-            @if(item.sd_date != '-'){
-              <span class="mat-subtitle-1">{{formatDateThai(item.sd_date)}} {{item.sd_time}}</span>
-            }@else {
-              <button mat-fab extended class="reh-btn-blue mb-2" style="width: 156px;" (click)="onGetJob($event)">
-                <mat-icon fontSet="material-icons-outlined" >system_security_update</mat-icon>
-                <span class="mat-subtitle-2">คลิกรับงาน</span></button>
-            }
-
+            <span class="mat-subtitle-1">{{formatDateThai(item.sd_date)}} {{item.sd_time}}</span>
           </div>
         </div>
         <div class="row">
@@ -132,20 +130,7 @@
           </div>
 
           <div class="col-6">
-
-            @if(item.ed_date != '-'){
-              <span class="mat-subtitle-1">{{formatDateThai(item.ed_date)}} {{item.ed_time}}</span>
-            }@else if(item.ed_date == '-' && item.sd_date != '-'){
-              <button mat-fab extended class="reh-btn-green" style="width: 156px;"  (click)="onConfirmJob($event)">
-                <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
-                <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
-            }@else{
-              <button mat-fab extended class="reh-btn-green disabled" style="width: 156px;" disabled (click)="onConfirmJob($event)">
-                <mat-icon fontSet="material-icons-outlined" >system_security_update_good</mat-icon>
-                <span class="mat-subtitle-2">คลิกปิดงาน</span></button>
-            }
-
-
+            <span class="mat-subtitle-1">{{formatDateThai(item.ed_date)}} {{item.ed_time}}</span>
           </div>
         </div>
         <div class="row">
@@ -176,4 +161,4 @@
       <span class="mat-subtitle-2">ปิดหน้าจอ</span>
     </button>
   </mat-dialog-actions>
-</form>
+

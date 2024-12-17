@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AccessibleFormConfirmComponent } from '../accessible-form-confirm/accessible-form-confirm.component';
+import { AccessibleFormConfirmComponent } from '../../../../shared/components/accessible-form-confirm/accessible-form-confirm.component';
 import { AcsService } from '@core/services/acs.service';
 import { RoleService } from '@core/services/role.service';
 import moment from 'moment';
@@ -31,6 +31,8 @@ import { WardCreate } from '@core/interface/ward.interface';
 import { UserList } from '@core/interface/user.model';
 import { NoDataComponent } from '@core/components/nodata/nodata.component';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
+import { QuickChipComponent } from '@shared/components/quick-chip/quick-chip.component';
+import { ProceedChipComponent } from '@shared/components/proceed-chip/proceed-chip.component';
 
 
 const today = new Date();
@@ -65,9 +67,9 @@ const year = today.getFullYear();
     CommonModule,
 
     NoDataComponent,
-    LoadingIndicatorComponent
-
-
+    LoadingIndicatorComponent,
+    QuickChipComponent,
+    ProceedChipComponent
   ],
   providers: [
     { provide: MatPaginatorIntl, useValue: getThaiPaginatorIntl() },

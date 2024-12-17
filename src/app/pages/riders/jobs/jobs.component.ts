@@ -27,9 +27,13 @@ import { getThaiPaginatorIntl } from '@core/interface/thai-paginator-intl';
 import { AcsService } from '@core/services/acs.service';
 import { AuthService } from '@core/services/auth.service';
 import { RoleService } from '@core/services/role.service';
+import { ProceedChipComponent } from '@shared/components/proceed-chip/proceed-chip.component';
+import { QuickChipComponent } from '@shared/components/quick-chip/quick-chip.component';
 import moment from 'moment';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { interval, Subscription } from 'rxjs';
+
+import { AccessibleFormViewComponent } from '../../../shared/components/accessible-form-view/accessible-form-view.component';
 
 
 export interface PeriodicElement {
@@ -73,7 +77,9 @@ export interface PeriodicElement {
     CommonModule,
 
     NoDataComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    QuickChipComponent,
+    ProceedChipComponent
   ],
 
   providers: [
@@ -168,7 +174,10 @@ export default class RiderJobComponent implements OnInit {
   clickedJob(row:any, jobtype:string){
     console.log('Clicked Job', row);
     if(row.id != 'null'){
-      this.router.navigate(['rider/scanner', row.id,jobtype,row.wcode_sto,row.wcode_stoname]);
+      const sta = jobtype == 'getjob' ? row.wcode_sta : row.wcode_sto;
+      const staname = jobtype == 'getjob' ? row.wcode_staname : row.wcode_stoname;
+
+      this.router.navigate(['rider/scanner', row.id,jobtype,sta,staname]);
     }
   }
 
@@ -218,5 +227,23 @@ export default class RiderJobComponent implements OnInit {
     // return moment(date).format("LL"); // Customize the format as needed
     return moment(date).format("l"); // Customize the format as needed
   }
+
+  openDialogView(Id:number): void {
+      const dialogRef = this.dialog.open(
+        AccessibleFormViewComponent,
+        {
+          data: {
+            Id: Id
+          },
+          width: "640px",
+          disableClose: true
+        }
+      );
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log("The dialog was closed");
+        result === "ok" && this.getRiderByDate();
+      });
+    }
 
 }

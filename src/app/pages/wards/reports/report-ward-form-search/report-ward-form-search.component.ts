@@ -129,7 +129,7 @@ export class ReportWardFormSearchComponent implements OnInit {
   formGroupData!: FormGroup;
 
   optionQuicks: QuicksList[] = [
-    { quick_id: '0', quick_name: 'ทั้งหมด',quick_color:'',quick_time:'',quick_allow:'' }
+    { quick_id: '0', quick_name: 'ทั้งหมด',quick_details:'',quick_color:'',quick_time:'',quick_allow:'' }
   ];
 
   filteredOptions!: Observable<any[]>;

@@ -18,6 +18,8 @@ export interface AcsList {
   ed_time: string;
   quick: number;
   quick_name: string;
+  quick_details: string;
+  quick_color: string;
   time_work: number;
   time_workname: string;
   wk_perid: string;

@@ -26,6 +26,8 @@ import { AuthService } from '@core/services/auth.service';
 import { NoDataComponent } from '@core/components/nodata/nodata.component';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 import { LoadingService } from '@core/components/loading/loading.service';
+import { QuickChipComponent } from '@shared/components/quick-chip/quick-chip.component';
+import { ProceedChipComponent } from '@shared/components/proceed-chip/proceed-chip.component';
 
 
 @Component({
@@ -49,7 +51,9 @@ import { LoadingService } from '@core/components/loading/loading.service';
     CommonModule,
 
     NoDataComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    QuickChipComponent,
+    ProceedChipComponent
   ],
 
 })
@@ -68,7 +72,7 @@ export default class AccessibleListGetJobComponent {
 
   // @Output() messageChange = new EventEmitter<string>();
 
-  displayedColumns = [ 'go_date','go_time', 'equip','type_oi', 'quick', 'od_rem', 'wcode_staname','status_work','star'];
+  displayedColumns = [ 'status_work','go_date','go_time', 'equip','type_oi', 'quick', 'wcode_staname','star'];
   // dataSource = new MatTableDataSource<TPatient>();
   dataSource = new MatTableDataSource<any>([]);
 
@@ -161,7 +165,7 @@ export default class AccessibleListGetJobComponent {
           activity_indicator: "",
           activity_amount: "",
         },
-        width: "720px",
+        width: "840px",
         disableClose: true
       }
     );

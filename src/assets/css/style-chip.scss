@@ -1,0 +1,42 @@
+.bg-txt-blue {
+  background-color: var(--blue-color) !important;
+
+  text-align: center;
+  span.label{
+    color:#fff !important;
+  }
+}
+
+.bg-txt-green {
+  background-color: var(--green-color) !important;
+  text-align: center;
+
+  span.label{
+    color:#fff !important;
+  }
+}
+.bg-txt-yellow {
+  background-color: var(--yellow-color) !important;
+  text-align: center;
+}
+
+.bg-txt-orange {
+  background-color: var(--orange-color) !important;
+  text-align: center;
+
+}
+.bg-txt-red {
+  background-color: var(--red-color) !important;
+  text-align: center;
+}
+
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blinking-text {
+  animation: blink 1s infinite;
+}

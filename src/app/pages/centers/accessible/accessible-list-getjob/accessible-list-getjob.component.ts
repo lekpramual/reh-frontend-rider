@@ -13,8 +13,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AccessibleFormCreateComponent } from '../accessible-form-create/accessible-form-create.component';
-import { AccessibleFormAssignmentComponent } from '../accessible-form-assignment/accessible-form-assignment.component';
-import { AccessibleFormCancelComponent } from '../accessible-form-cancel/accessible-form-cancel.component';
+
+
+
+import { AccessibleFormCancelComponent } from '../../../../shared/components/accessible-form-cancel/accessible-form-cancel.component';
+import { AccessibleFormAssignmentComponent } from '../../../../shared/components/accessible-form-assignment/accessible-form-assignment.component';
+
 import { AcsService } from '@core/services/acs.service';
 import { interval, Subscription } from 'rxjs';
 import moment from 'moment';
@@ -23,6 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AcsGetJobList } from '@core/interface/acs.interface';
 import { NoDataComponent } from '@core/components/nodata/nodata.component';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
+import { QuickChipComponent } from '@shared/components/quick-chip/quick-chip.component';
 
 
 @Component({
@@ -45,7 +50,8 @@ import { LoadingIndicatorComponent } from '@core/components/loading/loading.comp
     CommonModule,
 
     NoDataComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    QuickChipComponent
   ],
 
 })

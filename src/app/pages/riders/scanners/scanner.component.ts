@@ -68,17 +68,21 @@ export default class RiderScannerComponent implements OnInit{
     this.wardId = this.route.snapshot.params["ward"];
     this.jobType = this.route.snapshot.params["jobtype"];
     this.wardName = this.route.snapshot.params["wardname"];
+
+    console.log('wardId', this.wardId);
   }
 
    // Handle the scan success event
   async onCodeResult(resultString: any) {
+
+    console.log('resultString',resultString);
     this.qrCodeResult = JSON.parse(resultString);
     const ward_id = this.qrCodeResult.ward_id;
     const ward_name = this.qrCodeResult.ward_name;
 
 
     // Handle check ward params and ward scan qrcode
-    if(ward_id == this.wardId){
+    if(`${ward_id}` == this.wardId){
       let data:any = {};
       data.ward = this.wardId;
       data.type = this.jobType;
@@ -92,7 +96,7 @@ export default class RiderScannerComponent implements OnInit{
       });
       this.router.navigate(['rider/jobs']);
     }else{
-      // console.log('Scanned Fuile:', ward_id,this.wardId);
+      console.log('Scanned Fuile:', ward_id,this.wardId);
       this._snackBar.open('ผิดพลาด กรุณาตรวจสอบจุดสแกน', 'ลองอีกครั้ง', {
         duration:3000,
         horizontalPosition: 'center',

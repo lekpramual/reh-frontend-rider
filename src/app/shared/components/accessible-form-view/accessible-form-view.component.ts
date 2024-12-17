@@ -23,10 +23,10 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-accessible-form-confirm',
+  selector: 'app-accessible-form-view',
   standalone: true,
-  templateUrl: './accessible-form-confirm.component.html',
-  styleUrl: './accessible-form-confirm.component.scss',
+  templateUrl: './accessible-form-view.component.html',
+  styleUrl: './accessible-form-view.component.scss',
   imports:[
     CommonModule,
     FormsModule,
@@ -49,7 +49,7 @@ import { Observable, map, startWith } from 'rxjs';
     QuickChipComponent
   ]
 })
-export class AccessibleFormConfirmComponent implements OnInit{
+export class AccessibleFormViewComponent implements OnInit{
 
   _Id = signal('');
   _data = signal<AcsList[]>([]);
@@ -61,11 +61,28 @@ export class AccessibleFormConfirmComponent implements OnInit{
 
 
   constructor(
-    public dialogRef: MatDialogRef<AccessibleFormConfirmComponent>,
+    public dialogRef: MatDialogRef<AccessibleFormViewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _acsService: AcsService,
     private _snackBar: MatSnackBar
-  ) {}
+  ) {
+
+    moment.updateLocale('th', {
+          longDateFormat: {
+            LT: 'HH:mm',
+            LTS: 'HH:mm:ss',
+            L: 'DD/MM/YYYY',
+            LL: 'D MMMM YYYY',
+            LLL: 'D MMMM YYYY เวลา HH:mm',
+            LLLL: 'วันddddที่ D MMMM YYYY เวลา HH:mm',
+          },
+          // Function to add 543 years to the Gregorian year
+          postformat: (str: any) =>
+            str.replace(/(\d{4})/g, (year: any) =>
+              (parseInt(year, 10) + 543).toString()
+            ),
+        });
+  }
 
   async ngOnInit() {
     // this._Id = this.data?.Id;
@@ -143,8 +160,6 @@ export class AccessibleFormConfirmComponent implements OnInit{
     await this.updateJob('confirm');
   }
 
-
-
   async updateJob(mode:string){
     try {
       // console.log('mode',mode)
@@ -179,7 +194,7 @@ export class AccessibleFormConfirmComponent implements OnInit{
   //ฟังก์ชั่น: ปีภาษาไทย
   formatDateThai(date: Date): string {
     // return moment(date).format("LL"); // Customize the format as needed
-    return moment(date).format("ll"); // Customize the format as needed
+    return moment(date).format("l"); // Customize the format as needed
   }
 
   calculateTimeDifferenceInMinutes(date:any,startTime: any, endTime: any): number {

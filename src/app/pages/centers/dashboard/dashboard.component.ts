@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingIndicatorComponent } from '@core/components/loading/loading.component';
 import { LoadingService } from '@core/components/loading/loading.service';
 import { AuthService } from '@core/services/auth.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +28,7 @@ import { AuthService } from '@core/services/auth.service';
     FormsModule,
     CommonModule,
 
+    MatIcon,
     LoadingIndicatorComponent
   ]
 })

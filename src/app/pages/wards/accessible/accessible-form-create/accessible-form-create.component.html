@@ -20,7 +20,6 @@
                 <mat-form-field class="reh-input-full-width">
                   <mat-label>HN</mat-label>
                   <input
-
                     matInput
                     name="hn"
                     placeholder="HN (ผู้ป่วยที่ให้ไปรับ ถ้ามี กด Enter)"
@@ -120,7 +119,7 @@
                     style="width: 364px;"
                     [ngStyle]="{ 'background': option.quick_color }"
                       >
-                      <span class="label mat-subtitle-2"  >{{ option.quick_name }}</span>
+                      <span class="label mat-subtitle-2"  >{{ option.quick_name }} [{{option.quick_details}}]</span>
                     </mat-chip>
                   </mat-radio-button>
                 }
@@ -222,7 +221,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 text-center">
+        <div class="col-6 text-center">
           <mat-form-field class="reh-input-full-width mt-2">
             <mat-label>เลือก จุดรับผู้ป่วย</mat-label>
 
@@ -237,7 +236,7 @@
                 </ngx-mat-select-search>
               </mat-option>
               @for (option of filteredOptionsDepart | async; track option) {
-              <mat-option [value]="option.ward_id"> {{ option.ward_name }}</mat-option>
+              <mat-option [value]="option.ward_id"> {{ option.ward_name }} </mat-option>
               }
             </mat-select>
 
@@ -251,9 +250,7 @@
             >
           </mat-form-field>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12 text-center">
+        <div class="col-6 text-center">
           <mat-form-field class="reh-input-full-width mt-1">
             <mat-label>เลือก จุดส่งผู้ป่วย</mat-label>
 
@@ -283,6 +280,37 @@
           </mat-form-field>
         </div>
       </div>
+      <!-- <div class="row">
+        <div class="col-6 text-center">
+          <mat-form-field class="reh-input-full-width mt-1">
+            <mat-label>เลือก จุดส่งผู้ป่วย</mat-label>
+
+            <mat-select formControlName="wcode_sto">
+              <mat-option>
+                <ngx-mat-select-search
+                  [formControl]="searchControl"
+                  placeholderLabel="ค้นหา จุดส่งผู้ป่วย"
+                  [preventHomeEndKeyPropagation]="true"
+                >
+                  <span ngxMatSelectNoEntriesFound> ไม่พบข้อมูล </span>
+                </ngx-mat-select-search>
+              </mat-option>
+              @for (option of filteredOptionsDepart | async; track option) {
+                <mat-option [value]="option.ward_id"> {{ option.ward_name }}</mat-option>
+              }
+            </mat-select>
+
+            <mat-error
+              *ngIf="
+                formAccessible.get('wcode_sto')?.invalid ||
+                formAccessible.get('wcode_sto')?.touched
+              "
+            >
+              *โปรดเลือก จุดส่งผู้ป่วย</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div> -->
     </div>
 
 
